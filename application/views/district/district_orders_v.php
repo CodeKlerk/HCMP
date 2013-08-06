@@ -51,12 +51,12 @@ $earliest_year = $current_year - 10;
 		<th>Kemsa Order No.</th>
 		<th>MFL&nbsp;Code</th>
 		<th>Facility Name</th>
-		<th>Initial&nbsp;Drawing&nbsp;Rights(KSH)</th>
+		<th>Initial&nbsp;Drawing&nbsp;Rights&nbsp;(KSH)</th>
 		<th>Order&nbsp;Value&nbsp;(KSH)</th>
 		<th>Drawing&nbsp;Rights&nbsp;Balance&nbsp;(KSH)</th>
 		<th>Order&nbsp;Date</th>
-		<th>Approval&nbsp;Status|Action</th>
-		
+		<th>Approval&nbsp;Status</th>
+		<th>Action</th>
 	</tr>
 	</thead>
 	<tbody>
@@ -83,26 +83,25 @@ $earliest_year = $current_year - 10;
 		echo $datea;?></td>
 		<td><?php
 		$order_status=$rows->orderStatus;
-		if(strtolower($order_status)=="pending"){
-			$lcol='"btn btn-warning"';
-		}else if(strtolower($order_status)=="approved"){
-			$lcol='"btn btn-info"';
-		}else if(strtolower($order_status)=="delivered"){
-			$lcol='"btn btn-success"';
+		if($order_status=="Pending"){
+			$lcol='#FF0000';
+		}else if($order_status=="Approved"){
+			$lcol='#00FF00';
+		}else if($order_status=="Delivered"){
+			$lcol='#289909';
 		}
 		
-		 
-		 echo ' <button style="text-transform:capitalize;width:6em;" class='.$lcol.' type="button">'.$order_status.'</button>';?>
+		 echo '<div align="center"><font color='.$lcol.'>'.$order_status.'</font></div>';?></td>
 		
-		| <a href="<?php 
-		if(strtolower($order_status)=="pending"){
+		<td><a href="<?php 
+		if($order_status=="Pending"){
 			
 			echo site_url('order_approval/district_order_details/'.$rows->id.'/'.$rows->facilityCode);
 		}else{
 			echo site_url('order_management/moh_order_details/'.$rows->id.'/'.$rows->kemsaOrderid);
 		}
 		
-		?>"class="btn btn-inverse" style="margin-right:1em;">View</a></td>
+		?>"class="link">View</a></td>
 	</tr> 
 	<?php
 		}

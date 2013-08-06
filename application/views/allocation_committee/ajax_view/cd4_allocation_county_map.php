@@ -38,7 +38,7 @@
 		
 		
 		var chart = new FusionMaps("<?php echo base_url()."scripts/FusionMaps/FCMap_KenyaCounty.swf"?>","ChartId", "100%", "50%", "0", "1" );
-		var url = '<?php echo base_url()."rtk_management/rtk_allocation_kenyan_map"?>'; 
+		var url = '<?php echo base_url()."cd4_management/map_chart"?>'; 
 		chart.setDataURL(url);
 		chart.render("chart");
 

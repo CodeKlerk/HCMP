@@ -11,21 +11,10 @@
 	border : none;
 	text-align: center;
 	}
-	
-	.user_{
-	background : none;
-	border : none;
-	text-align: center;
-	}
 	.user2{
 	width:70px;
-	background-color:#FCEFA1;
 	
 	text-align: center;
-	}
-	
-	.input_text{
-	background-color:#FCEFA1;	
 	}
 	.col5{background:#D8D8D8;}
 				 .form_settings { 
@@ -34,6 +23,27 @@
   font-family: 'trebuchet MS', 'Lucida sans', Arial;
 }
 
+.form_settings p { 
+  padding: 0 0 4px 0;
+}
+			 
+.form_settings span { 
+  float: left; 
+  width: 20%; 
+  text-align: left;
+}
+  
+.form_settings input, .form_settings textarea , .form_settings select { 
+  padding: 5px; 
+  width: 20%; 
+  font: 100% arial; 
+  border: 1px solid #D5D5D5; 
+  background: #FFF; 
+  color: #47433F;
+  border-radius: 7px 7px 7px 7px;
+  -moz-border-radius: 7px 7px 7px 7px;
+  -webkit-border: 7px 7px 7px 7px;  
+}
 	</style>
 	
 <script>
@@ -125,14 +135,6 @@ return;
      	 	$('#drawing').html(drawingRights);  
      	 	
      	 }else{
-     	 	
-     	 	if(draw<0){  	 		
-     	 		$('#drawing').css("color","red");
-     	 	}
-     	 	else{
-     	 		$('#drawing').css("color","#036");
-     	 	}
-     	 
      	 	$('#drawing').html(number_format(draw, 2, '.', ','));
      	 	}
      	 	
@@ -349,7 +351,7 @@ function update_transaction(baseUrl,data_array){
                 var bal=drawingRights-c_total;
                 
         if(t==0){
-        	$( "#demo" ).append('<div id="pop" title="System Message"><p>Please Enter Order Quantity</p></div>');
+        	$( "#demo" ).append(' <div id="pop" title="System Message"><p>Please Enter Order Quantity</p></div>');
         	$("#pop").dialog({
 			height: 140,
 			modal: true
@@ -360,19 +362,19 @@ function update_transaction(baseUrl,data_array){
      		'<tr>'+
 			'<td><label for="name">Drawing Rights</label></td>'+
 			'<td>'+
-			'<input class="user_" type="text" readonly="readonly"  value="'+number_format(drawingRights, 2, '.', ',')+' Ksh'+'" />'+
+			'<input  type="text" readonly="yes"   value="'+number_format(drawingRights, 2, '.', ',')+' Ksh'+'" />'+
 			'</td>'+
 		'</tr>'+
 		'<tr>'+
 			'<td><label for="phone">Total Order Value</label></td>'+
 			'<td>'+
-			'<input class="user_" type="text" readonly="readonly" value="'+t+' Ksh'+'"/>'+
+			'<input type="text" readonly="yes"   value="'+t+' Ksh'+'"/>'+
 			'</td>'+
 		'</tr>'+
 		'<tr>'+
 			'<td><label for="pin">Balance</label></td>'+
 			'<td>'+
-			'<input class="user_" type="text" readonly="readonly" id="drawing_rights_bal"  value="'+number_format(bal, 2, '.', ',')+' Ksh'+'"/>'+
+			'<input type="text" readonly="yes"   value="'+number_format(bal, 2, '.', ',')+'Ksh'+'"/>'+
 			'</td>'+
 		'</tr>'
      		
@@ -388,13 +390,6 @@ function update_transaction(baseUrl,data_array){
 						"</tr>" ); 
                     });
          	  $( "#dialog-form" ).dialog( "open" ); 
-         	  
-         	  if(bal<0){  	 		
-     	 		$('#drawing_rights_bal').css("color","red");
-     	 	}
-     	 	else{
-     	 		$('#drawing_rights_bal').css("color","#036");
-     	 	} 
   /*******************************************************printing out the pop out form***********************************/   	
          	  } 
          	  });
@@ -418,7 +413,8 @@ function update_transaction(baseUrl,data_array){
     checker(index,chr);
     });
     
-    	$('#main').dataTable( {   		
+    	$('#main').dataTable( {
+    		
 					"bJQueryUI": true,
                    "bPaginate": false
 				} );
@@ -431,7 +427,7 @@ function update_transaction(baseUrl,data_array){
 <!-- pop out modal box -->
 
 <div id="dialog-form" title="Please Confirm your Order">
-	<table class="data-table"  id='test-hapa'><tbody></tbody></table>
+	<table style="margin-left: 40%"  id='test-hapa'><tbody></tbody></table>
 	<form>
 	<table id="user-order" width="500px" class="data-table">
 					<thead>
@@ -498,26 +494,24 @@ function update_transaction(baseUrl,data_array){
 	 echo form_open('Order_Management/makeOrder',$attributes); ?>
 	
 	 <div id="notification">Enter Order Quantity and Comment</div>
-	 <div id="notification">Order Quantity= (Monthly Consumption * 4) - Closing Stock</div>
+	 <div id="notification">Quantified Quantity = (Consumption * 4/) - Closing Stock</div>
 	  
-<div>
-</div>
-<table>
+<table width="100%">
 	<tr>
 		<td>
-	
-     <b id="notification">Oder Form Number:</b> <input type="text" class="input_text" name="order_no"  />
-	
+	<div class="form_settings" style="width: 50%">
+     <p><span>Oder Form Number:</span> <input type="text" name="order_no"  /></p>
+	</div>
 	</td>
 	<td>
-	
-	 <b id="notification">Bed Capacity:</b><input type="text" class="input_text" name="bed_capacity"  />
-	 
+	<div class="form_settings" style="width: 100%">
+	  <p><span>Bed Capacity:</span><input type="text" name="bed_capacity"  />	 </p>
+	  	</div>   
 	  	</td>	
 	  	<td>
-	
-	 <b id="notification">Number of Patients:</b><input type="text" class="input_text" name="workload" /></p>
-	  
+	 <div class="form_settings" style="width: 100%">
+	 <p><span>Number of Patients:</span><input type="text" name="workload" /></p>
+	   </div>
 	   </td>
 	   </tr>
 	</table>
@@ -539,10 +533,9 @@ function update_transaction(baseUrl,data_array){
 					    <th><b>Losses</b></th>
 					    <th><b>Closing Stock</b></th>
 					    <th><b>No days out of stock</b></th>
-					    <th><b>Suggested Order Quantity</b></th>
 					    <th><b>Order Quantity</b></th>
 					    <th><b>Actual Units</b></th>
-					    <th><b>Order Cost (Ksh)&nbsp;Year 2012/2013</b></th>	
+					    <th><b>Order cost(Ksh)</b></th>	
 					   <th><b>Comment(if any)</b></th>				    
 					</tr>
 					</thead>
@@ -554,32 +547,27 @@ function update_transaction(baseUrl,data_array){
 								for($i=0;$i<$j;$i++){?>
 						<tr>
 							<td><?php echo $facility_order[$i]['category_name'];?></td>
-							<?php echo form_hidden('drugCode['.$count.']', $facility_order[$i]['drug_code']);
-							      echo form_hidden('kemsaCode['.$count.']', $facility_order[$i]['kemsa_code']);
-							      echo form_hidden('drugName['.$count.']', $facility_order[$i]['drug_name']);
-							      echo form_hidden('price['.$count.']'  ,$facility_order[$i]['unit_cost']);
-							      echo form_hidden('unit_size['.$count.']'  ,$facility_order[$i]['unit_size']);
-								  echo form_hidden('historical['.$count.']'  ,$facility_order[$i]['historical']);
-								  echo form_hidden('closing_stock_['.$count.']'  ,$facility_order[$i]['closing_stock_']);
-							      
-							      ?>
+							<?php echo form_hidden('drugCode['.$count.']', $facility_order[$i]['drug_code']);?>
+							<?php echo form_hidden('kemsaCode['.$count.']', $facility_order[$i]['kemsa_code']);?>
+							<?php echo form_hidden('drugName['.$count.']', $facility_order[$i]['drug_name']);?>
+							<?php echo form_hidden('price['.$count.']'  ,$facility_order[$i]['unit_cost']);?>
+							<?php echo form_hidden('unit_size['.$count.']'  ,$facility_order[$i]['unit_size']);?>
 							<td><?php echo $facility_order[$i]['drug_name']?></td>
 							<td><?php echo $facility_order[$i]['drug_code'];?></td>
 							<td><?php echo $facility_order[$i]['unit_size']?> </td>
 							<td><?php echo $facility_order[$i]['unit_cost']; ?> </td>
-							<td><input readonly="readonly" class="user" type="text"<?php echo 'name="open['.$count.']"'; ?>  value="<?php echo $facility_order[$i]['opening_balance'];?>" /></td>
-							<td><input class="user" readonly="readonly" type="text"<?php echo 'name="receipts['.$count.']"'; ?>  value="<?php echo $facility_order[$i]['total_receipts'];?>" /></td>
-							<td><input  class="user" readonly="readonly" type="text"<?php echo 'name="issues['.$count.']"'; ?>  value="<?php echo $facility_order[$i]['total_issues'];?>" /></td>
-							<td><input  class="user" readonly="readonly" type="text"<?php echo 'name="adjustments['.$count.']"'; ?> value="<?php echo $facility_order[$i]['adj']?>"  /></td>
-							<td><input  class="user" readonly="readonly" type="text"<?php echo 'name="losses['.$count.']"'; ?> value="<?php echo $facility_order[$i]['losses'] ?>" /></td>
-							<td><input  class="user" readonly="readonly" type="text"<?php echo 'name="closing['.$count.']"'; ?> value="<?php echo $facility_order[$i]['closing_stock'];?>" /></td>
-							<td><input  class="user" readonly="readonly" type="text"<?php echo 'name="days['.$count.']"'; ?> value="<?php echo $facility_order[$i]['days_out_of_stock'];?>" /></td>
-							<td ><input  class="user" readonly="readonly"type="text" <?php echo 'name="suggested['.$count.']"';?> value=""/></td>
+							<td><input id="open[]" readonly="readonly" class="user" type="text" <?php echo 'name="open['.$count.']"'; ?>  value="<?php echo $facility_order[$i]['opening_balance'];?>" /></td>
+							<td><input id="receipts[]" class="user" readonly="readonly" type="text" <?php echo 'name="receipts['.$count.']"'; ?>  value="<?php echo $facility_order[$i]['total_receipts'];?>" /></td>
+							<td><input id="issues[]" class="user" readonly="readonly" type="text" <?php echo 'name="issues['.$count.']"'; ?>  value="<?php echo $facility_order[$i]['total_issues'];?>" /></td>
+							<td><input id="adjustments[]" class="user" readonly="readonly" type="text"  <?php echo 'name="adjustments['.$count.']"'; ?> value="<?php echo $facility_order[$i]['adj']?>"  /></td>
+							<td><input id="losses[]" class="user" readonly="readonly" type="text"  <?php echo 'name="losses['.$count.']"'; ?> value="<?php echo $facility_order[$i]['losses'] ?>" /></td>
+							<td><input id="closing[]" class="user" readonly="readonly" type="text"  <?php echo 'name="closing['.$count.']"'; ?> value="<?php echo $facility_order[$i]['closing_stock'];?>" /></td>
+							<td><input id="days[]" class="user" readonly="readonly" type="text"  <?php echo 'name="days['.$count.']"'; ?> value="<?php echo $facility_order[$i]['days_out_of_stock'];?>" /></td>
 							<td ><input id="quantity[]" class="user2" type="text" <?php echo 'name="quantity['.$count.']"';?> value="<?php $qty=$facility_order[$i]['qty'];
 							if($qty>0){echo $qty;} else echo 0;?>" onkeyup="<?php echo 'checker('.$count.','.$thr.')';?>"/></td>
-							<td><input class="user" readonly="readonly" style="border: none" type="text" <?php echo 'name="actual_quantity['.$count.']"';?> value="0"/></td>
-							<td><?php echo '<input style="border: none"  type="text" class="user" name="cost['.$count.']" value="0" readonly="yes"   />';?></td>
-							<td ><input type="text" class="input_text"  <?php echo 'name="comment['.$count.']"' ?> onkeyup="<?php echo 'update_comment('.$count.')';?>" value="N/A" /></td>
+							<td><input class="user" style="border: none" type="text" id="actual_quantity[]" <?php echo 'name="actual_quantity['.$count.']"';?> value="0" readonly="yes" /></td>
+							<td><?php echo '<input style="border: none" id="cost[]" type="text" class="user" name="cost['.$count.']" value="0" readonly="yes"   />';?></td>
+							<td ><input type="text" id="comment[]" <?php echo 'name="comment['.$count.']"' ?> onkeyup="<?php echo 'update_comment('.$count.')';?>" value="N/A" /></td>
 			       
 						</tr>
 						

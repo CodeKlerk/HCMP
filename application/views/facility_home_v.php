@@ -66,7 +66,7 @@ $(document).ready(function(){
 		<div class="message information">			
 			<h2>Dispatched Orders</h2>			
 			<p>
-			<a class="link" href="<?php echo site_url("Order_Management/index/");?>"><?php echo$dispatched;  ?> Order(s) has been Dispatched from KEMSA stores.</a>
+			<a class="link" href="<?php echo site_url("Order_Management/index/");?>"><?php echo$dispatched;  ?> Order(s)</a> has been Dispatched from KEMSA stores.
 			</p>
 		</div>
 		<?php endif;?>
@@ -84,7 +84,7 @@ $(document).ready(function(){
 			<h2>Pending Dispatch</h2>
 			<p>
 				<a class="link" href="<?php 
-				 echo site_url("Order_Management/index/");?>"><?php echo $pending_orders_d;?> Order(s) pending dispatch from KEMSA</a>
+				 echo site_url("Order_Management/index/");?>"><?php echo $pending_orders_d;?> Order(s)</a>pending dispatch from KEMSA
 			</p>
 		</div>
 		<?php endif;?>
@@ -103,28 +103,19 @@ $(document).ready(function(){
                        <a href="<?php echo site_url('stock_expiry_management/default_expiries_notification');?>" <a class="link"><?php echo $exp_count['balance']; ?> Product(s) Expiring in the next 6 months</a>
                        </p>
                </div>
-               <?php endif;
-               
-          if (count($historical_stock)<163){?> 
-		<div class="message warning">
-			<h2>Incomplete Historical Stock</h2>
-			<p>
-				<a href="<?php 
-				echo site_url('stock_management/historical_stock_take');?>" <a class="link"> Please provide your historical stock information </a>
-			</p>
-		</div>
-		<?php }?>
-               
+               <?php endif;?>
 		</fieldset>
 		<fieldset>
 		<legend>Actions</legend>
 	     <?php
 	   //  $stock=1;
-	      if(count($stock)>0 && count($historical_stock)>0){?>
+	      if(count($stock)>0){
+	     	 if($access_level=="facility"): ?>
 	     	 
 		<!--<div class="activity update">
 	    <a href="<?php echo site_url('service_point/index');?>"><h2>Add Service Points</h2>	</a>
-		</div>-->
+		</div>
+		<?php endif; ?>-->
 		<!--<div class="activity update">
 	    <a href="<?php echo site_url('stock_management/facility_first_run');?>"><h2>Add Initial Stock Level</h2>	</a>
 		</div>-->
@@ -135,7 +126,7 @@ $(document).ready(function(){
 		<a href="<?php echo site_url('order_management/new_order');?>">	<h2>Order Commodities</h2></a>
 		</div>
 		<div class="activity update_order">
-		<a href="<?php echo site_url('order_management/#tabs-2');?>"><h2>Update Order Delivery from KEMSA</h2>	</a>
+		<a href="<?php echo site_url('order_management');?>"><h2>Update Order Delivery from KEMSA</h2>	</a>
 		</div>
 		<?php if($access_level=="facility"): ?>
 		<div class="activity users">
@@ -158,12 +149,9 @@ $(document).ready(function(){
 		<!--<div class="activity settings">
 	    <a href="<?php echo site_url('report_management/facility_settings');?>"><h2>Settings</h2>	</a>
 		</div>-->
-		    <?php } else if (count($stock)==0 && count($historical_stock)>0){?> 
+	    <?php } else {?> 
 	    <div class="activity update">
-	    <a href="<?php echo site_url('stock_management/facility_first_run');?>"><h2>Update Stock Level</h2>	</a>
-		</div>
-		<div class="activity update">
-	    <a href="<?php echo site_url('stock_management/historical_stock_take');?>"><h2>Provide Historical Stock Data</h2></a>
+	    <a href="<?php echo site_url('stock_management/facility_first_run');?>"><h2>Add Initial Stock Level</h2>	</a>
 		</div>
 		<div class="message warning">
 			<h2>No Stock</h2>
@@ -172,25 +160,13 @@ $(document).ready(function(){
 				echo site_url('stock_management/facility_first_run');?>" <a class="link"> Please update your stock details </a>
 			</p>
 		</div>
-		<?php } else if (count($historical_stock)==0){?> 
-	
-		<div class="activity update">
-	    <a href="<?php echo site_url('stock_management/historical_stock_take');?>"><h2>Provide Historical Stock Data</h2></a>
-		</div>
-		<div class="message warning">
-			<h2>No Historical Stock</h2>
-			<p>
-				<a href="<?php 
-				echo site_url('stock_management/historical_stock_take');?>" <a class="link"> Please provide your historical stock information </a>
-			</p>
-		</div>
 		<?php }?>
 		
 		</fieldset>
 	</div>
 	<div id="right_content">
 	
-		<div id="stock_status" style="overflow: scroll; height: 80em; min-height:100%; margin: 0;"></div>
+		<div id="stock_status" style="overflow: scroll; height: 60em; min-height:100%; margin: 0;"></div>
 	</div>
 	
 </div>

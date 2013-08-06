@@ -244,7 +244,7 @@ else if( $in[$i]['category_name']!=$in[$i-1]['category_name']){
             $this->mpdf->WriteHTML($html_title);
             $this->mpdf->defaultheaderline = 1;  
             $this->mpdf->simpleTables = true;
-            $this->mpdf->WriteHTML($html_body);
+            $this->mpdf->WriteHTML( $html_body);
             $this->mpdf->AddPage();
 			$this->mpdf->WriteHTML( $html_body1);
 			$report_name='facility_order_no'.$code;
@@ -291,7 +291,7 @@ else if( $in[$i]['category_name']!=$in[$i-1]['category_name']){
   }*/
   
   
-	$this->send_email($email_address,$message,$subject,$attach_file=NULL,$bcc_email=NULL);
+	
   
    $msg="Order No $code has been approved";
   $this->district_orders($msg);

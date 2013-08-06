@@ -1,10 +1,7 @@
 <script type="text/javascript" language="javascript" src="<?php echo base_url(); ?>Scripts/jquery.dataTables.js"></script>
-		<script type="text/javascript" charset="utf-8" src="<?php echo base_url(); ?>DataTables-1.9.3/extras/TableTools-2.0.0/media/js/ZeroClipboard.js"></script>
-		<script type="text/javascript" charset="utf-8" src="<?php echo base_url(); ?>DataTables-1.9.3/extras/TableTools-2.0.0/media/js/TableTools.js"></script>
 		<style type="text/css" title="currentStyle">
 			
 			@import "<?php echo base_url(); ?>DataTables-1.9.3 /media/css/jquery.dataTables.css";
-			@import "<?php echo base_url(); ?>DataTables-1.9.3/extras/TableTools-2.0.0/media/css/TableTools.css";
 		</style>
 		<style>
 
@@ -30,11 +27,7 @@ $earliest_year = $current_year - 10;
 				/* Build the DataTable with third column using our custom sort functions */
 				$('#example').dataTable( {
 					"bJQueryUI": true,
-					"iDisplayLength" : 50,
-					"sDom": 'T<"clear">lfrtip',
-					"oTableTools": {
-			"sSwfPath": "<?php echo base_url(); ?>DataTables-1.9.3/extras/TableTools-2.0.0/media/swf/copy_cvs_xls_pdf.swf"
-		},
+					
 					"aaSorting": [ [0,'asc'], [1,'asc'] ],
 					"aoColumnDefs": [
 						{ "sType": 'string-case', "aTargets": [ 2 ] }

@@ -127,11 +127,11 @@ background:url('<?php echo base_url()?>
 	}
 
 </style>
-<div class="leftpanel"><h3 class="accordion" id="section1">Commodity Expiries<span></span><h3>
+<div class="leftpanel"><h3 class="accordion" id="section1">Expiries<span></span><h3>
 <div class="container">
     <div class="content">
       
-    <h3> <a href="#"  id="expired">View Expired Commodities</a></h3> 
+    <h3> <a href="#"  id="expired">View Expiries</a></h3> 
     </n>
      <h3> <a href="#" id="potentialexpiries">View Potential Expiries</a></h3> 
       

@@ -224,20 +224,6 @@ AND d.county=c.id");
 return $q;
 
 }
-public static function get_drawingR_county_by_district(){
-	
-		$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
-SELECT * 
-FROM (SELECT  `facility_code` ,  `facility_name` , facilities.`district` , SUM(  `drawing_rights` ) AS drawingR, districts.district AS districtName
-FROM facilities, districts
-WHERE facilities.district = districts.id
-AND districts.county =1
-GROUP BY facilities.`district`
-) AS temp
-WHERE temp.drawingR !=  'NULL'
-");
-return $q;
-}
 
 
 

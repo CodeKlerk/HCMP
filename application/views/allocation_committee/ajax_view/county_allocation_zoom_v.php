@@ -32,10 +32,17 @@
 		chart.setDataURL(url);
 		chart.render("chart3");
 		
-		var chart = new FusionCharts("<?php echo base_url()."scripts/FusionWidgets/Charts/HLinearGauge.swf"?>", "ChartId", "100%", "40%", "0", "0");
+		var chart = new FusionCharts("<?php echo base_url()."scripts/FusionWidgets/Charts/HLinearGauge.swf"?>", "ChartId", "100%", "15%", "0", "0");
 		var url = '<?php echo base_url()."rtk_management/get_allocation_rate_national_hlineargauge/$doghnut/$county_id"?>'; 
 		chart.setDataURL(url);
 		chart.render("chart4");
+
+		var chart = new FusionCharts("<?php echo base_url()."scripts/FusionCharts/Bar2D.swf"?>","ChartId", "100%", "100%", "0", "1" );
+		var url = '<?php echo base_url()."rtk_management/rapid_kit_county_allocation/$county_id"?>'; 
+		chart.setDataURL(url);
+		chart.render("chart5");
+
+	 
 
 				/* Build the DataTable with third column using our custom sort functions */
 				$('#example').dataTable( {
@@ -71,7 +78,8 @@
 	</div>
 	<div id="notification">Allocation Rate: <?php echo $county_name; ?></div>
 	<div class="chart_content" style="width:100%; height: 20%;">
-	<div class="multiple_chart_content" style="width:50%;" id="chart4"></div>
+	<div class="multiple_chart_content" style="width:50%; height:70%;" id="chart4"></div>
+	<div class="multiple_chart_content" style="width:50%;" id="chart5"></div>
 	
 	</div>
 <?php $attributes = array( 'name' => 'myform', 'id'=>'myform');

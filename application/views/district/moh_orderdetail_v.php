@@ -2,12 +2,6 @@
 		<style type="text/css" title="currentStyle">
 			
 			@import "<?php echo base_url(); ?>DataTables-1.9.3 /media2/css/jquery.dataTables.css";
-				.user2{
-	width:70px;
-	background-color:#FCEFA1;
-	
-	text-align: center;
-	}
 		</style>	
 <script>
 /******************************************data-table set up*********************/
@@ -44,7 +38,7 @@
 });
 </script>
 
-<div id="notification">Rationalized Quantities = (Monthly Consumption * 4) - Closing Stock</div>
+<div id="notification">Quantified Quantity = (Consumption * 4/) - Closing Stock</div>
 <caption><p style="letter-spacing: 1px;font-weight: bold;text-shadow: 0 1px rgba(0, 0, 0, 0.1);font-size: 14px; " >
 	Facility Order No <?php echo $this->uri->segment(3);?>| Facility MFl code <?php echo $this->uri->segment(4);?></p></caption>
 <?php $attributes = array( 'name' => 'myform', 'id'=>'myform');
@@ -67,11 +61,10 @@
 					    <th><b>Losses</b></th>
 					    <th><b>Closing Stock</b></th>
 					    <th><b>No days out of stock</b></th>
-					    <th><b>Rationalized Quantities</b></th>
 					    <th><b>Order Quantity</b></th>
 					    <th><b>Order cost(Ksh)</b></th>	
 					   <th><b>Comment(if any)</b></th>
-					   
+					   <th><b>Quantified Quantities</b></th>
 	</tr>
 	</thead>
 	<tbody>
@@ -103,10 +96,7 @@
 			echo "<td>$cat_name</td>";
 		
 		$cost=$drug->Unit_Cost; $t_cost=$cost*$ordered;
-   echo '<td>'.$drug->Drug_Name.'</td>
-         <td>'.$drug->Kemsa_Code.'</td>
-		 <td>'.$drug->Unit_Size.'</td>
-		 <td>'.$drug->Unit_Cost.'</td>';?>
+		 echo '<td>'.$drug->Drug_Name.'</td><td>'.$drug->Kemsa_Code.'</td><td>'.$drug->Unit_Size.'</td><td>'.$drug->Unit_Cost.'</td>';?>
 		<td ><?php echo $rows->o_balance;?></td>
 		<td><?php echo $rows->t_receipts;?></td>
 		<td><?php echo $t_issues;?></td>
@@ -114,11 +104,10 @@
 		<td><?php echo $rows->losses;?></td>
 		<td><?php echo $c_stock;?></td>
 		<td><?php echo $rows->days;?></td>
-		<td><input class="user2" type="text" value="<?php echo  ceil($value);?>" <?php echo ' name="adj[]"'?> /></td>	
-		<td><input class="user2" type="text" value="<?php echo $ordered;?>" <?php echo 'name="order_value[]"';?>/></td>
-		<td><input class="user2" type="text" value="<?php echo  ceil($t_cost);;?>" <?php echo 'name="order_total[]"';?>/></td>
+		<td><?php echo $ordered;?></td>
+		<td><?php echo  ceil($t_cost);?></td>
 		<td><?php echo $rows->comment;?></td>
-			
+		<td><input type="text" value="<?php echo  ceil($value);?>" <?php echo ' name="adj[]"'?> /></td>		
 	</tr> 
 	<?php
 	$count++;	}

@@ -1,9 +1,9 @@
 <script type="text/javascript">
 jQuery(document).ready(function() {
-		var chart = new FusionCharts("<?php echo base_url()."scripts/FusionCharts/MSLine.swf"?>", "ChartId5", "85%", "75%", "0", "0");
+		var chart = new FusionCharts("<?php echo base_url()."scripts/FusionCharts/MSLine.swf"?>", "ChartId", "85%", "85%", "0", "0");
 		var url = '<?php echo base_url()."report_management/consumption_trends"?>'; 
 		chart.setDataURL(url);
-		chart.render("chart3");
+		chart.render("chart");
 		
 				$( "#filter-b" )
 			.button()
@@ -30,8 +30,8 @@ jQuery(document).ready(function() {
 	<input style="margin-left: 10px" type="button" id="filter-b" value="filter" />
 	</fieldset>
 	</div>
-<div id="chart-area" style="width: 100%; height: 100%; margin-left:5em;">
-	<div id="chart3" style="width: 100%; height: 100%;">
+<div id="chart-area" style="width: 100%; height: 100%">
+	<div id="chart" >
 		
 	</div>
 </div>

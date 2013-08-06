@@ -59,6 +59,30 @@ class Lab_Commodity_Details extends Doctrine_Record {
 		ORDER BY commodity_id ASC");
 		  return $query;
   	}
+  		//get the order details associated with a given order number
+  public static function update_lab_commodity_details($data_array){
+  	// UPDATE `lab_commodity_details` SET `commodity_id`=[value-5],`unit_of_issue`=[value-6],`beginning_bal`=[value-7],`q_received`=[value-8],`q_used`=[value-9],`no_of_tests_done`=[value-10],`losses`=[value-11],`positive_adj`=[value-12],`negative_adj`=[value-13],`closing_stock`=[value-14],`q_expiring`=[value-15],`days_out_of_stock`=[value-16],`q_requested`=[value-17],`created_at`=[value-18] WHERE 1
+$q = Doctrine_Query::create()
+     ->update('lab_commodity_details l')
+     ->set('l.unit_of_issue', 'Another value')
+     ->set('l.beginning_bal', 'Another value')
+     ->set('l.q_received', 'Another value')
+     ->set('l.q_used', 'Another value')
+     ->set('l.no_of_tests_done', 'Another value')
+     ->set('l.losses', 'Another value')
+     ->set('l.positive_adj', 'Another value')
+     ->set('l.negative_adj', 'Another value')
+     ->set('l.closing_stock', 'Another value')
+     ->set('l.q_expiring', 'Another value')
+     ->set('l.days_out_of_stock', 'Another value')
+     ->set('l.q_requested', 'Another value')
+     ->where('l.order_id=?',1)
+     ->andWhere('l.facility_code=?',1)
+     ->andWhere('l.commodity_id=?',1)
+     ->execute();
 
+  	// UPDATE `lab_commodity_orders` SET `vct`=[value-5],`pitc`=[value-6],`pmtct`=[value-7],`b_screening`=[value-8],`other`=[value-9],`specification`=[value-10],`rdt_under_tests`=[value-11],`rdt_under_pos`=[value-12],`rdt_btwn_tests`=[value-13],`rdt_btwn_pos`=[value-14],`rdt_over_tests`=[value-15],`rdt_over_pos`=[value-16],`micro_under_tests`=[value-17],`micro_under_pos`=[value-18],`micro_btwn_tests`=[value-19],`micro_btwn_pos`=[value-20],`micro_over_tests`=[value-21],`micro_over_pos`=[value-22],`beg_date`=[value-23],`end_date`=[value-24],`explanation`=[value-25],`moh_642`=[value-26],`moh_643`=[value-27],`compiled_by`=[value-28],`created_at`=[value-29] WHERE 1
+
+}
 }
 	?>

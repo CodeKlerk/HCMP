@@ -136,15 +136,9 @@ $( "#dialog1" ).dialog({
 <?php endif;  ?>
 <?php if(isset($msg)): ?>
 <div id="notification">    
-<div style="float: left"><?php echo $msg." .";?></div>
+<div style="float: left"><?php echo $msg;?></div>
 
-<div style="float: left; margin-left: 1em"><?php 
-
-$fechaa = new DateTime($max_date[0]['MAX']);
-		$today=new DateTime();
-        $datea= $fechaa->format(' d  M Y h:i:s A');
-
-echo "The Last Stock Update was as at : $datea";?></div>
+<div style="float: left; margin-left: 1em"><?php echo "Balances are as of : ".$max_date[0]['MAX'];?></div>
 </div>
 <?php endif;  unset($msg);?>
     <?php $attributes = array( 'name' => 'myform', 'id'=>'myform');
@@ -155,7 +149,7 @@ echo "The Last Stock Update was as at : $datea";?></div>
             <div style="display: table; padding: 1em">
   			<div style="display: table-row;">
     			<div style="display: table-cell;">
-      				<label>Enable auto calculate Closing Stock ? </label>
+      				<label>Enable auto calculate ( Closing Stock ) ? </label>
             		<label>Yes</label><input type="radio" name="group"  value="YES" checked="checked"/><label>No</label><input type="radio" name="group"  value="NO"/>
     				</div>
   				</div>

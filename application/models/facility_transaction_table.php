@@ -39,7 +39,13 @@ class Facility_Transaction_Table extends Doctrine_Record {
     }
 	 public static function get_commodities_for_ordering($facility_code){
 	 	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
-->fetchAll("SELECT * from `facility_order_details` where facility_code= '$facility_code'");
+		->fetchAll("SELECT a.category_name, b.drug_name, b.unit_size, b.unit_cost, c.kemsa_code, b.kemsa_code as drug_code, c.opening_balance, c.total_receipts, c.total_issues, c.closing_stock, c.days_out_of_stock, c.cycle_date, c.adj, c.losses, c.status, c.qty, c.comment, c.date_t
+FROM drug_category a, drug b, facility_transaction_table c
+WHERE b.id = c.kemsa_code
+AND c.facility_code =".$facility_code."
+AND c.availability = '1'
+AND a.id = b.drug_category
+ORDER BY a.category_name DESC");
         return $inserttransaction ;
 		
 	 }

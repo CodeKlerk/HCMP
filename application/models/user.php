@@ -124,11 +124,5 @@ public static function get_dpp_details($distirct){
 		return $level->toArray();
 }
 
-public static function check_user_exist($email){
-	$query = Doctrine_Query::create() -> select("*") -> from("user")->where("`email` = '$email'");
-		$level = $query -> execute();
-		return count($level);
-}
-
 
 }

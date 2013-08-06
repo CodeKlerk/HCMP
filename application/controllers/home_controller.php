@@ -38,7 +38,7 @@ class Home_Controller extends MY_Controller {
 /*****************************************Notifications********************************************/		    
 		    $data['diff']=$difference;			
 			$data['exp']=Facility_Stock::get_exp_count($date,$facility_c);
-		    $data['historical_stock'] = Historical_Stock::count_historical_stock($facility_c);
+		
 			$data['exp_count']=Facility_Stock::get_exp_count($date,$facility_c);
 			$data['stock']=Facility_Stock::count_facility_stock_first($facility_c);
 		    $data['pending_orders'] = Ordertbl::get_pending_count($facility_c);
@@ -94,14 +94,11 @@ else if($access_level == "dpp"){
           }
 
       $table_body .="</td>";
-
-
-		
 			
 		}
 
 	$data['table_body']=$table_body;
-	$data['content_view'] = "rtk/dpp/dpp_home";
+	$data['content_view'] = "rtk/dpp/dpp_home_with_table";
 	$data['banner_text'] = "Home";
 	$data['link'] = "home";
 		
@@ -134,10 +131,10 @@ else if($access_level == "allocation_committee"){
 	  $total_facilities=$total_facilities+$total_facilities_in_county;
 	  $total_allocated= $total_allocated+ $total_facilities_allocated_in_county;
 	   
-	   $table_data .="<tr><td><a href=".site_url()."rtk_management/allocation_county_detail_zoom/$countyid> $countyname</a> $total_facilities_in_county | $total_facilities_allocated_in_county</td></tr>";
+	   $table_data .="<tr><td><a href=".site_url()."rtk_management/allocation_county_detail_zoom/$countyid> $countyname</a> </td><td>$total_facilities_in_county | $total_facilities_allocated_in_county</td></tr>";
 	   
 	   }
-    $table_data .="<tr><td>TOTAL  $total_facilities | $total_allocated</td><tr>";
+    $table_data .="<tr><td>TOTAL </td><td> $total_facilities | $total_allocated</td><tr>";
    
 	$data['table_data']=$table_data;
 	$data['pop_up']=$pop_up;

@@ -1,3 +1,5 @@
+
+<script type='text/javascript' src='<?php echo base_url(); ?>Scripts/jquery.easy-confirm-dialog.js'></script>
 <style>
 table.data-table1 {
 	border: 1px solid #000033;
@@ -70,9 +72,11 @@ padding: 5px;
 
 	
 </style>
+
 	<div class="whole_report">
 <div>
 	<img src="<?php echo base_url().'Images/coat_of_arms.png'?>" style="position:absolute;  width:90px; width:90px; top:0px; left:0px; margin-bottom:-100px;margin-right:-100px;"></img>
+       
        <span style="margin-left:100px;  font-family: arial,helvetica,clean,sans-serif;display: block; font-weight: bold; font-size: 15px;">
      Ministry of Health</span><br>
        <span style=" font-size: 12px;  margin-left:100px;">Health Commodities Management Platform</span><span style="text-align:center;" >

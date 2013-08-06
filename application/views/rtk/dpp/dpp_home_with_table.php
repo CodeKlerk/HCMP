@@ -1,3 +1,5 @@
+
+
 <script src="<?php echo base_url().'Scripts/accordion.js'?>" type="text/javascript"></script>
 <SCRIPT LANGUAGE="Javascript" SRC="<?php echo base_url();?>Scripts/FusionCharts/FusionCharts.js"></SCRIPT> 
 <script type="text/javascript" language="javascript" src="<?php echo base_url(); ?>Scripts/jquery.dataTables.js"></script>
@@ -5,39 +7,19 @@
       
       @import "<?php echo base_url(); ?>DataTables-1.9.3 /media/css/jquery.dataTables.css";
     </style>
-<script type="text/javascript">
-$(document).ready(function(){
- 
-  $( "#facilities" ).live('change',function(){
-          var data = $("#facilities").val();           
-           var data_array=data.split("|");
-           var fac_code=data_array[0];
-  // alert(fac_code);
-      
-      });
-
-$("#generate").click(function(){
-  var url = "<?php echo base_url().'rtk_management/view_report'?>";
-      //alert (url);
-          var data =$("#facilities").val();
-          var data_array=data.split("|");
-          var fac_code=data_array[0];
-          var fac_name=data_array[1];
-        $.ajax({
-          type: "POST",
-          data: {'report': $('#report').val(), 'month': $('#month').val(),'year': $('#year').val(),'facilitycode': fac_code,'facility_name': fac_name},          
-          url: url,
-          });
-    });
-
-  $.fn.slideFadeToggle = function(speed, easing, callback) {
+    <script type="text/javascript">
+    $(document).ready(function(){
+       $('#example_main').dataTable({
+          "bJQueryUI": true,
+          "bPaginate": false
+        } );
+         $.fn.slideFadeToggle = function(speed, easing, callback) {
         return this.animate({
           opacity : 'toggle',
           height : 'toggle'
         }, speed, easing, callback);
       };
-
-      $('.accordion').accordion({
+        $('.accordion').accordion({
         defaultOpen : 'section1',
         cookieName : 'nav',
         speed : 'medium',
@@ -48,67 +30,12 @@ $("#generate").click(function(){
           elem.next().slideFadeToggle(opts.speed);
         }
       });
-       $('#example_main').dataTable( {
-          "bJQueryUI": true,
-          "bPaginate": false
-        } );
+
+    });
+    </script>
 
 
-
-    var chart = new FusionCharts("<?php echo base_url()."scripts/FusionCharts/MSColumn2D.swf"?>", "ChartId", "100%", "40%", "0", "0");
-    var url = '<?php echo base_url()."rtk_management/generate_malaria_test_chart"?>'; 
-    chart.setDataURL(url);
-    chart.render("chart_1");
-
-
-    var chart = new FusionCharts("<?php echo base_url()."scripts/FusionCharts/Doughnut2D.swf"?>", "ChartId_flash", "100%", "40%", "0", "1");
-    var url = '<?php echo base_url()."rtk_management/generate_hiv_test_kits_chart"?>'; 
-    chart.setDataURL(url);
-    chart.render("chart_2");
-           
-      
-
-
-    
-$(".ajax-call").click(function(){
-var id  = $(this).attr("id"); 
-
-  if(id=="fcdrr"){
-    var url = "<?php echo base_url().'rtk_management/get_report/fcdrr' ?>";
-  }
-  if(id=="lab_commodities"){
-    var url = "<?php echo base_url().'rtk_management/get_report/lab_commodities' ?>";
-  }
-   
-  
-  
-
-  ajax_request (url);
-    
-});
-function ajax_request (url){
-  var url =url;
-  var loading_icon="<?php echo base_url().'Images/loader.gif' ?>";
-   $.ajax({
-          type: "POST",
-          url: url,
-          beforeSend: function() {
-            $("#test_a").html("");
-            
-             $("#test_a").html("<img style='margin-left:20%;' src="+loading_icon+">");
-            
-          },
-          success: function(msg) {
-          $("#test_a").html("");
-           $("#test_a").html(msg);           
-          }
-        }); 
-}
-
-
-});
-</script>
-<style>
+    <style>
 .leftpanel{
       width: 17%;
       height:auto;
@@ -286,6 +213,23 @@ code {
   </div>
 </div>
 
+
+
+
+  <h3 class="accordion" >Statistics<span></span><h3>
+<div class="container">
+  
+  <nav class="sidenav">
+  <ul>
+  
+
+  </ul>
+</nav>
+
+</div>
+
+
+
 </div>
 
 <div class="sidebar">
@@ -294,10 +238,24 @@ code {
 <nav class="sidenav">
   <ul>
     <li class="orders_minibar"><a href="<?php echo site_url('rtk_management/rtk_orders');?>">Orders</a></li>
-  <ul>
+        <li class="orders_minibar"><a href="<?php echo site_url('rtk_management/rtk_orders');?>">Pending
+    <span style="
+    font-weight: 400;
+    font-size: 1.5em;
+    color: #F3EA0B;
+    float: right;
+    background: rgb(216, 40, 40);
+    padding: 4px;
+    border-radius: 28px;
+    border: solid 1px rgb(150, 98, 98);
+">30</span>
+</a> </li>
+ 
+  </ul>
 </nav>
-        
-    </fieldset>
+
+
+     
   
 </div>
 
@@ -305,17 +263,34 @@ code {
 </div>
 
 <div class="dash_main" id = "dash_main">
-
-
-
-<div id="test_a" style="overflow: scroll; height: 51em; min-height:100%; margin: 0; width: 100%">
-  <div>
-      <div id="chart_1"   style="float:left;width: 50%; height: 100%"></div>
-      <div id="chart_2" style="float:left; width: 50%; height: 100%" ></div>
-
- </div>
+  
 
  
+    <?php $district=$this->session->userdata('district1');
+      $district_name=Districts::get_district_name($district)->toArray();
+      $d_name=$district_name[0]['district']; ?>
+      <?php if(isset($popout)){ ?><div id="dialog" title="System Message"><p><?php echo $popout;?></p></div><?php }?>
+
+   <p id="notification" >RTK Facilities in <?php echo $d_name ?> District</p>
+       
+       <div style="float:left;"><img src="<?php echo base_url().'/Images/check_mark_resize.png'?>"></img>
+        <p id="notification">A check mark indicates that that report has been submitted for that facility within the past month</p>
+      </div>
+            <table  style="margin-left: 0;" id="example_main" width="100%" >
+          <thead>
+          <tr>
+            <th><b>MFL Code</b></th>
+            <th><b>Facility Name</b></th>
+            <th><b>Owner</b></th>
+            <th ><b>Actions&nbsp;on&nbsp;RTK&nbsp;Reports&nbsp;</b></th> 
+                        
+          </tr>
+          </thead>
+          <tbody>
+    <?php echo $table_body; ?>
+              
+        </tbody>            
+        </table>
 
     </div>
     </div>

@@ -40,6 +40,175 @@ jQuery(document).ready(function() {
 				// 	$("#begin_date").datepicker("option", "minDate", selectedDate);
 				// }
 			});
+			
+	     
+
+//		 var inbal = 0;
+//		 var endbal = parseInt(inbal);
+//		 var val = 0;
+	var final=0;
+	var num_final= parseInt(final);
+
+	
+	
+	function compute_end(row){
+	var bal = $('#b_balance_'+row).val();
+	var num_bal=parseInt(bal);
+//	alert(num_bal);
+	
+	var qty_rcvd = $('#q_received_'+row).val();
+	var num_qty_rcvd=parseInt(qty_rcvd);
+//	alert(num_qty_rcvd);
+
+	var q_used = $('#q_used_'+row).val();
+	var num_q_used=parseInt(q_used);
+//	alert(num_q_used);
+
+	var tests_done = $('#tests_done_'+row).val();
+	var num_tests_done=parseInt(tests_done);
+ //	alert(num_tests_done);
+
+	var loses = $('#losses_'+row).val();
+	var num_loses=parseInt(loses);
+//	alert(num_loses);
+
+	var pos_adj = $('#pos_adj_'+row).val();
+	var num_pos_adj=parseInt(pos_adj);
+//	alert(num_pos_adj);
+
+	var neg_adj = $('#neg_adj_'+row).val();
+	var num_neg_adj=parseInt(neg_adj);
+//	alert(num_neg_adj);
+
+/*
+	num_final+=num_bal;
+	num_final+=num_qty_rcvd;
+	num_final-=num_q_used;
+	num_final-=num_tests_done;
+	num_final-=num_loses;
+	num_final+=num_pos_adj;
+	num_final-=num_neg_adj;
+
+	*/
+	num_final=num_bal+num_qty_rcvd-num_q_used-num_tests_done-num_loses+num_pos_adj-num_neg_adj;
+//alert(num_final);
+	
+//	final = final+bal+qty_rcvd+q_used-tests_done-loses+pos_adj-neg_adj;
+
+	$('#physical_count_'+row).attr("value",num_final);
+}
+ 		$('.bbal').keyup(function(){
+			row_id = $(this).closest("tr");
+			number = row_id.attr("commodity_id");
+			num = parseInt(number);
+        	compute_end(num);
+        })
+		 $('.qty_rcvd').keyup(function(){
+			row_id = $(this).closest("tr");
+			number = row_id.attr("commodity_id");
+			num = parseInt(number);
+        	compute_end(num);
+        })
+		 $('.qty_used').keyup(function(){
+			row_id = $(this).closest("tr");
+			number = row_id.attr("commodity_id");
+			num = parseInt(number);
+        	compute_end(num);
+        })
+		 $('.tests_done').keyup(function(){
+			row_id = $(this).closest("tr");
+			number = row_id.attr("commodity_id");
+			num = parseInt(number);
+        	compute_end(num);
+        })
+		 $('.loses').keyup(function(){
+			row_id = $(this).closest("tr");
+			number = row_id.attr("commodity_id");
+			num = parseInt(number);
+        	compute_end(num);
+        })
+		 $('.pos_adj').keyup(function(){
+			row_id = $(this).closest("tr");
+			number = row_id.attr("commodity_id");
+			num = parseInt(number);
+        	compute_end(num);
+        })
+		  $('.neg_adj').keyup(function(){
+			row_id = $(this).closest("tr");
+			number = row_id.attr("commodity_id");
+			num = parseInt(number);
+        	compute_end(num);
+        })
+		
+/*
+		 
+        $('.bbal').keyup(function(){
+			row_id = $(this).closest("tr");
+			number = row_id.attr("commodity_id");
+			num = parseInt(number);
+			value = $(this).val();
+        	add(value,num)
+        })
+		  $('.qty_rcvd').keyup(function(){
+			row_id = $(this).closest("tr");
+			number = row_id.attr("commodity_id");
+			num = parseInt(number);
+			value = $(this).val();
+        	add(value,num)
+        })
+		  $('.qty_used').keyup(function(){
+			row_id = $(this).closest("tr");
+			number = row_id.attr("commodity_id");
+			num = parseInt(number);
+			value = $(this).val();
+        	sub(value,num)
+        })
+		  $('.tests_done').keyup(function(){
+			row_id = $(this).closest("tr");
+			number = row_id.attr("commodity_id");
+			num = parseInt(number);
+			value = $(this).val();
+        	sub(value,num)
+        })
+		  $('.loses').keyup(function(){
+			row_id = $(this).closest("tr");
+			number = row_id.attr("commodity_id");
+			num = parseInt(number);
+			value = $(this).val();
+        	sub(value,num)
+        })
+			$('.pos_adj').keyup(function(){
+			row_id = $(this).closest("tr");
+			number = row_id.attr("commodity_id");
+			num = parseInt(number);
+			value = $(this).val();
+        	add(value,num)
+        })
+			  $('.neg_adj').keyup(function(){
+			row_id = $(this).closest("tr");
+			number = row_id.attr("commodity_id");
+			num = parseInt(number);
+			value = $(this).val();
+        	sub(value,num)
+        })
+			  */
+
+        function add (prev,value,row_id){
+        	val = $('#physical_count_'+row_id).val();
+        	endbal = parseInt(val);
+//        	alert(endbal);
+
+        	val = parseInt(value);
+        	endbal+=val;
+        	$('#physical_count_'+row_id).attr("value",endbal);			
+        }
+        function sub (prev,value,row_id){
+			val = parseInt(value);
+        	endbal-=val;
+        	$('#physical_count_'+row_id).attr("value",endbal);
+			}
+	 
+
             });
 
 
@@ -213,23 +382,23 @@ $attributes = array( 'name' => 'myform', 'id'=>'myform');
 
 						<?php
 						foreach ($lab_category->category_lab_commodities as $lab_commodities) {?>
-					<tr><input type="hidden" id="commodity_id[<?php echo $checker?>]" name="commodity_id[<?php echo $checker?>]" value="<?php echo $lab_commodities['id']; ?>" >
+					<tr commodity_id="<?php echo $checker?>"><input type="hidden" id="commodity_id_<?php echo $checker?>" name="commodity_id[<?php echo $checker?>]" value="<?php echo $lab_commodities['id']; ?>" >
 						<input type="hidden" id="facilityCode" name="facilityCode">
 						<input type="hidden" id="district" name="district" value="<?php echo $district_id; ?>">
-						<input type="hidden" id="unit_of_issue[<?php echo $checker?>]" name = "unit_of_issue[<?php echo $checker?>]" value="<?php echo $lab_commodities['unit_of_issue']; ?>">
+						<input type="hidden" id="unit_of_issue_<?php echo $checker?>" name = "unit_of_issue[<?php echo $checker?>]" value="<?php echo $lab_commodities['unit_of_issue']; ?>">
 						<td colspan = "2" style = "text-align:left"></b><?php echo $lab_commodities['commodity_name']; ?></td>
-						<td style = "color:#000; border:none; text; text-align:center"><?php echo $lab_commodities['unit_of_issue']; ?></td>
-						<td><input id="b_balance[<?php echo $checker?>]" name = "b_balance[<?php echo $checker?>]" class='user2' size="10" type="text" style = "text-align:center"/></td>
-						<td><input id="q_received[<?php echo $checker?>]" name = "q_received[<?php echo $checker?>]" class='user2' size="10" type="text" style = "text-align:center"/></td>
-						<td><input id="q_used[<?php echo $checker?>]" name = "q_used[<?php echo $checker?>]" class='user2' size="10" type="text" style = "text-align:center"/></td>
-						<td><input id="tests_done[<?php echo $checker?>]" name = "tests_done[<?php echo $checker?>]" class='user2' size="10" type="text" style = "text-align:center"/></td>
-						<td><input id="losses[<?php echo $checker?>]" name = "losses[<?php echo $checker?>]" class='user2' size="10" type="text" style = "text-align:center"/></td>
-						<td><input id="pos_adj[<?php echo $checker?>]" name = "pos_adj[<?php echo $checker?>]" class='user2' size="10" type="text" style = "text-align:center"/></td>	
-						<td><input id="neg_adj[<?php echo $checker?>]" name = "neg_adj[<?php echo $checker?>]" class='user2' size="10" type="text" style = "text-align:center"/></td>
-						<td><input id="physical_count[<?php echo $checker?>]"  name = "physical_count[<?php echo $checker?>]" class='user2' size="10" type="text" style = "text-align:center"/></td>
-						<td><input id="q_expiring[<?php echo $checker?>]" name = "q_expiring[<?php echo $checker?>]" class='user2' size="10" type="text" style = "text-align:center"/></td>
-						<td><input id="days_out_of_stock[<?php echo $checker?>]" name = "days_out_of_stock[<?php echo $checker?>]" class='user2' size="10" type="text" style = "text-align:center"/></td>	
-						<td><input id="q_requested[<?php echo $checker?>]" name = "q_requested[<?php echo $checker?>]" class='user2' size="10" type="text" style = "text-align:center"/></td>				    
+						<td style = "color:#000; border:none; text; text-align:center"><?php //echo $lab_commodities['unit_of_issue']; ?>TESTS</td>
+						<td><input id="b_balance_<?php echo $checker?>" name = "b_balance[<?php echo $checker?>]" class='bbal' size="10" type="text" value="0" style = "text-align:center"/></td>
+						<td><input id="q_received_<?php echo $checker?>" name = "q_received[<?php echo $checker?>]" class='qty_rcvd' size="10" type="text" value="0" style = "text-align:center"/></td>
+						<td><input id="q_used_<?php echo $checker?>" name = "q_used[<?php echo $checker?>]" class='qty_used' size="10" type="text" value="0" style = "text-align:center"/></td>
+						<td><input id="tests_done_<?php echo $checker?>" name = "tests_done[<?php echo $checker?>]" class='tests_done' size="10" value="0" type="text" style = "text-align:center"/></td>
+						<td><input id="losses_<?php echo $checker?>" name = "losses[<?php echo $checker?>]" class='loses' size="10" type="text" value="0" style = "text-align:center"/></td>
+						<td><input id="pos_adj_<?php echo $checker?>" name = "pos_adj[<?php echo $checker?>]" class='pos_adj' size="10" type="text" value="0" style = "text-align:center"/></td>	
+						<td><input id="neg_adj_<?php echo $checker?>" name = "neg_adj[<?php echo $checker?>]" class='neg_adj' size="10" type="text" value="0" style = "text-align:center"/></td>
+						<td><input id="physical_count_<?php echo $checker?>"  name = "physical_count[<?php echo $checker?>]" class='phys_count' value="0" size="10" type="text" style = "text-align:center"/></td>
+						<td><input id="q_expiring_<?php echo $checker?>" name = "q_expiring[<?php echo $checker?>]" class='user2' size="10" type="text" style = "text-align:center"/></td>
+						<td><input id="days_out_of_stock_<?php echo $checker?>" name = "days_out_of_stock[<?php echo $checker?>]" class='user2' size="10" type="text" style = "text-align:center"/></td>	
+						<td><input id="q_requested_<?php echo $checker?>" name = "q_requested[<?php echo $checker?>]" class='user2' size="10" type="text" style = "text-align:center"/></td>				    
 					</tr>
 					<?php $checker++;}
 					

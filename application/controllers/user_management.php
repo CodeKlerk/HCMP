@@ -25,14 +25,7 @@ public function change_password(){
 	}
 	public function logout(){
 		$data = array();
-		$u1=new Log();
-		$action='Logged Out';
-		$u1->user_id=$this -> session -> userdata('identity');
-		$u1->action=$action;
-		$u1->save();
-		
 		$this->session->sess_destroy();
-		
 		$data['title'] = "Login";
 		
 		
@@ -312,11 +305,11 @@ $user_name=$this->input->post('user_name');
 		
 		$message='Hello '.$f_name.',You have been registered. Check your email for login details HCMP';
 		$message_1='Hello '.$f_name.', You have been registered.Your username is '.$email.' and your password is '.$password.' Please reset your password after you login ';
-	    $subject="User Registration :".$f_name." ".$other_name;
+	    $name=$f_name." ".$other_name;
 	
 	
 		$this->send_sms($phone,$message);
-		$this->send_email($email,$message_1,$subject);
+		$this->send_email($email,$message_1,$name);
 
 
 
@@ -452,44 +445,6 @@ $user_name=$this->input->post('user_name');
 		$this -> load -> view("template", $data);
 	}
 
-		public function forget_pass(){
-		$this -> load -> view("forgotpassword_v");
-	}
-	public function password_recovery(){
-		
-		$email=$_POST['username'];
-		$password='123456';
-		$mycount= User::check_user_exist($email);
-		
-		$subject="Password reset";
-		$message="You requested for a password reset. Your new password is 123456. Please login and change this password.";
-		if ($mycount>0) {
-			//hash then reset password
-			$salt = '#*seCrEt!@-*%';
-			$value=( md5($salt . $password));
-			
-			$updatep = Doctrine_Manager::getInstance()->getCurrentConnection();
-			
-
-			$updatep->execute("UPDATE user SET password='$value'  WHERE username='$email'; ");
-			
-			//send mail
-			
-			
-			$response=$this->send_email($email,$message,$subject);
-			
-			
-				 $data['popup'] = "Successpopup";
-	         $this -> load -> view("login_v",$data);
-			
-			
-			//$this->send_sms($phone,$message);
-		}	
-		else{
-				$data['popup'] = "errorpopup";
-			$this -> load -> view("forgotpassword_v",$data);
-			}	
-	}
 	public function base_params($data) {
 		$this -> load -> view("template", $data);
 	}
@@ -575,15 +530,6 @@ $user_name=$this->input->post('user_name');
 		$data['result'] = User::getAll();
 		$data['counties'] = Counties::getAll();
 		$this -> load -> view("template", $data);
-	}
-	
-	public function get_user_profile(){
-		$user_id=$this -> session -> userdata('identity');
-		
-		$data['user_data']=user::getAllUser($user_id)->toArray();
-		
-		$this->load->view('facility/user_management/user_profile_v',$data);
-		
 	}
 	public function moh_active(){
 		$status=1;		

@@ -1,8 +1,8 @@
 <?php
 if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
-include_once('auto_sms.php');
-class Report_Management extends auto_sms {
+
+class Report_Management extends MY_Controller {
 	function __construct() {
 		parent::__construct();
 		$this->load->helper('url');
@@ -358,7 +358,7 @@ $unitCost = 0.00;
 		$unitCost = 0.01;
 		break;
 	}
-    $dataElement = $query[$got]['drug_name'];
+$dataElement = $query[$got]['drug_name'];
 	$bBalance = $query[$got]['opening_balance']*$unitCost;
 	$qReceived = $query[$got]['total_receipts']*$unitCost;
 	$qDispensed = $query[$got]['total_issues']*$unitCost;
@@ -1440,37 +1440,13 @@ function moh_category_consumption_report(){
      $this -> load -> view("moh/ajax_reports/consumption_category",$data);   }
 		
 }
-public function generate_costofexpiries_chart($option=NULL,$location_id=NULL){
-	 $district=$this -> session -> userdata('district');
-	 $year=date("Y");
-	 
-		 	switch ($option) {
-				 case 'county':
-	$county_id=districts::get_county_id($district);
-					 
-	 $commodity_array=Facility_Stock::get_county_cost_of_exipries($county_id[0]['county']);	
-	 
-	
-	$county_name=counties::get_county_name($county_id[0]['county']);
-	$title=$county_name[0]["county"]." County";	
-	
+public function generate_costofexpiries_chart(){
+		 $commodity_array=Facility_Stock::get_district_cost_of_exipries(1);	
+		 $detail=$commodity_array;
 		
-     $detail=$commodity_array;		 
-					 break;
-				 
-				 default:
-		
-		 $commodity_array=Facility_Stock::get_district_cost_of_exipries($district);	
-		 $detail=$commodity_array;	 
-					 break;
-			 }
-		 
-	
-	   
-		
-	    $strXML = "<chart formatNumberScale='0'
-	    lineColor='000000' lineAlpha='40' showValues='1' rotateValues='1' valuePosition='auto'
-	     palette='1' caption='Monthly Cost of Expired Commodities' subcaption='For the year $year' xAxisName='Months' yAxisName='Cost of Commodities (KES)' yAxisMinValue='15000' showValues='0'  useRoundEdges='1' alternateHGridAlpha='20' divLineAlpha='50' canvasBorderColor='666666' canvasBorderAlpha='40' baseFontColor='666666' lineColor='AFD8F8' chartRightMargin = '0' showBorder='0' bgColor='FFFFFF'>";
+	    $strXML = "<chart
+	    lineColor='FF5904' lineAlpha='85' showValues='1' rotateValues='1' valuePosition='auto'
+	     palette='1' caption='Monthly Cost of Expired Commodities' subcaption='For the year 2013' xAxisName='Months' yAxisName='Cost of Commodities (KES)' yAxisMinValue='15000' showValues='0'  useRoundEdges='1' alternateHGridAlpha='20' divLineAlpha='50' canvasBorderColor='666666' canvasBorderAlpha='40' baseFontColor='666666' lineColor='AFD8F8' chartRightMargin = '60' showBorder='0' bgColor='FFFFFF'>";
 
 	    for($i=0;$i<12;$i++){
 
@@ -1673,60 +1649,30 @@ public function get_stock_status($option=NULL,$facility_code=NULL){
 	$chart =NULL;
 	$title=NULL;
 	$district=$this -> session -> userdata('district');
-	$district_name=districts::get_district_name($district)->toArray();
-
-
-	
+	$district_name=districts::get_district_name($district);
 	if($option==NULL){
-
-	    $title=$district_name[0]["district"]." District";
+		
+		
+	    $title="".$district_name["district"]." District";
         $commodity_array=facility_stock::get_district_stock_level($district);
 		
 	}
 	elseif($option=="ajax-request_facility") {
-		
 		$district_name=facilities::get_facility_name_($facility_code);
 	    $title=$district_name["facility_name"];
-		
         $commodity_array=facility_stock::get_facility_stock_level($facility_code);
 		
-
-		
 	}
-	
-	
 	elseif($option=="ajax-request_drug") {
-		 $title="".$district_name[0]["district"]." District";
+		 $title="".$district_name["district"]." District";
         $commodity_array=facility_stock::get_district_drug_stock_level($district,$facility_code);
-			
-		}
 		
-	elseif($option=="ajax-request_county") {
-	$county_id=districts::get_county_id($district);
-	$county_name=counties::get_county_name($county_id[0]['county']);
-	$title=$county_name[0]["county"]." County";
-        switch ($facility_code) {
-			   case 'r_h':
-			 $commodity_array=facility_stock::get_county_drug_stock_level(1,8);	
-				break;
-				case 'malaria':
-			 $commodity_array=facility_stock::get_county_drug_stock_level(1,1);	
-				break;
-
-			default:
-				 $commodity_array=facility_stock::get_county_drug_stock_level(1);
-				break;
-		}
-        
-		
-
 	}
- 
 
 
 
 
-$chart .="<chart palette='2' chartLeftMargin='0' useEllipsesWhenOverflow='1' plotSpacePercent='100' yAxisNamePadding='0'yAxisValuesPadding='0' bgColor='FFFFFF' showBorder='0' caption='Commodity Stock Level :$title' shownames='1' showvalues='1'   showSum='1' decimals='0' useRoundEdges='1'>";
+$chart .="<chart palette='2' bgColor='FFFFFF' showBorder='0' caption='Commodity Stock Level :$title' shownames='1' showvalues='1'   showSum='1' decimals='0' useRoundEdges='1'>";
 foreach($commodity_array as $commodity_detail){
 $chart .="<set label='".preg_replace("/[^A-Za-z0-9 ]/", "", $commodity_detail['drug_name'])."' value='$commodity_detail[total]' />";
 }
@@ -1745,70 +1691,6 @@ echo $chart;
 //////
 public function get_stock_status_ajax($option=NULL,$facility_code=NULL){
 	$district=$this -> session -> userdata('district1');
-	
-	
-	$width="100%";
-    $height="100%";
-	
-	if($option==NULL){
-
-        $commodity_array=facility_stock::get_district_stock_level($district);
-		
-	}
-	elseif($option=="ajax-request_facility") {
-		
-		$district_name=facilities::get_facility_name_($facility_code);
-	    $title=$district_name["facility_name"];		
-        $commodity_array=facility_stock::get_facility_stock_level($facility_code);
-
-	}
-	
-	
-	elseif($option=="ajax-request_county") {
-		
-		switch ($facility_code) {
-			   case 'r_h':
-			 $commodity_array=facility_stock::get_county_drug_stock_level(1,8);	
-				break;
-				case 'malaria':
-			 $commodity_array=facility_stock::get_county_drug_stock_level(1,1);	
-				break;
-
-			default:
-				 $commodity_array=facility_stock::get_county_drug_stock_level(1);
-				break;
-		}
-		
-       
-        
-		
-
-	}
-	
-	elseif($option=="ajax-request_drug") {
-		
-        $commodity_array=facility_stock::get_district_drug_stock_level($district,$facility_code);
-
-	}
-	
-	if(count($commodity_array)<20){
-		$width="100%";
-        $height="70%";	
-		}
-		
-		if(count($commodity_array)>20 && count($commodity_array)<50){
-		$width="100%";
-        $height="100%";		
-		}
-		if(count($commodity_array)>50){
-		$width="100%";
-        $height="200%";		
-		}
- 
- $data['width']=$width;
- $data['height']=$height;
-	
-	
 	$data['facilities']=Facilities::getFacilities($district);
 	$data['option']=$option;
 	$data['facility_code']=$facility_code;
@@ -1853,24 +1735,9 @@ public function get_consumption_trends_ajax(){
 	$this->load->view("district/ajax_view/consumption_trends_v", $data);
 }
 
-public function get_costofexpiries_chart_ajax($option=NULL,$location_id=NULL){
-	
-     switch ($option) {
-		case 'county':
-		
-		$county="true";
-		
-	   $data['county']='county';
-	  
-		break;
-		
-		default:
+public function get_costofexpiries_chart_ajax(){
 	$district=$this -> session -> userdata('district1');
-	$data['facilities']=Facilities::getFacilities($district);	
-			break;
-	}
-
-	
+	$data['facilities']=Facilities::getFacilities($district);
 	$this->load->view("district/ajax_view/costofexpiries_v",$data);
 }
 public function get_costoforders_chart_ajax(){
@@ -1893,7 +1760,7 @@ public function facility_settings(){
 		$this -> load -> view("template", $data);
 }	
 
-	public function get_district_facility_stock_($graph_type,$facility_code=NULL){
+	public function get_district_facility_stock_($graph_type,$facility_code){
 		
 		switch ($graph_type) {
 			case 'bar2d_facility':
@@ -1901,9 +1768,6 @@ public function facility_settings(){
 			break;
 			case 'bar2d_drug':
 				 $this->get_stock_status_ajax($option="ajax-request_drug",$facility_code);
-			break;
-			case 'bar2d_county':
-				 $this->get_stock_status_ajax($option="ajax-request_county");
 			break;
 			
 			default:
@@ -2058,7 +1922,7 @@ echo $strXML;
 }
 //county charts  5
 public function cost_of_ordered_commodities_chart(){
-$strXML ="<chart formatNumberScale='0'  lineColor='000000' lineAlpha='40' caption='cost of ordered commodities' xAxisName='Month' yAxisName='Ksh' alternateVGridColor='AFD8F8' baseFontColor='114B78' toolTipBorderColor='114B78' toolTipBgColor='E7EFF6' useRoundEdges='1' showBorder='0' bgColor='FFFFFF,FFFFFF'>
+$strXML ="<chart canvasPadding='10' caption='cost of ordered commodities' xAxisName='Month' yAxisName='Ksh' alternateVGridColor='AFD8F8' baseFontColor='114B78' toolTipBorderColor='114B78' toolTipBgColor='E7EFF6' useRoundEdges='1' showBorder='0' bgColor='FFFFFF,FFFFFF'>
 <set label='Jan' value='17400' />
 <set label='Feb' value='19800' />
 <set label='Mar' value='21800' />
@@ -2083,19 +1947,65 @@ public function cummulative_fill_rate_chart(){
 <color minValue='80' maxValue='100' code='8BBA00'/>
 </colorRange>
 <dials>
-<dial value='60' rearExtension='10' baseWidth='2'/>
+<dial value='92' rearExtension='10'/>
 </dials>
-
+<trendpoints>
+<point value='50' displayValue='Cummulative Fill Rate' fontcolor='FF4400' useMarker='1' dashed='1' dashLen='2' dashGap='2' valueInside='1'/>
+</trendpoints>
+<!-- Rectangles behind the gauge  -->
+<annotations>
+<annotationGroup id='Grp1' showBelow='1'>
+<annotation/>
+</annotationGroup>
+</annotations>
+<styles>
+<definition>
+<style name='RectShadow' type='shadow' strength='3'/>
+</definition>
+<application>
+<apply toObject='Grp1' styles='RectShadow'/>
+</application>
+</styles>
 </chart>";
 
 echo $strXML;
 }
 //county charts  7
+public function district_drawing_rights_chart(){
+$strXML ="<chart palette='3' caption='Districts Drawing Rights'  numberprefix='$' xaxisName='Districts'yaxisName='Amount' useRoundEdges='1' showValues='0' legendBorderAlpha='0'>  
 
+<categories showValues='1'>
+      <category label='Dagoretti' />
+      <category label='Embakasi' />
+      <category label='Kamukunji' />
+      <category label='Kasarani' />
+      <category label='Langata' />
+      <category label='Makadara' />
+      <category label='Njiru' />
+      <category label='Starehe' />
+      <category label='Westlands' />
+           
+</categories>
+
+<dataset>
+      <set value='570' />
+      <set value='589' />
+      <set value='611' />
+      <set value='635' />
+      <set value='570' />
+      <set value='589' />
+      <set value='611' />
+      <set value='635' />
+      <set value='656' />
+         
+</dataset>
+</chart>";
+echo $strXML;
+}
 
 //county charts  8
 public function orders_placed_chart(){
-$strXML ="<chart caption=' Orders Placed By Districts' formatNumberScale='0' formatNumberScale='0' showBorder='0' bgcolor='FFFFF' color='FF4400'>
+$strXML ="<chart caption=' Orders Placed By Districts' formatNumberScale='0' color='FF4400'>
 <set label='Dagoretti' value='51852' />
 <set label='Embakasi' value='88168' />
 <set label='Kamukunji' value='73897' />
@@ -2119,7 +2029,8 @@ $strXML = "<Chart bgColor='FFFFFF' bgAlpha='0' numberSuffix='%' caption='$title'
 showGaugeLabels='0' valueAbovePointer='0' pointerOnTop='1' pointerRadius='5'>
     <colorRange> 
        
-        <color minValue='0' maxValue='33' name='Orders Placed' code='FF0000' />       
+        <color minValue='0' maxValue='33' name='Orders Placed' code='FF0000' />
+        
         <color minValue='34' maxValue='67' name='Orders Approved' code='FFFF00' /> 
          <color minValue='68' maxValue='100' name='Orders Delivered' code='00FF00' />
     </colorRange>";   
@@ -2136,222 +2047,9 @@ $strXML .="$str_xml_body
 
 echo $strXML;
 }
-
-//county charts  9
-public function lead_time_chart_county(){
-	$title='Lead Time';
-$str_xml_body="<value>1</value>";
-
-$strXML = '<Chart bgColor="FFFFFF" bgAlpha="0" showBorder="0" upperLimit="15" lowerLimit="0" gaugeRoundRadius="5" chartBottomMargin="10" ticksBelowGauge="1" showGaugeLabels="1" valueAbovePointer="1" pointerOnTop="1" pointerRadius="9" >
-
-<colorRange>
-<color minValue="0" maxValue="5" label="5 days"  />
-<color minValue="5" maxValue="10" label="5 days"/>
-<color minValue="10" maxValue="15" label="5 days"/>
-
-</colorRange>
-<pointers>
-   <pointer value="8.3" toolText="Total Turn Around Time" link="P-detailsWin,width=450,height=150,toolbar=no,scrollbars=no, resizable=no-provincialtatbreakdown.php?province=5%26mwaka=2012%26mwezi=07%26dcode=%26fcode=0" />
- 
-</pointers>
-
-
-<styles>
-
-<definition>
-<style name="ValueFont" type="Font" bgColor="333333" size="10" color="FFFFFF"/>
-</definition>
-<application>
-<apply toObject="VALUE" styles="valueFont"/>
-</application>
-</styles>
-</Chart>';
-
-echo $strXML;
-}
 ////////////////////////////////////////////////////////////////////////////////////////////
 	
-	public function County_orders_placed_chart(){
-$strXML ="<chart palette='3' bgColor='FFFFFF' formatNumberScale='0' showBorder='0' caption='' yAxisName='Units' showValues='0' numVDivLines='10' divLineAlpha='30' useRoundEdges='1' legendBorderAlpha='0'>
-
-    <categories>
-
-      <category label='Dagoretti' />
-      
-      <category label='Embakasi' />
-      
-      <category label='Kamukunji' />
-      
-      <category label='Kasarani' />
-      
-      <category label='Langata' />
-      
-      <category label='Makadara' />
-      <category label='Njiru' />
-      <category label='Starehe' />
-      <category label='Westlands' />
-
-    </categories>
-
-
-    <dataset seriesName='Allocated Drawing ' color='A66EDD' >
-
-        <set value='3500000' />
-
-        <set value='4200000' />
-
-        <set value='3100000' />
-
-        <set value='2800000' />
-
-        <set value='3400000' />
-
-        <set value='3000000' />
-        <set value='2000000' />
-
-        <set value='2600000' />
-
-        <set value='1900000' />
-
-    </dataset>
-
-
-    <dataset seriesName='Drawing right Bal' color='F6BD0F'>
-
-        <set value='2200000' />
-
-        <set value='2500000' />
-
-        <set value='1800000' />
-
-        <set value='2200000' />
-
-        <set value='1700000' />
-
-        <set value='1600000' />
-        <set value='1200000' />
-
-        <set value='1700000' />
-
-        <set value='1000000' />
-
-    </dataset>
-
-
-</chart>";
-echo $strXML;
-
-}
-	public function county_ordering_rate_chart(){
-$strXML ="<chart stack100Percent='1' showPercentValues='1' palette='2' bgColor='FFFFFF' formatNumberScale='0' showBorder='0' showLabels='1' showvalues='0'  numberPrefix=''  showSum='1' decimals='0' useRoundEdges='1' legendBorderAlpha='0'>
-
-    <categories>
-
-        <category label='Dagoretti' />
-
-        <category label='Embakasi' />
-
-        <category label='Kamukunji' />
-
-        <category label='Kasarani' />
-
-        <category label='Langata' />
-        <category label='Makadara' />
-      <category label='Njiru' />
-      <category label='Starehe' />
-      <category label='Westlands' />
-
-    </categories>
-
-     <dataset seriesName='Orders Made' color='659EC7' showValues='0'>
-
-        <set value='15' />
-
-        <set value='19' />
-
-        <set value='27' />
-
-        <set value='16' />
-
-        <set value='26' />
-        <set value='22' />
-
-        <set value='21' />
-
-        <set value='14' />
-
-        <set value='30' />
-
-    </dataset>
-
-    <dataset seriesName='No of Facilities' color='E8E8E8' showValues='0'>
-
-        <set value='65' />
-
-        <set value='76' />
-
-        <set value='18' />
-
-        <set value='31' />
-
-        <set value='68' />
-        <set value='90' />
-
-        <set value='71' />
-
-        <set value='45' />
-
-        <set value='52' />
-
-    </dataset>
-
-</chart>";
-echo $strXML;
-}
-
-public function get_county_stock_status_view(){
-	$this->load->view("county/ajax_view/county_stock_status_v");
-}
-<<<<<<< HEAD
-public function get_lead_time(){
 	
-}
-=======
-public function district_drawing_rights_chart(){
-		$drawing_rights=Facilities::get_drawingR_county_by_district();
-		$strXML= "";
-		$strXML ="<chart palette='3' caption='Districts Drawing Rights'  bgColor='FFFFFF' numberprefix='$' xaxisName='Districts'yaxisName='Amount' useRoundEdges='1' showValues='0' legendBorderAlpha='0'>  
-
-<categories showValues='1'>";
-		
-		$rowcountname=count($drawing_rights);
-		for ($i=0; $i < $rowcountname ; $i++) { 
-			foreach ($drawing_rights as $value) {
-			
-		}
-			$name= $drawing_rights[$i]["districtName"];
-			
-      $strXML .="<category label='".$name."' />";
-      
-	}
-	$strXML .="</categories>";
-	$strXML .="<dataset>";
-	$rowcountname=count($drawing_rights);
-		for ($i=0; $i < $rowcountname ; $i++) { 
-	foreach ($drawing_rights as $value) {
-			
-		}
-			$rights= $drawing_rights[$i]["drawingR"];
-			
-      
-      
-	$strXML .="<set value='".$rights."' />";
-      		}
-		$strXML .="</dataset></chart>"; 
-		echo $strXML;
-			
-		
-		}
->>>>>>> 7ba521d78e614a16d26c210b414726c48756310d
+	
 
 }

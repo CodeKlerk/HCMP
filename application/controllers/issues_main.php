@@ -16,7 +16,7 @@ class Issues_main extends MY_Controller {
 		$facility=$this -> session -> userdata('news');
 		$facility=$this->uri->segment(4);
 		
-		
+	 		
 		
 			switch ($checker)
 			{
@@ -70,10 +70,10 @@ class Issues_main extends MY_Controller {
 		$ids=$_POST['kemsaCode'];		
 	    $Available=$_POST['AvStck'];
 		$batchN=$_POST['batchNo'];
-		$Expiry=$_POST['Expiries'];
-		$sNo=$_POST['S11'];
-        $qty=$_POST['Qtyissued'];
-		$thedate=$_POST['date_issue'];
+		$Expiry=$_POST['Exp'];
+		$sNo=$_POST['s11N'];
+        $qty=$_POST['qty'];
+		$thedate=$_POST['datepicker'];
 		$serviceP=$_POST['Servicepoint'];
         $j=sizeof ($ids);
        $count=0;

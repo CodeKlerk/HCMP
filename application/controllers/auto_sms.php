@@ -191,7 +191,7 @@ public function send_sms($phones,$message) {
 	}
 
 
-public function send_email($email_address,$message,$subject,$attach_file=NULL,$bcc_email=NULL){
+public function send_email($email_address,$message,$name){
 	
 			$fromm='hcmpkenya@gmail.com';
 		    $messages=$message;
@@ -215,7 +215,7 @@ public function send_email($email_address,$message,$subject,$attach_file=NULL,$b
   		$this->email->from($fromm,'Health Commodities Management Platform'); // change it to yours
   		$this->email->to($email_address); // change it to yours
   		$this->email->bcc('kariukijackson@gmail.com,kelvinmwas@gmail.com');
-  		$this->email->subject($subject);
+  		$this->email->subject('User Registration :'.$name);
  		$this->email->message($messages);
  
   if($this->email->send())
@@ -226,9 +226,6 @@ public function send_email($email_address,$message,$subject,$attach_file=NULL,$b
 {
  show_error($this->email->print_debugger());
 }
-
-
-return TRUE;
 }
 	
 		

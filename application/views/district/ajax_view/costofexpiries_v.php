@@ -1,34 +1,9 @@
-<?php if($county=="county"){ 
-
-$url_swf=base_url()."scripts/FusionCharts/Line.swf";
-$url_data=base_url()."report_management/generate_costofexpiries_chart/".$county;
-
-echo <<<HTMLCHART
-	<script type="text/javascript">
+<script type="text/javascript">
 jQuery(document).ready(function() {
-		var chart = new FusionCharts("$url_swf", "ChartId1", "100%", "100%", "0", "0");
-		var url = '$url_data'; 
-		chart.setDataURL(url);
-		chart.render("chart_exp");
-
-			});
-			
-</script>
-	<div id="chart-area" style="width: 100%; height: 100%; margin-left: 10em;">
-	<div id="chart_exp" style="width: 100%; height: 100%;" >
-		
-	</div>
-HTMLCHART;
-
-
-}
-else{?>
-	<script type="text/javascript">
-jQuery(document).ready(function() {
-		var chart = new FusionCharts("<?php echo base_url()."scripts/FusionCharts/Line.swf"?>", "ChartId1", "85%", "80%", "0", "0");
+		var chart = new FusionCharts("<?php echo base_url()."scripts/FusionCharts/Line.swf"?>", "ChartId", "85%", "85%", "0", "0");
 		var url = '<?php echo base_url()."report_management/generate_costofexpiries_chart"?>'; 
 		chart.setDataURL(url);
-		chart.render("chart_exp");
+		chart.render("chart");
 		
 			$( "#filter-b" )
 			.button()
@@ -38,8 +13,11 @@ jQuery(document).ready(function() {
 			});
 			
 </script>
-
-		<div id="filter" align="center" style="margin: 0px">
+<?php      
+     $currentYear = date('Y');
+     $earliestYear = $currentYear-3;
+      ?>
+		<div id="filter" align="center">
 		<fieldset>
 			<!--<label for='expiriesselectedyear'>Select Year:</label>
 			<select name='expiriesselectedyear' id='expiriesselectedyear'>
@@ -68,12 +46,9 @@ jQuery(document).ready(function() {
 	</fieldset>
 	</div>
 	
-	<div id="chart-area" style="width: 100%; height: 100%; margin-left: 10em;">
-	<div id="chart_exp" style="width: 100%; height: 100%;" >
+	<div id="chart-area" style="width: 100%; height: 100%">
+	<div id="chart" >
 		
 	</div>
 </div>
-	
-<?php }?>
-
       

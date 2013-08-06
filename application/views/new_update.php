@@ -5,7 +5,11 @@
 			@import "<?php echo base_url(); ?>DataTables-1.9.3 /media2/css/jquery.dataTables.css";
 		</style>
 <style>
-
+div.input {
+  float: left;
+    display: block;
+    width: 18.875em;
+}
 .user{
 		width:6.25em;
 	}
@@ -108,10 +112,10 @@ $att=array("name"=>'myform','id'=>'myform');
 	 echo form_open('stock/submit',$att); ?>
 	 <?php foreach($ord as $d):?>
 	 	<div>
-	 		<p id="notification" style="text-align:center;">Please enter Order Delivery details and Received commodities in Packs and NOT units </p>
-		
+	 		<p id="notification" style="text-align:center;">* Please enter commodities upon confirmation of the actual counts </p>
+		<p id="notification" style="text-align:center;">* Commodoties Received in packs </p>
 	 	</div>
-	 	<div style=" font-size: 15px; margin-bottom: 1em;"><a href="#" class="show_hide" >Delivery Dispatch Details. Click to Show / Hide</a></div>
+	 	<div style=" font-size: 15px; margin-bottom: 1em;"><a href="#" class="show_hide" >Click to Show/hide</a></div>
 	 	
 	 	<div id="updateord" >
 	 	<fieldset id="updateOrderleft">

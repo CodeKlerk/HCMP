@@ -123,6 +123,7 @@ public function get_report($facility_code){
 public function save_lab_report_data()
 	{
 		
+		
 		$district_id=$_POST['district'];
 		$facility_code=$_POST['facility_code'];
 		$drug_id=$_POST['commodity_id'];
@@ -165,6 +166,7 @@ public function save_lab_report_data()
 		$moh_643=$_POST['moh_643'];
 
 		$user_id=75;
+		date_default_timezone_set('EUROPE/Moscow');
 		$order_date=date('y-m-d'); 
 		$count=1;
 		
@@ -279,19 +281,23 @@ public function save_lab_report_data()
 		$data['table_body']=$table_body;
 		$data['title'] = "Home";
 		$data['popout']="Your order has been saved.";
-		$data['content_view'] = "rtk/dpp/dpp_home";
+		$data['content_view'] = "rtk/dpp/dpp_home_with_table";
 		$data['banner_text'] = "Home";
 		$data['link'] = "home";
 		$this->load->view('template', $data);
 
 	}
-	public function lab_order_details($msg=NULL){
-	$delivery=$this->uri->segment(3);
+ public function edit_lab_order_details($order_id, $msg=NULL){
+		$delivery=$this->uri->segment(3);
+		$district=$this->session->userdata('district1');
 		$data['title'] = "Lab Commodity Order Details";
-     	$data['content_view'] = "rtk/lab_order_details_v";
+     	// $data['content_view'] = "rtk/lab_order_details_v";
+     	$data['order_id']=$order_id;
+     	$data['content_view'] = "rtk/dpp/lab_commodities_report_edit_v";
 		$data['banner_text'] = "Lab Commodity Order Details";
 		$data['lab_categories']=Lab_Commodity_Categories::get_all();
-		$data['detail_list']=Lab_Commodity_Details::get_order($delivery);		
+		$data['detail_list']=Lab_Commodity_Details::get_order($delivery);
+		$data['all_details']= Lab_Commodity_Orders::get_single_lab_order($order_id);
 		$this -> load -> view("template", $data);
 }
 public function get_lab_report($order_no, $report_type){
@@ -354,6 +360,7 @@ switch ($report_type) {
 
 
 }
+
 //generate pdf
 	public function generate_lab_report_pdf($report_name,$title,$html_data){
 					
@@ -415,6 +422,7 @@ SELECT id, commodity_code, commodity_name, unit_of_issue FROM `rtk_commodities` 
 	
 	}
 	public function post_fcdrr(){
+		date_default_timezone_set('EUROPE/Moscow');
 	$facility_c=$this -> session -> userdata('news');
 	 $order_date=date('Y-m-d');
 	    $facility_code=$_POST['facility_code'];
@@ -666,6 +674,165 @@ $chart_categories .="</categories>";
 	 echo $chart;
 	
 }
+public static function update_lab_commodity_orders(){
+		$order_id=$_POST['order_id'];
+		$detail_id=$_POST['detail_id'];
+		$district_id=$_POST['district'];
+		$facility_code=$_POST['facility_code'];
+		$drug_id=$_POST['commodity_id'];
+		$unit_of_issue=$_POST['unit_of_issue'];
+		$b_balance=$_POST['b_balance'];
+		$q_received=$_POST['q_received'];
+		$q_used=$_POST['q_used'];
+		$tests_done=$_POST['tests_done'];
+		$losses=$_POST['losses'];
+		$pos_adj=$_POST['pos_adj'];
+		$neg_adj=$_POST['neg_adj'];
+		$physical_count=$_POST['physical_count'];
+		$q_expiring=$_POST['q_expiring'];
+		$days_out_of_stock=$_POST['days_out_of_stock'];
+		$q_requested=$_POST['q_requested'];
+		$commodity_count=count($drug_id);
+		$detail_count=count($detail_id);
+
+		$vct=$_POST['vct'];
+		$pitc=$_POST['pitc'];
+		$pmtct=$_POST['pmtct'];
+		$b_screening=$_POST['blood_screening'];
+		$other=$_POST['other2'];
+		$specification=$_POST['specification'];
+		$rdt_under_tests=$_POST['rdt_under_tests'];
+		$rdt_under_pos=$_POST['rdt_under_positive'];
+		$rdt_btwn_tests=$_POST['rdt_to_tests'];
+		$rdt_btwn_pos=$_POST['rdt_to_positive'];
+		$rdt_over_tests=$_POST['rdt_over_tests'];
+		$rdt_over_pos=$_POST['rdt_over_positive'];
+		$micro_under_tests=$_POST['micro_under_tests'];
+		$micro_under_pos=$_POST['micro_under_positive'];
+		$micro_btwn_tests=$_POST['micro_to_tests'];
+		$micro_btwn_pos=$_POST['micro_to_positive'];
+		$micro_over_tests=$_POST['micro_over_tests'];
+		$micro_over_pos=$_POST['micro_over_positive'];
+		date_default_timezone_set('EUROPE/Moscow');
+		$beg_date=date('y-m-d',strtotime($_POST['begin_date']));
+		$end_date=date('y-m-d',strtotime($_POST['end_date']));
+		$explanation=$_POST['explanation'];
+		$moh_642=$_POST['moh_642'];
+		$moh_643=$_POST['moh_643'];
+
+		$myobj = Doctrine::getTable('Lab_Commodity_Orders')->find($order_id);
+  
+       $myobj->vct =$vct;
+       $myobj->pitc =$pitc;
+       $myobj->pmtct =$pmtct;
+       $myobj->b_screening =$b_screening;
+       $myobj->other =$other;
+       $myobj->specification =$specification;
+       $myobj->rdt_under_tests =$rdt_under_tests;
+       $myobj->rdt_under_pos =$rdt_under_pos;
+       $myobj->rdt_btwn_tests =$rdt_btwn_tests;
+       $myobj->rdt_btwn_pos =$rdt_btwn_pos;
+       $myobj->rdt_over_tests =$rdt_over_tests;
+       $myobj->rdt_over_pos =$rdt_over_pos;
+       $myobj->micro_under_tests =$micro_under_tests;
+       $myobj->micro_under_pos =$micro_under_pos;
+       $myobj->micro_btwn_tests =$micro_btwn_tests;
+       $myobj->micro_btwn_pos =$micro_btwn_pos;
+       $myobj->micro_over_tests =$micro_over_tests;
+       $myobj->micro_over_pos =$micro_over_pos;
+       $myobj->beg_date =$beg_date;
+       $myobj->end_date =$end_date;
+       $myobj->explanation =$explanation;
+       $myobj->moh_642 =$moh_642;
+       $myobj->moh_643 =$moh_643;
+       $myobj->save();
+
+      
+            for($i=0;$i<$detail_count;$i++){
+       $myobj = Doctrine::getTable('Lab_Commodity_Details')->find($detail_id[$i]);
+       $myobj->beginning_bal =$b_balance[$i];
+       $myobj->q_received =$q_received[$i];
+       $myobj->q_used =$q_used[$i];
+       $myobj->no_of_tests_done =$tests_done[$i];
+       $myobj->losses =$losses[$i];
+       $myobj->positive_adj =$pos_adj[$i];
+       $myobj->negative_adj =$neg_adj[$i];
+       $myobj->closing_stock =$physical_count[$i];
+       $myobj->q_expiring =$q_expiring[$i];
+       $myobj->days_out_of_stock =$days_out_of_stock[$i];
+       $myobj->q_requested =$q_requested[$i];
+       $myobj->save();
+   }
+		// 	Need to change
+  // 		$district=$this->session->userdata('district1');
+	 //    $district_name=Districts::get_district_name($district)->toArray();
+	 //    $d_name=$district_name[0]['district'];
+
+		// $data['title'] = "District Orders";
+		// $data['content_view'] = "rtk/dpp/rtk_orders_listing_v";
+		// $data['banner_text'] = $d_name." District Orders";		
+		// $data['fcdrr_order_list']=Lab_Commodity_Orders::get_district_orders($district);
+		// $data['lab_order_list']=Lab_Commodity_Orders::get_district_orders($district);
+		// // dd($data['lab_order_list']);
+		// $data['all_orders']=Lab_Commodity_Orders::get_district_orders($district);
+		// $myobj = Doctrine::getTable('districts')->find($district);
+		// //$data['district_incharge']=array($id=>$myobj->district);
+		// $data['myClass'] = $this;
+		// $data['msg']=$msg;
+
+		// $this -> load -> view("template", $data);
+
+}
+	public function lab_order_details($order_id, $msg=NULL){
+		$delivery=$this->uri->segment(3);
+		$district=$this->session->userdata('district1');
+		$data['title'] = "Lab Commodity Order Details";
+     	// $data['content_view'] = "rtk/lab_order_details_v";
+     	$data['order_id']=$order_id;
+     	$data['content_view'] = "rtk/dpp/lab_commodities_report";
+		$data['banner_text'] = "Lab Commodity Order Details";
+		$data['lab_categories']=Lab_Commodity_Categories::get_all();
+		$data['detail_list']=Lab_Commodity_Details::get_order($delivery);
+		$data['all_details']= Lab_Commodity_Orders::get_single_lab_order($order_id);
+		$this -> load -> view("template", $data);}
+
+	public static function get_single_lab_order($order_id=1){
+	$query=Doctrine_Manager::getInstance()->getCurrentConnection()
+	->fetchAll("SELECT o.id, f.facility_name, o.facility_code, o.district_id, dist.district as district_name, c.county as county_name, f.owner, cat.category_name, com.commodity_name, o.order_date, o.vct, o.pitc, o.pmtct, o.b_screening, o.other, o.specification, o.rdt_under_tests, o.rdt_under_pos, o.rdt_btwn_tests, o.rdt_btwn_pos, o.rdt_over_tests, o.rdt_over_pos, o.micro_under_tests, o.micro_under_pos, o.micro_btwn_tests, o.micro_btwn_pos, o.micro_over_tests, o.micro_over_pos, o.beg_date, o.end_date, o.explanation, o.moh_642, o.moh_643, o.compiled_by, u.fname, u.lname, d.order_id,d.facility_code,d.district_id,d.commodity_id,d.unit_of_issue,d.beginning_bal,d.q_received,d.q_used,d.no_of_tests_done,d.losses,d.positive_adj,d.negative_adj,d.closing_stock,d.q_expiring,d.days_out_of_stock,d.q_requested
+		FROM lab_commodity_orders o, lab_commodity_details d,lab_commodity_categories cat, lab_commodities com, user u, facilities f, districts dist, counties c
+		WHERE o.id=$order_id
+		AND o.id=d.order_id
+		AND o.district_id=dist.id
+		AND dist.county=c.id
+		AND o.facility_code=d.facility_code
+		AND f.facility_code=o.facility_code
+		AND u.id=o.compiled_by
+		AND com.id=d.commodity_id
+		AND cat.id=com.category
+		ORDER BY d.commodity_id
+		");
+dd($query);
+}
+	public function rtk_orders($msg=NULL){
+		$district=$this->session->userdata('district1');
+	    $district_name=Districts::get_district_name($district)->toArray();
+	    $d_name=$district_name[0]['district'];
+
+		$data['title'] = "District Orders";
+		$data['content_view'] = "rtk/dpp/rtk_orders_listing_v";
+		$data['banner_text'] = $d_name." District Orders";		
+		$data['fcdrr_order_list']=Lab_Commodity_Orders::get_district_orders($district);
+		$data['lab_order_list']=Lab_Commodity_Orders::get_district_orders($district);
+		// dd($data['lab_order_list']);
+		$data['all_orders']=Lab_Commodity_Orders::get_district_orders($district);
+		$myobj = Doctrine::getTable('districts')->find($district);
+		//$data['district_incharge']=array($id=>$myobj->district);
+		$data['myClass'] = $this;
+		$data['msg']=$msg;
+
+		$this -> load -> view("template", $data);
+		
+	}
 public function get_reporting_rate_national_bar($option,$county_id=NULL){
 		$str_xml_body='';
 		$title="";
@@ -886,7 +1053,6 @@ echo $strXML;
 public function county_detail_zoom($county_id){
 		
 	$data['facility'] =Facilities::get_total_facilities_rtk_in_county($county_id);
-
 	$data['doghnut']="county";
 	$data['bar_chart']="county";
     $data['county_id']=$county_id;
@@ -949,6 +1115,65 @@ $this -> load -> view("rtk/ajax_view/facility_zoom_v",$data);
 
 }
 
+public function rapid_kit_county_allocation($county_id)
+{
+//	echo $county_id;
+	$county = Counties::get_county_name($county_id);
+	$county_data=rtk_stock_status::get_county_reporting_details($county_id);
+
+
+
+	$sum_unigold=0;
+	$sum_determine=0;
+	$sum_syphillis=0;
+	foreach ($county_data as $county_detail) {
+		# code...
+	if($county_detail['commodity']==1){
+   	$commodity="Rapid HIV 1+ 2 Test Kit  (Unigold)";
+   	$sum_unigold+=$county_detail['qty'];
+    }
+    if($county_detail['commodity']==2) {
+	$commodity="Rapid HIV 1+2 Test Kit (Determine)";
+	$sum_determine+=$county_detail['qty'];
+	}
+	if($county_detail['commodity']==3) {
+	$commodity="Rapid Syphillis Test (RPR)";
+	$sum_syphillis+=$county_detail['qty'];
+	}
+	echo "<pre>";
+//	var_dump($county_data);
+ 	echo "</pre>";
+	}
+/*
+	echo $sum_unigold."<br />";
+	echo $sum_syphillis."<br />";
+	echo $sum_determine."<br />";
+*/
+
+	// the code below builds the xmp body
+
+
+	$str_xml_body='';
+		$title="";
+		 
+			$county_name=Counties::get_county_name($county_id);
+			$county_data=rtk_stock_status::get_reporting_county($county_id);
+			$county_name=$county_name[0]['county'];
+			$title="Rapid kit allocation by county:". " $county_name";
+				$str_xml_body .="<set value='$sum_determine' label='Total Determine'/>";
+				$str_xml_body .="<set value='$sum_unigold' label='Total Unigold'/>";
+				$str_xml_body .="<set value='$sum_syphillis' label='Sum Syphillis'/>";
+
+	 
+		
+		
+$strXML = "<chart caption='Facility Reporting Rate : $title' yAxisName='Number of facilities' alternateVGridColor='AFD8F8' baseFontColor='114B78' toolTipBorderColor='114B78' toolTipBgColor='E7EFF6' useRoundEdges='1' showBorder='0' bgColor='FFFFFF,FFFFFF'>";   
+$strXML .="$str_xml_body</chart>";
+echo $strXML;
+
+
+
+}
 
 public function get_rtk_allocation_kenyan_map(){
 
@@ -956,24 +1181,14 @@ public function get_rtk_allocation_kenyan_map(){
 }
 
 public function allocation_county_detail_zoom($county_id){
-	$county_data=rtk_stock_status::get_county_reporting_details($county_id);
-	
-	
+	$county_data=rtk_stock_status::get_county_reporting_details($county_id);	
 	$county_name=Counties::get_county_name($county_id);
-
-			$county_name=$county_name[0]['county'];
-	
-	
-		
+	$county_name=$county_name[0]['county'];		
 	$table_body='';
 	$fill_rate=0;
 	$checker=0;
-	if(count($county_data)>0){
-		
-	
-	
-	foreach($county_data as $county_detail){
-	
+	if(count($county_data)>0){	
+	foreach($county_data as $county_detail){	
         if($county_detail['commodity']==1){
         	$commodity="Rapid HIV 1+ 2 Test Kit  (Unigold)";
         }
@@ -1513,6 +1728,12 @@ public function generate_fcdrr_Report_pdf($report_name,$title,$html_data){
             $this->mpdf->Output($reportname,'D');
 
 	}
+
+
+
+
+
+
 public function generate_fcdrr_Report_excel($report_name,$title,$html_data){
 		$data = $html_data;
 	    $filename=$report_name;                      
@@ -1522,6 +1743,248 @@ public function generate_fcdrr_Report_excel($report_name,$title,$html_data){
 		
 	}
 
+	public function new_counties_alloc(){
+	$data['title'] = 'National allocations';
+	$data['banner_text'] = 'National allocations';
+	$data['content_view']= 'allocation_committee/allocation_v';
+	$this->load->view('template',$data);
+
 }
+	public function new_counties_alloc_chart()
+	{
+echo "<chart caption='Counties Allocation NAtional' xAxisName='Month' yAxisName='Revenue' showValues='0' numberPrefix=''>";
+		$counties = counties::getAllcounties();
+		foreach($counties as $counties_data)
+		{
+			$counties_data_id = $counties_data["id"];
+			$counties_data_name = $counties_data["county"];
+//			var_dump($counties_data);
+			echo "<categories><category label='$counties_data_name' /></categories>";
+			
+		}
+// counties are already displaying on graph.. now to diplay the neccesary data
+ echo "
+ 
+   <dataset seriesName='Rapid HIV 1+ 2 Test Kit  (Unigold)'>
+      <set value='27400' />
+      <set value='29800'/>
+      <set value='25800' />
+      <set value='26800' />
+      <set value='29600' />
+      <set value='32600' />
+      <set value='31800' />
+      <set value='36700' />
+      <set value='29700' />
+      <set value='31900' />
+      <set value='34800' />
+      <set value='24800' />
+      <set value='27400' />
+      <set value='29800'/>
+      <set value='25800' />
+      <set value='26800' />
+      <set value='29600' />
+      <set value='32600' />
+      <set value='31800' />
+      <set value='36700' />
+      <set value='29700' />
+      <set value='31900' />
+      <set value='34800' />
+      <set value='24800' />     
+      <set value='27400' />
+      <set value='29800'/>
+      <set value='25800' />
+      <set value='26800' />
+      <set value='29600' />
+      <set value='32600' />
+      <set value='31800' />
+      <set value='36700' />
+      <set value='29700' />
+      <set value='31900' />
+      <set value='34800' />
+      <set value='27400' />
+      <set value='29800'/>
+      <set value='25800' />
+      <set value='26800' />
+      <set value='29600' />
+      <set value='32600' />
+      <set value='31800' />
+      <set value='36700' />
+      <set value='29700' />
+      <set value='31900' />
+      <set value='34800' />
+      <set value='24800' />
+
+   </dataset>
+
+   <dataset seriesName='Rapid HIV 1+2 Test Kit (Determine)'>
+      <set value='27400' />
+      <set value='29800'/>
+      <set value='25800' />
+      <set value='26800' />
+      <set value='29600' />
+      <set value='32600' />
+      <set value='31800' />
+      <set value='36700' />
+      <set value='29700' />
+      <set value='31900' />
+      <set value='34800' />
+      <set value='24800' />
+      <set value='27400' />
+      <set value='29800'/>
+      <set value='25800' />
+      <set value='26800' />
+      <set value='29600' />
+      <set value='32600' />
+      <set value='31800' />
+      <set value='36700' />
+      <set value='29700' />
+      <set value='31900' />
+      <set value='34800' />
+      <set value='24800' />     
+      <set value='27400' />
+      <set value='29800'/>
+      <set value='25800' />
+      <set value='26800' />
+      <set value='29600' />
+      <set value='32600' />
+      <set value='31800' />
+      <set value='36700' />
+      <set value='29700' />
+      <set value='31900' />
+      <set value='34800' />
+      <set value='27400' />
+      <set value='29800'/>
+      <set value='25800' />
+      <set value='26800' />
+      <set value='29600' />
+      <set value='32600' />
+      <set value='31800' />
+      <set value='36700' />
+      <set value='29700' />
+      <set value='31900' />
+      <set value='34800' />
+      <set value='24800' />
+   </dataset>
+ <dataset seriesName='Rapid Syphillis Test (RPR)'>
+      <set value='27400' />
+      <set value='29800'/>
+      <set value='25800' />
+      <set value='26800' />
+      <set value='29600' />
+      <set value='32600' />
+      <set value='31800' />
+      <set value='36700' />
+      <set value='29700' />
+      <set value='31900' />
+      <set value='34800' />
+      <set value='24800' />
+      <set value='27400' />
+      <set value='29800'/>
+      <set value='25800' />
+      <set value='26800' />
+      <set value='29600' />
+      <set value='32600' />
+      <set value='31800' />
+      <set value='36700' />
+      <set value='29700' />
+      <set value='31900' />
+      <set value='34800' />
+      <set value='24800' />     
+      <set value='27400' />
+      <set value='29800'/>
+      <set value='25800' />
+      <set value='26800' />
+      <set value='29600' />
+      <set value='32600' />
+      <set value='31800' />
+      <set value='36700' />
+      <set value='29700' />
+      <set value='31900' />
+      <set value='34800' />
+      <set value='27400' />
+      <set value='29800'/>
+      <set value='25800' />
+      <set value='26800' />
+      <set value='29600' />
+      <set value='32600' />
+      <set value='31800' />
+      <set value='36700' />
+      <set value='29700' />
+      <set value='31900' />
+      <set value='34800' />
+      <set value='24800' />
+   </dataset>
+   <trendlines>
+      <line startValue='42000' color='91C728' displayValue='Target' showOnTop='1'/>
+   </trendlines>
+
+</chart>";}
+	public function national_allocation(){
+		$data['banner_text']="National Allocation";
+		$data['content_view']="allocation_committee/national_allocation_v";
+		$data['title']="National Allocation";
+		$this->load->view('template',$data);
+
+
+		}
+	public function national_allocation_chart(){
+				
+		$str_xml_body='';
+//		$title="";
+		$strXML = "<chart caption='National Allocation' yAxisName='Allocation' alternateVGridColor='AFD8F8' baseFontColor='114B78' toolTipBorderColor='114B78' toolTipBgColor='E7EFF6' useRoundEdges='1' showBorder='0' bgColor='FFFFFF,FFFFFF'>";
+
+		
+		$allocations = rtk_stock_status::get_national_allocation();
+		$counties = counties::getAllcounties();
+		foreach($counties as $counties_data)
+		{
+			$counties_data_id = $counties_data["id"];
+			
+		}
+				
+		$districts =  districts::getDistrict(2);// Gets districts within county id 2
+		foreach($districts as $districts_data){
+		$districts_data_id =$districts_data["id"];
+		$districts_data_name = $districts_data["district"];
+//		echo $districts_data_id;
+//echo $districts_data_name."<br /><br />";
+		$facilities = facilities::getFacilities($districts_data_id);
+		foreach($facilities as $facilities_data){
+		$facilities_data_id = $facilities_data["id"];
+		$facilities_data_code = $facilities_data["facility_code"];
+		
+		$allocations = rtk_stock_status::get_county_allocation($facilities_data_code);
+ 		$sum_determine=0;
+		$sum_unigold=0;
+		$sum_syphillis=0;
+		$commodity="";
+		
+
+		foreach ($allocations as $allocations_data){
+		if($allocations_data["commodity_id"]==1){$commodity="Rapid HIV 1+ 2 Test Kit  (Unigold)";$sum_unigold+=$allocations_data["qty"];}
+    	if($allocations_data["commodity_id"]==2){$commodity="Rapid HIV 1+2 Test Kit (Determine)";$sum_determine+=$allocations_data["qty"];}
+		if($allocations_data["commodity_id"]==3){$commodity="Rapid Syphillis Test (RPR)"; $sum_syphillis+=$allocations_data["qty"];}	
+ 		$allocations_data_commodity_id = $allocations_data["commodity_id"];
+ 
+	}	
+	 
+}	
+		$str_xml_body .="<set value='$sum_determine' label='Total Determine $districts_data_name'/>";
+		$str_xml_body .="<set value='$sum_unigold' label='Reporting Unigold $districts_data_name'/>";
+		$str_xml_body .="<set value='$sum_syphillis' label='Sum Syphillis $districts_data_name'/>";	
+
+}		
+
+echo $str_xml_body;
+$strXML .="$str_xml_body</chart>";
+echo $strXML;
+
+
+
+ 	}
+
+}
+
+
 
 ?>

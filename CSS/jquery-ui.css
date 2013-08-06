@@ -466,7 +466,7 @@ button.ui-button::-moz-focus-inner {
 	border-left-width: 1px;
 }
 .ui-dialog {
-	position: absolute;
+	position: relative;
 	top: 0;
 	left: 0;
 	padding: .2em;
@@ -787,7 +787,7 @@ body .ui-tooltip {
 ----------------------------------*/
 .ui-widget {
 	font-family: Verdana,Arial,sans-serif;
-	font-size: 1.6em;
+	font-size: 1.1em;
 }
 .ui-widget .ui-widget {
 	font-size: 1em;

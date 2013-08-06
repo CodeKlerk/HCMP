@@ -51,7 +51,7 @@ class Stock_Management extends auto_sms {
 			'quantity'=>$a_stock[$i],
 			'stock_date'=>$orderDate);
 			
-			Facility_Stock::update_facility_stock($mydata);
+			//Facility_Stock::update_facility_stock($mydata);
 			
 			
 			}
@@ -80,13 +80,13 @@ class Stock_Management extends auto_sms {
 			'issued_to' => 'N/A',
 			'issued_by' => $this -> session -> userdata('identity')
 			);
-			Facility_Issues::update_issues_table($mydata3);
-			Facility_Transaction_Table::update_facility_table($mydata2);
+			//Facility_Issues::update_issues_table($mydata3);
+			//Facility_Transaction_Table::update_facility_table($mydata2);
 		
 		
 			}
 		
-		Update_stock_first_temp::delete_facility_temp(NULL,$facility_c);
+		//Update_stock_first_temp::delete_facility_temp(NULL,$facility_c);
 		
 //////////////////////////////////////////////////////////////////////////////////////////
 		
@@ -404,49 +404,6 @@ public function update_facility_stock_details(){
 	$this->get_facility_stock_details($confirmation_message="Stock Details Have Been Updated");
 	
 }
-
-//////////
-public function historical_stock_take(){
-		$facility_code=$this -> session -> userdata('news');
-		
-		$data['title'] = "Provide Historical Stock Data";
-     	$data['content_view'] = "facility/historical_stock_v";
-		$data['banner_text'] = "Provide Historical Stock Data";
-		$data['quick_link'] ="load_stock";
-		$data['link'] = "home";
-		$data['drugs'] = Drug::getAll();
-		$data['drug_name']=Drug::get_drug_name();
-		$data['drug_categories'] = Drug_Category::getAll();;
-		$data['quick_link'] = "update_stock_level";
-		$this -> load -> view("template", $data);
-
-	}
-	public function save_historical_stock(){
-		$data_array=$_POST['data_array'];
-		$h_stock=explode("|", $data_array);
-	    $code=$h_stock[0];
-		$facilityCode=$this -> session -> userdata('news');
-
-		$query = Doctrine_Query::create() -> select("drug_id, consumption_level") -> from("historical_stock") -> where("facility_code=$facilityCode")->andwhere("drug_id=$h_stock[0]");
-		$stocktake = $query ->execute();
-
-		if (count($stocktake)>0) {
-			$update = Doctrine_Manager::getInstance()->getCurrentConnection();
-		//$update->execute("UPDATE historical_stock SET consumption_level=$h_stock[1], unit_count=$h_stock[3] where facility_code=$facility_code AND drug_id=$h_stock[0]");
-      	$q = Doctrine_Query::create()
-			->update('historical_stock')
-				->set('consumption_level','?',"$h_stock[1]")
-				->set('unit_count','?',"$h_stock[3]")
-					->where("facility_code='$facilityCode' AND drug_id='$h_stock[0]'");
-						$q->execute();
-
-		} else if (count($stocktake)==0) {
-			$insert = Doctrine_Manager::getInstance()->getCurrentConnection();
-		$insert->execute("INSERT INTO historical_stock (`facility_code`, `drug_id`, `unit_size`, `consumption_level`, `unit_count`) VALUES ('".$facilityCode."', '".$h_stock[0]."', '".$h_stock[2]."', '".$h_stock[1]."', '".$h_stock[3]."')");
-		}
-		
-		echo 'success consumption_level= '.$h_stock[1].'unit_count= '.$h_stock[3].'drug_id= '.$h_stock[0];
-	}
 
 }
 ?>

@@ -18,8 +18,8 @@
 	text-align: center;
 	}
 	</style>
-        
-   <script> 
+
+<script> 
    
 /* Define two custom functions (asc and desc) for string sorting */
 			jQuery.fn.dataTableExt.oSort['string-case-asc']  = function(x,y) {
@@ -42,9 +42,8 @@
 				} );
 			} );
 
-json_obj = {
-				"url" : "<?php echo base_url().'Images/calendar.gif';?>",
-				};
+json_obj = {	"url" : "<?php echo base_url().'Images/calendar.gif';?>",
+	};
 	var baseUrl=json_obj.url;
 	
 	$(function() {
@@ -99,62 +98,52 @@ json_obj = {
 		$( "#IssueNow" ).dialog({
 		    autoOpen: true,
 			height: 250,
-			width:1400,
-			modal: true,
+			width:1250,
+			modal: false,
 			buttons: {
 				"Issue": function() {
 					
-					if ($('input:text[name=s11N]').val()=="") {
-						
+					if ($('input:text[name=s11N]').val()=="") {						
 						alert("Please enter S11 No");
 						return;
 					}
-					if ($("#desc option:selected").text()=="-Select Drug Name-") {
-						
+					if ($("#desc option:selected").text()=="-Select Drug Name-") {						
 						alert("Please Select Drug");
 						return;
 					}
-					if ($("#Exp option:selected").text()=="-Exp-" || $("#Exp option:selected").text()=="--Exp--") {
-						
+					if ($("#Exp option:selected").text()=="-Exp-" || $("#Exp option:selected").text()=="--Exp--") {						
 						alert("Please Specify a Batch Number to Load its Details");
 						return;
 					}
-					if ($('input:text[name=qty]').val()=="") {
-						
+					if ($('input:text[name=qty]').val()=="") {						
 						alert("Please Specify the Amount to Issue");
 						return;
 					}
-					if ($("#Servicepoint option:selected").text()=="-Select-") {
-						
+					if ($("#Servicepoint option:selected").text()=="-Select-") {						
 						alert("Please Specify the Service Point");
 						return;
-					}
-					
+					}		
 			
 
           $( "#example" ).dataTable().fnAddData(['<input class="user" type="text" name="S11[]"  value="'+ $('input:text[name=s11N]').val() +'"/>' + '',
-         					"" + $('input:[name=kemsac_1]').val() + "" , 
-							"" + $("#desc option:selected").text() + "" ,
-							"" + $("#batchNo option:selected").text() + ""+ 
+          	"" + $('input:[name=kemsac_1]').val() + "" ,
+          	"" + $("#desc option:selected").text() + "" ,
+			"" + $("#batchNo option:selected").text() + ""+ 
 
          '<input type="hidden" name="kemsaCode['+checker+']" value="'+$('input:[name=kemsac]').val()+'" />'+
          '<input type="hidden" name="drugName['+checker+']" value="'+$("#desc option:selected").text()+'" />'+
          '<input type="hidden" name="batchNo['+checker+']" value="'+$("#batchNo option:selected").text()+'" />'+ 
-          '<input type="hidden" name="Expiries['+checker+']" value="'+$("#Exp option:selected").val()+'" />'
-         					
-
-							,
-							
-							'' +'<input class="user" type="text" name="Expiries['+checker+']" readonly="readonly" value="'+ $("#Exp option:selected").val() +'"/>' + '' ,
-							'' +'<input class="user" type="text" name="AvStck['+checker+']" readonly="readonly" value="'+ $('input:text[name=avlb_Stock]').val() +'"/>' + '' ,
-							'' + '<input class="user" type="text" name="Qtyissued['+checker+']" value="'+ $('input:text[name=qty]').val() +'" />' + '' ,
-							'' + '<input class="user" type="text" name="date_issue['+checker+']"  value="'+ $('input:text[name=datepicker]').val() +'" />' + '' ,
-							'' + '<input class="user" type="text" name="Servicepoint"  value="'+$("#Servicepoint option:selected").text()+'" />' + '' ,
-							'' + '<img class="del" src="<?php echo base_url()?>Images/close.png" />' ]); 
-						checker =checker+1;
-						$( this ).dialog( "close" );
-          $('#demo').show();
-				},
+         '<input type="hidden" name="Expiries['+checker+']" value="'+$("#Exp option:selected").val()+'" />',
+        '' +'<input class="user" type="text" name="Expiries['+checker+']" readonly="readonly" value="'+ $("#Exp option:selected").val() +'"/>' + '' ,
+		'' +'<input class="user" type="text" name="AvStck['+checker+']" readonly="readonly" value="'+ $('input:text[name=avlb_Stock]').val() +'"/>' + '' ,
+		'' + '<input class="user" type="text" name="Qtyissued['+checker+']" value="'+ $('input:text[name=qty]').val() +'" />' + '' ,
+		'' + '<input class="user" type="text" name="date_issue['+checker+']"  value="'+ $('input:text[name=datepicker]').val() +'" />' + '' ,
+		'' + '<input class="user" type="text" name="Servicepoint"  value="'+$("#Servicepoint option:selected").text()+'" />' + '' ,
+		'' + '<img class="del" src="<?php echo base_url()?>Images/close.png" />' ]);
+		checker =checker+1;
+		$( this ).dialog( "close" );
+        $('#demo').show();
+			},
 
 			Cancel: function() {
 					$( this ).dialog( "close" );
@@ -182,7 +171,7 @@ json_obj = {
 			.button()
 			.click(function() {
 				$( "#IssueNow" ).dialog( "open" );
-				
+		
 
 			});
 			var $myDialog = $('<div></div>')
@@ -387,7 +376,7 @@ td {
 	
 	
 	
-	<div id="IssueNow" title="Fill in the details below">
+	<div id="IssueNow" title="Fill in the details below" width: auto; min-height: 0px; height: 84px;>
 	<table class="data-table" width="100%">
 					<thead>
 					<tr>
@@ -414,8 +403,7 @@ td {
         <select class="dropdownsize" id="desc" name="desc">
     <option >-Select Commodity -</option>
 		<?php 
-		foreach ($drugs as $drugs) {
-			
+		foreach ($drugs as $drugs) {			
 			foreach ($drugs->Code as $d) {
 			$drugname=$d->Drug_Name;
 			$code=$d->id;
@@ -426,8 +414,7 @@ td {
 			<option value="<?php echo $code."|".$unit."|".$kemsa_code;?>"><?php echo $drugname;?></option>
 		<?php }
 		?>
-		<?php }
-							?>
+		<?php }?>
 	</select></td>
 	<td width="70"><input class="user1" id="unit_size" name="unit_size" />
 		
@@ -452,8 +439,8 @@ td {
 						
 						<td width="130"><?php 
 					
-					$today= ( date('d M, Y')); 
-					
+				//	$today= ( date('d M, Y')); 
+				$today = "Wed Jul,2013"	
 				?><input type="text" name="datepicker" class="date" readonly="readonly" value="<?php echo $today;?>" id="datepicker"/></td>
 				<td width="60">   
 					<select id="Servicepoint" name="Servicepoint" class="user1">
@@ -504,16 +491,11 @@ td {
 						<th><b>Remove</b></th> 				    
 					</tr>
 					</thead>
-					<tbody>
-		
-							
-						
-						
-						
-		</tbody>
-						
-						
-				</table>
+					<tbody>	
+	<tr class="even"><td class=" sorting_1"><input class="user" type="text" name="S11[]" value="32"></td><td class=" sorting_2">PM03ALB001</td><td class="">Albendazole tab 400mg</td><td class="">gadfga<input type="hidden" name="kemsaCode[1]" value="5"><input type="hidden" name="drugName[1]" value="Albendazole tab 400mg"><input type="hidden" name="batchNo[1]" value="gadfga"><input type="hidden" name="Expiries[1]" value="31 Dec, 2013"></td><td class=""><input class="user" type="text" name="Expiries[1]" readonly="readonly" value="31 Dec, 2013"></td><td class=""><input class="user" type="text" name="AvStck[1]" readonly="readonly" value="994"></td><td class=""><input class="user" type="text" name="Qtyissued[1]" value="3"></td><td class=""><input class="user" type="text" name="date_issue[1]" value="7 Jul, 2013"></td><td class=""><input class="user" type="text" name="Servicepoint" value="CCC"></td><td class=""><img class="del" src="http://localhost/HCMP/Images/close.png"></td></tr>
+					
+			
+		</tbody></table>
 				</form>
 
 <input   id="NewIssue"  value="Issue" >

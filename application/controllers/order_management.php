@@ -7,8 +7,8 @@ class Order_Management extends auto_sms {
 		$this->load->helper(array('form','url'));
 	}
 
-	public function index($tab=NULL) {
-		$this -> listing($tab);
+	public function index() {
+		$this -> listing();
 	}
 	public function new_order($note=NULL) {
 		
@@ -233,7 +233,7 @@ class Order_Management extends auto_sms {
 	}
 	public function new_order2() {
 		
-		$data['title'] = "Place Order";
+		$data['title'] = "New Order";
 		$data['content_view'] = "new_order_v2";
 		$data['banner_text'] = "New Order";
 		$data['link'] = "order_management";
@@ -324,7 +324,7 @@ public function kemsa_approve_order(){
          $count++;	
 }
 }
-	public function listing($tab) {
+	public function listing() {
 		 $facility_c=$this -> session -> userdata('news');
 		// echo $facility_c;
 		$data['myClass'] = $this;
@@ -334,7 +334,7 @@ public function kemsa_approve_order(){
 		$data['received']=Ordertbl::get_received($facility_c);
 		$data['title'] = "All Orders";
 		$data['quick_link'] = "order_listing";
-		$data['content_view'] = "orders_listing_v$tab";
+		$data['content_view'] = "orders_listing_v";
 		$data['banner_text'] = "All Orders";
 		$data['link'] = "order_management"; 
 		$this -> load -> view("template", $data);
@@ -408,8 +408,10 @@ public function kemsa_approve_order(){
 	
 	 public function getBatch(){
 		//for ajax
+             //5, 17401
 		$desc=$_POST['desc'];
 		$facility_c=$this -> session -> userdata('news');
+                $facility_c = 17401;
 		$describe=Facility_Stock::getAll($desc,$facility_c);
 		
 		$list="";

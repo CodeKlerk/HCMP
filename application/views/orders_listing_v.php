@@ -74,29 +74,22 @@ endif; ?>
 		<table class="data-table">
 			<tr>
 				<th><strong>Facility Order No </strong></th>
-				<th><strong>Order Value (Ksh)</strong></th> 
-				<th><strong>Drawing Rights Balance (Ksh)</strong></th> 
-				<th><strong>Date Ordered</strong></th>
-				<th><strong>Date Approved</strong></th>
-				<th><strong>Days Pending Delivery</strong></th>
+				<th><strong>KEMSA Order No </strong></th>
+				<th><strong>Order Total Ksh</strong></th> 
+				<th><strong>Date Ordered</strong></th> 
+				<th><strong>Days Pending </strong></th>
 				<th>Action</th>
 			</tr>
 			<?php foreach($pending_d as $rows_d):?>
 			<tr>
 				<?php echo "<td>$rows_d->id</td>
-				<td>".number_format($rows_d->orderTotal, 2, '.', ',')."</td>
-				 <td>".number_format($rows_d->drawing_rights-$rows_d->orderTotal, 2, '.', ',')."</td>";
+				<td>$rows_d->kemsaOrderid</td>
+				 <td>".number_format($rows_d->orderTotal, 2, '.', ',')."</td>";
 				
 		$datea= $rows_d->orderDate;
 		$fechaa = new DateTime($datea);
 		$today=new DateTime();
         $datea= $fechaa->format(' d  M Y');
-		
-		
-		$date_1= $rows_d->approvalDate;
-		$fecha_1 = new DateTime($datea);
-        $date_1= $fechaa->format(' d  M Y');
-        echo "<td>".$date_1."</td>"; 
 		echo "<td>".$datea."</td>"; 
 			
 		$days1=$myClass->getWorkingDays($fechaa,$today,0);

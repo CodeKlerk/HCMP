@@ -1,0 +1,7 @@
+will transfer all RTK and CD4 functionalities from application_code to application then git the changes today..
+
+# To enable aditing of FCDRR forms
+
+This is the link for shiet!! http://localhost/HCMP/rtk_management/rtk_orders
+
+http://localhost/HCMP/rtk_management/get_report/13040 is working on application_code... to be moved to _git
