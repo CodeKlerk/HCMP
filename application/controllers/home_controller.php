@@ -86,7 +86,7 @@ else if($access_level == "dpp"){
 
            if($lab_count>0){
            	//".site_url('rtk_management/get_report/'.$facility_detail['facility_code'])."
-           $table_body .="Lab&nbsp;Commodities  <img src='".base_url()."/Images/check_mark_resize.png'></img><a href='#' class='link'>Edit</a></td>";
+           $table_body .="Lab&nbsp;Commodities  <img src='".base_url()."/Images/check_mark_resize.png'></img><!--<a href='#' class='link'>Edit</a>--></td>";
           }
           else{
   $table_body .="<a href=".site_url('rtk_management/get_report/'.$facility_detail['facility_code'])." class='link'>Lab&nbsp;Commodities</a></td>";

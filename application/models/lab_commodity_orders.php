@@ -71,6 +71,24 @@ class Lab_Commodity_Orders extends Doctrine_Record {
 		ORDER BY lab_commodity_orders.id");
 		return $query;
 	}
+	// function to get the latest district orders...
+
+	public static function get_latest_district_orders($district){
+
+// function to get the latest district orders...		
+		$query=Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT lab_commodity_orders.id, lab_commodity_orders.facility_code, facilities.facility_name, dist.id as district_id, dist.district as district_name, c.county, user.fname, user.lname, facilities.owner, lab_commodity_orders.order_date
+		FROM lab_commodity_orders, facilities, user, districts dist, counties c
+		WHERE district_id =$district
+		AND lab_commodity_orders.district_id=dist.id
+		AND dist.county=c.id
+		AND lab_commodity_orders.facility_code = facilities.facility_code
+		AND user.id = lab_commodity_orders.compiled_by
+		ORDER BY lab_commodity_orders.id");
+		return $query;
+	}
+
+
+	
 	public static function get_recent_lab_orders($facility_code){
 		date_default_timezone_set('EUROPE/moscow');
 	$last_month=date('m')-1;

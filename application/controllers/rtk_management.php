@@ -256,7 +256,7 @@ public function save_lab_report_data()
            $table_body .="<a href=".site_url('rtk_management/fcdrr_test/'.$facility_detail['facility_code'])." class='link'>FCDRR
         <img src='".base_url()."/Images/check_mark_resize.png'></img>
 
-		</a>|<a href=".site_url('rtk_management/update_fcdrr_test/'.$facility_detail['facility_code'])." class='link'>Edit</a>|";
+		</a>|<!<a href=".site_url('rtk_management/update_fcdrr_test/'.$facility_detail['facility_code'])." class='link'>Edit</a>|";
           }
           else{
  $table_body .="<a href=".site_url('rtk_management/fcdrr_test/'.$facility_detail['facility_code'])." class='link'>FCDRR
@@ -264,7 +264,7 @@ public function save_lab_report_data()
           }
 
            if($lab_count>0){
-           $table_body .="<a href=".site_url('rtk_management/get_report/'.$facility_detail['facility_code'])." class='link'>Lab&nbsp;Commodities  <img src='".base_url()."/Images/check_mark_resize.png'></img></a>|<a href=".site_url('rtk_management/'.$facility_detail['facility_code'])." class='link'>Edit</a></td>";
+           $table_body .="<a href=".site_url('rtk_management/get_report/'.$facility_detail['facility_code'])." class='link'>Lab&nbsp;Commodities  <img src='".base_url()."/Images/check_mark_resize.png'></img></a><!--|<a href=".site_url('rtk_management/'.$facility_detail['facility_code'])." class='link'>Edit</a>--></td>";
           }
           else{
   $table_body .="<a href=".site_url('rtk_management/get_report/'.$facility_detail['facility_code'])." class='link'>Lab&nbsp;Commodities</a></td>";
@@ -952,13 +952,63 @@ $colors=array("FFFFCC"=>"1","E2E2C7"=>"2","FFCCFF"=>"3","F7F7F7"=>"5","FFCC99"=>
 	   $total_facilities_allocated_in_county=$county_detail['total_facilities_allocated_in_county'];
 
 	  @$allocation_rate=round((($total_facilities_allocated_in_county/$total_facilities_in_county)*100),1);
+//     $map .="<entity  link='".base_url()."rtk_management/allocate_rtk/$countyid' id='$county_map_id' displayValue ='$countyname' color='".array_rand($colors,1)."' toolText='County :$countyname&lt;BR&gt; Total Facilities Reporting:".$total_facilities_in_county."&lt;BR&gt; Facilities Allocated  :".$total_facilities_allocated_in_county."&lt;BR&gt; Facility Allocation Rate :".$allocation_rate." %'/>";
      $map .="<entity  link='".base_url()."rtk_management/allocation_county_detail_zoom/$countyid' id='$county_map_id' displayValue ='$countyname' color='".array_rand($colors,1)."' toolText='County :$countyname&lt;BR&gt; Total Facilities Reporting:".$total_facilities_in_county."&lt;BR&gt; Facilities Allocated  :".$total_facilities_allocated_in_county."&lt;BR&gt; Facility Allocation Rate :".$allocation_rate." %'/>";
 
    		}
  echo  $this->kenyan_map($map,"RTK County allocation: Click to view facilities in county");
 	
 	
+}
+public function allocate_rtk($county_id)
+{
+	$ish;
+	$county = counties::get_county_name($county_id);
+	foreach ($county as $cname ) {$ish =$cname['county'];}
+		$data ['countyname']= $ish;
+
+	
+
+//	$facilities_in_county = facilities::get_total_facilities_rtk_in_county($county_id);
+//	var_dump($facilities_in_county);
+
+	$htm = '';
+
+	$districts_in_county = districts::getDistrict($county_id);
+//	var_dump($district);
+	$htm.='<ul class="facility-list">';
+	foreach ($districts_in_county as $key => $district_arr) {
+		# code...
+//		echo $district_arr['district'];
+
+		$district = $district_arr['id'];
+		$district_name = $district_arr['district'];
+		$htm.='<li>'.$district_name.'</li>';
+		$htm.='<ul class="sub-list">';	
+		$district_orders=Lab_Commodity_Orders::get_district_orders($district);
+		if (count($district_orders)>0){
+		foreach ($district_orders as $district_orders_arr) {
+			$facility = $district_orders_arr['facility_code'];
+			$facility_name = $district_orders_arr['facility_name'];
+			$htm.='<li style="border-left: medium solid rgb(233, 105, 88);background: #fff;"><a href="#'.$facility.'" class="allocate" onClick="showpreview('.$facility.')" >'.$facility_name.'</a></li>';
+//			$htm .='<li><a href="#'.$facility.'" class="allocate" onClick="showpreview('.$facility.')" >'.$facilitiessarr['fname'].'</a></li>';
+		}}
+		else{ $htm.='<li style="border-left: medium solid rgb(88, 233, 106);background: #fff;">No Orders</li>';
+	}
+				$htm.='</ul>';
+	}
+ 	$htm.='</ul>';
+
+ 	$data['htm'] = $htm;
+	$data['content_view'] = 'allocation_committee/ajax_view/rtk_county_allocation_v';
+	$data['banner_text'] = '';
+	$data['title']='';
+	$this -> load -> view("template",$data);
+	 
 }	
+
+
+
 public function kenyan_map($data, $title=NULL){
 	    $map ="";
 		$map .="<map showBevel='0' showMarkerLabels='1' caption='$title'  fillColor='F1f1f1' borderColor='000000' hoverColor='efeaef' canvasBorderColor='FFFFFF' baseFont='Verdana' baseFontSize='10' markerBorderColor='000000' markerBgColor='FF5904' markerRadius='6' legendPosition='bottom' useHoverColor='1' showMarkerToolTip='1'  showExportDataMenuItem='1' >";
@@ -1181,6 +1231,109 @@ public function get_rtk_allocation_kenyan_map(){
 }
 
 public function allocation_county_detail_zoom($county_id){
+
+	$ish;
+	$county = counties::get_county_name($county_id);
+	foreach ($county as $cname ) {$ish =$cname['county'];}
+		$data ['countyname']= $ish;
+
+	
+
+//	$facilities_in_county = facilities::get_total_facilities_rtk_in_county($county_id);
+//	var_dump($facilities_in_county);
+
+	$htm = '';
+	$table_body = '';
+
+	$districts_in_county = districts::getDistrict($county_id);
+//	var_dump($district);
+	$htm.='<ul class="facility-list">';
+	foreach ($districts_in_county as $key => $district_arr) {
+		# code...
+//		echo $district_arr['district'];
+
+		$district = $district_arr['id'];
+		$district_name = $district_arr['district'];
+		$htm.='<li>'.$district_name.'</li>';
+		$htm.='<ul class="sub-list">';	
+		$district_orders=Lab_Commodity_Orders::get_district_orders($district);
+		if (count($district_orders)>0){
+		foreach ($district_orders as $district_orders_arr) {
+			$facility = $district_orders_arr['facility_code'];
+			$facility_name = $district_orders_arr['facility_name'];
+
+			$orders = $this->db->query('SELECT * 
+						FROM  `lab_commodity_details` 
+						WHERE  `facility_code` =  '.$facility.'
+						LIMIT 0 , 4');
+			if ($orders->num_rows() > 0){
+				foreach ($orders->result_array() as $orders_arr) {
+					# code...
+$order_detail_id= $orders_arr['id'];			
+$q_requested   = $orders_arr['q_requested'];
+$q_received    = $orders_arr['q_received'];
+$commodity_id  = $orders_arr['commodity_id']; 
+$closing_stock = $orders_arr['closing_stock'];
+$q_used 	   = $orders_arr['q_used'];
+$beginning_bal = $orders_arr['beginning_bal'];
+$facility_code = $orders_arr['facility_code'];
+$allocated     = $orders_arr['allocated'];
+
+if($commodity_id==1){
+	$commodity="Rapid HIV 1+2 Test 1 - Screening";
+}
+if($commodity_id==2) {
+	$commodity="Rapid HIV 1+2 Test 1 - Confirmatory";
+}
+
+if($commodity_id==3) {
+	$commodity="Rapid HIV 1+2 Test 1 - Tiebreaker";
+}
+if($commodity_id==4) {
+	$commodity="Rapid Syphillis Test (RPR)";
+}
+
+
+$table_body.="<tr>
+<input type='hidden' name='id' value='$order_detail_id' />
+<td>$facility_code</td>
+<td>$facility_name</td>
+<td>$commodity</td>
+<td>$q_received</td>
+<td>$q_used</td>
+<td>$closing_stock</td>
+<td>$q_requested</td>
+<td><input type='text' class='user2' name='allocated_$order_detail_id' value='$allocated'/></td>
+<td>$q_requested</td>
+</tr>";
+ 			}
+
+			}
+
+			$htm.='<li style="border-left: medium solid rgb(233, 105, 88);background: #fff;"><a href="#'.$facility.'" class="allocate" onClick="showpreview('.$facility.')" >'.$facility_name.'</a></li>';
+//			$htm .='<li><a href="#'.$facility.'" class="allocate" onClick="showpreview('.$facility.')" >'.$facilitiessarr['fname'].'</a></li>';
+		}}
+		 
+				$htm.='</ul>';
+	}
+ 	$htm.='</ul>';
+
+ 	$data['htm'] = $htm;
+//	$data['content_view'] = 'allocation_committee/ajax_view/rtk_county_allocation_v';
+ $data['county_id'] = $county_id;
+$data['table_body']=$table_body;
+$data['title'] = "County View";
+$data['banner_text'] = "County View";
+$data['content_view']="allocation_committee/ajax_view/rtk_county_allocation_datatableonly_v";
+$this -> load -> view("template",$data);
+
+}
+public function rtk_allocation_data(){
+	echo "<pre>";
+	var_dump($_POST);
+	echo "</pre>";
+}
+public function allocation_county_detail_zoom_old($county_id){
 	$county_data=rtk_stock_status::get_county_reporting_details($county_id);	
 	$county_name=Counties::get_county_name($county_id);
 	$county_name=$county_name[0]['county'];		
@@ -1231,7 +1384,7 @@ $data['county_id']=$county_id;
 $data['table_body']=$table_body;
 $data['title'] = "County View";
 $data['banner_text'] = "County View";
-$data['content_view']="allocation_committee/ajax_view/county_allocation_zoom_v";
+$data['content_view']="allocation_committee/ajax_view/rtk_county_allocation_datatableonly_v";
 $this -> load -> view("template",$data);
 }
 

@@ -90,7 +90,7 @@ jQuery(document).ready(function() {
 	num_final-=num_neg_adj;
 
 	*/
-	num_final=num_bal+num_qty_rcvd-num_q_used-num_tests_done-num_loses+num_pos_adj-num_neg_adj;
+	num_final=num_bal+num_qty_rcvd-num_q_used-num_loses+num_pos_adj-num_neg_adj;
 //alert(num_final);
 	
 //	final = final+bal+qty_rcvd+q_used-tests_done-loses+pos_adj-neg_adj;
@@ -256,7 +256,11 @@ jQuery(document).ready(function() {
 
 
 </script>
-
+<style type="text/css">
+	input{
+		width: 70px;
+	}
+</style>
 <?php 
 $attributes = array( 'name' => 'myform', 'id'=>'myform');
 	 echo form_open('rtk_management/save_lab_report_data',$attributes); 
