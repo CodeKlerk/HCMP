@@ -11,7 +11,8 @@
     $(document).ready(function(){
        $('#example_main').dataTable({
           "bJQueryUI": true,
-          "bPaginate": false
+          "bPaginate": false,
+          "aaSorting": [[ 3, "asc" ]]
         } );
          $.fn.slideFadeToggle = function(speed, easing, callback) {
         return this.animate({
@@ -232,13 +233,17 @@ code {
 
 </div>
 
-<div class="sidebar">
   
-    <h2>Quick Access</h2>
+<div class="sidebar">
+  <a href="<?php echo site_url('rtk_management/rtk_orders');?>">&nbsp;</a>
+  
+    
 <nav class="sidenav">
   <ul>
-    <li class="orders_minibar"><a href="<?php echo site_url('rtk_management/rtk_orders');?>">Orders</a></li>
-        <li class="orders_minibar"><a href="<?php echo site_url('rtk_management/rtk_orders');?>">Pending
+    <li class="orders_minibar"><a href="<?php echo site_url('rtk_management/rtk_orders');?>" style="
+    margin: 0;  padding: 5%;  height: 15px;  border-top: #f0f0f0 1px solid;  background: #cccccc;  font: normal 1.3em 'Trebuchet MS',Arial,Sans-Serif;  text-decoration: none;  text-transform: uppercase;  background: #29527b;  border-radius: 0.5em;  color: #fff;
+">Orders</a></li>
+        <!--<li class="orders_minibar"><a href="<?php echo site_url('rtk_management/rtk_orders');?>">Pending
     <span style="
     font-weight: 400;
     font-size: 1.5em;
@@ -249,7 +254,7 @@ code {
     border-radius: 28px;
     border: solid 1px rgb(150, 98, 98);
 ">30</span>
-</a> </li>
+</a> </li>-->
  
   </ul>
 </nav>
@@ -282,7 +287,7 @@ code {
             <th><b>MFL Code</b></th>
             <th><b>Facility Name</b></th>
             <th><b>Owner</b></th>
-            <th ><b>Actions&nbsp;on&nbsp;RTK&nbsp;Reports&nbsp;</b></th> 
+            <th ><b>FCDRR Reports</b></th> 
                         
           </tr>
           </thead>

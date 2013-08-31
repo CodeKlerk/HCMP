@@ -63,26 +63,36 @@ AND facility= '.$facility.'');
 			</fieldset>';
 
 }
-
 		$htm .=  "<table class='data-table' style='font-size: 0.9em;'>";
 		$htm .=  "<thead>
 		<!--<th>Equipment Name</th> -->
-		<th> Description(Unit)</th>
-		<th>Quantity Received(3 months av)</th>
-		<th>Quantity Received(3 months av)</th>
-		<th>End Balance(June)</th>
-		<th>Requested</th>
-		<th>Allocated</th></thead>";
+ 
+		<th ROWSPAN=2> Reagent Name</th>
+		<th COLSPAN=3>Quantity Received(3 months av)</th>
+		<th COLSPAN=3>Quantity Consumed(3 months av)</th>
+		<th ROWSPAN=2>End Balance(July)</th>
+		<th ROWSPAN=2>Requested</th>
+		<th ROWSPAN=2>Allocated</th>
+		</tr>
+		<tr>
+		<th>May</th><th>June</th><th>July</th>
+		<th>May</th><th>June</th><th>July</th>
+		</tr></thead>
+		";
+  
 				foreach ($equipments->result_array() as $equipmentsarr) {
 
+				$name = $equipmentsarr['name'];
 				$reagentname = $equipmentsarr['reagentname'];
 				$equipmentname = $equipmentsarr['equipmentname'];
 				$unit = $equipmentsarr['unit'];
 
 //				echo "<pre>";
- //				var_dump($equipmentsarr);
+//			var_dump($equipmentsarr);
 
-			 	$htm .= '<tr><!--<td>'.$equipmentname.'</td>--><td>'.$reagentname.'<br />('.$unit.')</td><td>1</td><td>1</td><td>1</td><td>3</td><td><input type="text" value="0" /></td></tr>';
+ 
+			 	$htm .= '<tr> <td>'.$name.'<br />('.$unit.')</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>3</td><td>3</td><td><input type="text" value="0" /></td></tr>';
+ 
 
 //				echo "</pre>";
 			}

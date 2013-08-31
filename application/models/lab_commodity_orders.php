@@ -132,6 +132,11 @@ public static function get_single_lab_order($order_id){
 		");
 		return $query;
 }
+public static function getlastid(){
+	$query = Doctrine_Manager::getInstance()->getCurrentConnection()
+	->fetchAll("SELECT id FROM lab_commodity_orders ORDER by id");
+	return $query;
+}
 
 }
 ?>

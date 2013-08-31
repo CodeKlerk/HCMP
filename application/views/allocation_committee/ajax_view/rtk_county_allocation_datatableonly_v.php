@@ -8,7 +8,10 @@
 	
 	text-align: center;
 	}
-		</style>				
+	 #allocated{
+	 	background: #D1F8D5;
+        }
+		</style>	 
 				<script type="text/javascript" charset="utf-8">
 			
 			$(function() { 
@@ -16,6 +19,7 @@
 				/* Build the DataTable with third column using our custom sort functions */
 				$('#example').dataTable( {
 					"bJQueryUI": true,
+					"aaSorting": [[ 10, "desc" ]],
 					"bPaginate": false} );				
 					$( "#allocate" )
 			.button()
@@ -38,6 +42,7 @@
 					<tr>
 						<th><b>MFL</b></th>
 						<th><b>Facility Name</b></th>
+                                                <th><b>District</b></th>
 				 
 						<th><b>Commodity</b></th>
 						<th><b>Quantity Received</b></th>
@@ -47,6 +52,7 @@
 						<th><b>Quantity Requested for Re-Supply</b></th>
 						<th><b>Quantity Allocated</b></th>
 						<th><b>Quantity Issued(From KEMSA)</b></th>
+						<th><b>Status</b></th>
 											    
 					</tr>
 					</thead>

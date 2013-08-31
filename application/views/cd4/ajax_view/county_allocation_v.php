@@ -6,7 +6,8 @@
 //$("#view").click(function (){$("#overlay-preview").show(); });
 //alert("Welcome " + name + ", the ");
     $.ajax({
-    url:'<?php echo base_url();?>cd4_management/facility_allocate/'+id,
+//    url:'<?php echo base_url();?>cd4_management/facility_allocate/'+id,
+	 url:'<?php echo base_url();?>cd4_management/nascop_get/'+id,
     data:name,
 	success: function(result){
 		$(".cd4-allocate").html(result);
@@ -24,12 +25,10 @@
 	.facility-list a{
 
 	}
-<<<<<<< HEAD
-	.facility-list li a:active{
-=======
+
 	.facility-list a:active{
 		border-left: solid 4px rgb(71, 224, 71);
->>>>>>> 1494ff7b41acec67dfbd1f1945cb6100006c2fd9
+
 		background: #EEF1DF;
 	}
 	.facility-list li{
@@ -42,11 +41,11 @@
 		background: #EEF1DF;
 	}
 </style>
-<<<<<<< HEAD
- <div id="main_content">
-=======
- <div>
->>>>>>> 1494ff7b41acec67dfbd1f1945cb6100006c2fd9
+ 
+ <div id="main_content" style="
+    height: 1000px;
+">
+ 
  <div>
 	<div style="float: left;position: fixed;z-index: 100;background: #fff;">
 
@@ -60,13 +59,9 @@
 	</div>
 	</div>
  
-		
-<<<<<<< HEAD
-	<div class="cd4-allocate" style="width: 80%;
-float: right;">
-=======
+ 
 	<div class="cd4-allocate" style="width: 80%;float: right; height: 50em; margin-bottom: 5em;">
->>>>>>> 1494ff7b41acec67dfbd1f1945cb6100006c2fd9
+ 
 
 <?php $this->load->view('cd4/ajax_view/initial_facility_allocate');?>
 	</div>

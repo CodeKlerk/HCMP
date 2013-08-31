@@ -117,7 +117,7 @@ return $stats_data;
             $data['percentage_complete'] = Historical_Stock::historical_stock_rate($facility_c);	    
 		    $data['diff']=$difference;			
 			$data['exp']=Facility_Stock::get_exp_count($date,$facility_c);
-		
+		    $data['historical_stock'] = Historical_Stock::historical_stock_rate($facility_c);	
 			$data['exp_count']=Facility_Stock::get_exp_count($date,$facility_c);
 			$data['stock']=Facility_Stock::count_facility_stock_first($facility_c);
 		    $data['pending_orders'] = Ordertbl::get_pending_count($facility_c);
@@ -152,35 +152,32 @@ else if($access_level == "dpp"){
 		     // $facilities=Facilities::get_facility_details(6);
 		$table_body='';
 		foreach($facilities as $facility_detail){
-			
-			$table_body .="<tr><td><a class='ajax_call_1' id='county_facility' name='".base_url()."rtk_management/get_rtk_facility_detail/$facility_detail[facility_code]' href='#'>".$facility_detail["facility_code"]."</td>";
-			$table_body .="<td>".$facility_detail['facility_name']."</td><td>".$facility_detail['facility_owner']."</td>";
-		$table_body .="<td>";
-          
-          $lab_count=lab_commodity_orders::get_recent_lab_orders($facility_detail['facility_code']);
-          $fcdrr_count=rtk_fcdrr_order_details::get_facility_order_count($facility_detail['facility_code']);
-          if($fcdrr_count>0){
-           $table_body .="
-       FCDRR <img src='".base_url()."/Images/check_mark_resize.png'></img>
-<a href=".site_url('rtk_management/update_fcdrr_test/'.$facility_detail['facility_code'])." class='link'>Edit</a>|";
-          }
-          else{
- $table_body .="<a href=".site_url('rtk_management/fcdrr_test/'.$facility_detail['facility_code'])." class='link'>FCDRR
-        </a>|";
-          }
 
-           if($lab_count>0){
-           	//".site_url('rtk_management/get_report/'.$facility_detail['facility_code'])."
-           $table_body .="Lab&nbsp;Commodities  <img src='".base_url()."/Images/check_mark_resize.png'></img><!--<a href='#' class='link'>Edit</a>--></td>";
-          }
-          else{
-  $table_body .="<a href=".site_url('rtk_management/get_report/'.$facility_detail['facility_code'])." class='link'>Lab&nbsp;Commodities</a></td>";
-     
-          }
+            date_default_timezone_set("EUROPE/Moscow");
+            $lastmonth = date('F', strtotime("last day of previous month"));
 
-      $table_body .="</td>";
-			
-		}
+            $table_body .="<tr><td><a class='ajax_call_1' id='county_facility' name='" . base_url() . "rtk_management/get_rtk_facility_detail/$facility_detail[facility_code]' href='#'>" . $facility_detail["facility_code"] . "</td>";
+            $table_body .="<td>" . $facility_detail['facility_name'] . "</td><td>" . $facility_detail['facility_owner'] . "</td>";
+            $table_body .="<td>";
+
+            $lab_count = lab_commodity_orders::get_recent_lab_orders($facility_detail['facility_code']);
+            $fcdrr_count = rtk_fcdrr_order_details::get_facility_order_count($facility_detail['facility_code']);
+            if ($fcdrr_count > 0) {
+                $table_body .="<!-- FCDRR <img src='" . base_url() . "/Images/check_mark_resize.png'></img>
+                        <a href=" . site_url('rtk_management/update_fcdrr_test/' . $facility_detail['facility_code']) . " class='link'>Edit</a>|-->";
+            } else {
+                $table_body .="<!--<a href=" . site_url('rtk_management/fcdrr_test/' . $facility_detail['facility_code']) . " class='link'>FCDRR</a>|-->";
+            }
+
+            if ($lab_count > 0) {
+                //".site_url('rtk_management/get_report/'.$facility_detail['facility_code'])."
+                $table_body .="<span class='label label-success'>Submitted  for    $lastmonth </span> <!--<img src='" . base_url() . "/Images/check_mark_resize.png'></img>--><a href=" . site_url('rtk_management/rtk_orders') . " class='link'>View</a></td>";
+            } else {
+                $table_body .="<span class='label label-important'>  Pending for $lastmonth </span> <a href=" . site_url('rtk_management/get_report/' . $facility_detail['facility_code']) . " class='link'>Report</a></td>";
+            }
+
+            $table_body .="</td>";
+        }
 
 	$data['table_body']=$table_body;
 	$data['content_view'] = "rtk/dpp/dpp_home_with_table";

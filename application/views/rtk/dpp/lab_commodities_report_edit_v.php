@@ -87,43 +87,45 @@ jQuery(document).ready(function() {
 
 </script>
 
-<?php foreach ($all_details as $detail) {
-			$id=$detail['id'];
-			$facility_name=$detail['facility_name'];
-			$facility_code=$detail['facility_code'];
-			$district_id=$detail['district_id'];
-			$district=$detail['district_name'];
-			$county=$detail['county_name'];
-			$owner=$detail['owner'];
-			$vct=$detail['vct'];
-			$pitc=$detail['pitc'];
-			$pmtct=$detail['pmtct'];
-			$b_screening=$detail['b_screening'];
-			$other=$detail['other'];
-			$specification=$detail['specification'];
-			$rdt_under_tests=$detail['rdt_under_tests'];
-			$rdt_under_pos=$detail['rdt_under_pos'];
-			$rdt_btwn_tests=$detail['rdt_btwn_tests'];
-			$rdt_btwn_pos=$detail['rdt_btwn_pos'];
-			$rdt_over_tests=$detail['rdt_over_tests'];
-			$rdt_over_pos=$detail['rdt_over_pos'];
-			$micro_under_tests=$detail['micro_under_tests'];
-			$micro_under_pos=$detail['micro_under_pos'];
-			$micro_btwn_tests=$detail['micro_btwn_tests'];
-			$micro_btwn_pos=$detail['micro_btwn_pos'];
-			$micro_over_tests=$detail['micro_over_tests'];
-			$micro_over_pos=$detail['micro_over_pos'];
-			$beg_date=$detail['beg_date'];
-			$end_date=$detail['end_date'];
-			$explanation=$detail['explanation'];
-			$moh_642=$detail['moh_642'];
-			$moh_643=$detail['moh_643'];
-			$compiled_by=$detail['fname']." ".$detail['lname'];
-			$order_date=$detail['order_date'];
-			$phone_no=$detail['telephone'];
-			$full_name= $this -> session -> userdata('full_name');
-
-		}
+<?php 
+$orderid = $order_id;
+ 
+foreach ($all_details as $detail) {
+    $id = $detail['id'];
+    $facility_name = $detail['facility_name'];
+    $facility_code = $detail['facility_code'];
+    $district_id = $detail['district_id'];
+    $district = $detail['district'];
+    $county = $detail['county'];
+    $owner = $detail['owner'];
+    $vct = $detail['vct'];
+    $pitc = $detail['pitc'];
+    $pmtct = $detail['pmtct'];
+    $b_screening = $detail['b_screening'];
+    $other = $detail['other'];
+    $specification = $detail['specification'];
+    $rdt_under_tests = $detail['rdt_under_tests'];
+    $rdt_under_pos = $detail['rdt_under_pos'];
+    $rdt_btwn_tests = $detail['rdt_btwn_tests'];
+    $rdt_btwn_pos = $detail['rdt_btwn_pos'];
+    $rdt_over_tests = $detail['rdt_over_tests'];
+    $rdt_over_pos = $detail['rdt_over_pos'];
+    $micro_under_tests = $detail['micro_under_tests'];
+    $micro_under_pos = $detail['micro_under_pos'];
+    $micro_btwn_tests = $detail['micro_btwn_tests'];
+    $micro_btwn_pos = $detail['micro_btwn_pos'];
+    $micro_over_tests = $detail['micro_over_tests'];
+    $micro_over_pos = $detail['micro_over_pos'];
+    $beg_date = $detail['beg_date'];
+    $end_date = $detail['end_date'];
+    $explanation = $detail['explanation'];
+    $moh_642 = $detail['moh_642'];
+    $moh_643 = $detail['moh_643'];
+    $compiled_by = $detail['compiled_by'];
+    $order_date = $detail['order_date'];
+//    $phone_no = $detail['telephone'];
+    $designation = $this->session->userdata('full_name');
+}
 	$attributes = array( 'name' => 'myform', 'id'=>'myform');
 	echo form_open('rtk_management/update_lab_commodity_orders',$attributes); 
 		?>
@@ -138,11 +140,11 @@ jQuery(document).ready(function() {
 		
 					<tr><td style = "text-align:left"><b>Name of Facility:</b></td>
 						<td colspan = "2"><?php echo $facility_name?></td>
-						<td colspan = "2" rowspan = "8"></td>
+						<td colspan = "3" rowspan = "8" style="background: #fff;"></td>
 						<td colspan = "3"><b>Applicable to HIV Test Kits Only</b></td>
-						<td colspan = "2" rowspan = "8"></td>
+						<td colspan = "3" rowspan = "8" style="background: #fff;"></td>
 						<td colspan = "4" style="text-align:center"><b>Applicable to Malaria Testing Only</b></td>
-						<td colspan = "2" rowspan = "8"></td>
+
 					</tr>
 					<tr ><td colspan = "2" style = "text-align:left"><b>MFL Code:</b></td>
 						<td><?php echo $facility_code?></td>
@@ -230,7 +232,7 @@ jQuery(document).ready(function() {
 						<input type="hidden" id="facilityCode" name="facilityCode">
 						<input type="hidden" id="district" name="district" value="<?php echo $district_id; ?>">
 						<input type="hidden" id="unit_of_issue[<?php echo $checker?>]" name = "unit_of_issue[<?php echo $checker?>]" value="<?php echo $detail['unit_of_issue']; ?>">
-						<input type="hidden" id="detail_id[<?php echo $checker?>]" name = "detail_id[<?php echo $checker?>]" value="<?php echo $detail['detail_id']; ?>">
+						<input type="hidden" id="detail_id[<?php echo $checker?>]" name = "detail_id[<?php echo $checker?>]" value="<?php echo $detail['id']; ?>">
 						<td colspan = "2" style = "text-align:left"><b><?php echo $detail['category_name']; ?></b></td>		    
 						<td colspan = "2" style = "text-align:left"></b><?php echo $detail['commodity_name']; ?></td>
 						<td style = "text-align:center" readonly="readonly"><?php echo $detail['unit_of_issue']; ?></td>
@@ -256,7 +258,7 @@ jQuery(document).ready(function() {
 						<td colspan = "16" style = "text-align:left">Explain Losses and Adjustments:</td>
 					</tr>
 <tr>					
-						<td colspan = "16"><input colspan = "16" id="explanation" name="explanation" size="210" type="text" value="<?php echo $explanation?>"/></td>
+						<td colspan = "16"><input colspan = "16" id="explanation" name="explanation" size="210" type="text" value="<?php echo $explanation?>" style=" width: 90%;"/></td>
 					
 					</tr>
 					<tr></tr>
@@ -268,9 +270,9 @@ jQuery(document).ready(function() {
 						<td colspan = "4"><b>(2) F-CDRR for Laboratory Commodities (MOH 643):</b></td>
 						<td colspan = "2"><input class='user2' id="moh_643" name="moh_643" size="10" type="text" value="<?php echo $moh_643?>"/></td>
 					</tr>
-<tr>					<td colspan = "4" style = "text-align:left">Compiled by: <?php echo $compiled_by?></td>
-						<td colspan = "3" style = "text-align:left">Tel: <?php echo $phone_no?></td>
-						<td colspan = "3" style = "text-align:left">Designation: <?php echo $full_name?></td>
+<tr>					<td colspan = "4" style = "text-align:left">Compiled by: <?php echo $compiled_by?><input name="compiled_by" value ="<?php echo $compiled_by;?>" /></td>
+						<td colspan = "3" style = "text-align:left">Tel: <?php //echo $phone_no?><input name="compiled_by" value ="<?php // cho $phone_no;?>" /></td>
+						<td colspan = "3" style = "text-align:left">Designation: <?php //echo $full_name;?><input name="compiled_by" value ="<?php // echo $full_name;?>" /></td>
 						<td colspan = "3" style = "text-align:left">Sign:</td>
 						<td colspan = "3" style = "text-align:left">Date: <?php echo $order_date?></td>
 					</tr>
@@ -285,5 +287,6 @@ jQuery(document).ready(function() {
 
 </table></form>
 </div>
-<input  class="button" id="save1" name="save1"  value="Update Order" >
+<input  class="btn btn-primary" id="save1" name="save1"  value="Update Order" >
+
 <?php form_close();?>
