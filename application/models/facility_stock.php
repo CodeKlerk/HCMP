@@ -109,17 +109,48 @@ GROUP BY fs.kemsa_code*/
 		$stocks= $query -> execute();
 		return $stocks[0];
 	}
-	public static function getexp($date,$facility){
-		$query=Doctrine_query::create()->select("*")->from("Facility_Stock")->where ("facility_code='$facility' and expiry_date<='$date'");
+	public static function getexp($facility,$status=NULL){
+		
+		$query=($status!='decommission')? Doctrine_query::create()->select("f_s.kemsa_code,ROUND( (
+SUM( f_s.balance ) / d.total_units ) * d.unit_cost, 1
+) AS total")->from("Facility_Stock f_s, drug d")->where ("facility_code='$facility' and `expiry_date` <= NOW( ) and f_s.kemsa_code=d.id and STATUS =( 1
+OR 2 ) and balance >0")->groupby("f_s.kemsa_code") : Doctrine_query::create()->select("f_s.kemsa_code,ROUND( (
+SUM( f_s.balance ) / d.total_units ) * d.unit_cost, 1) AS total")->from("Facility_Stock f_s, drug d")->where ("facility_code='$facility' and `expiry_date` <= NOW( ) and f_s.kemsa_code=d.id and STATUS =1 and balance >0")->groupby("f_s.kemsa_code");
+
+		
 		$expire=$query->execute();
+		
 		return $expire;
 	}
-	public static function get_exp_count($date,$facility){
+	public static function get_facility_expired_stuff($date,$facility){
+	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
+->fetchAll("SELECT d.id as drug_id,d.kemsa_code,d.unit_size,d.drug_name,d.unit_cost,f_s.batch_no,f_s.manufacture,sum(f_s.balance) as balance ,f_s.expiry_date from facility_stock f_s, drug d where f_s.kemsa_code=d.id and f_s.facility_code='$facility' and f_s.expiry_date<='$date' and f_s.STATUS ='1' GROUP BY d.id");
+
+        return $inserttransaction ;	
+	}
+	
+	public static function get_facility_drug_total($facility_code,$drug_code){
+	$query = Doctrine_Query::create() -> select("sum(balance) as balance") -> from("Facility_Stock") -> where("facility_code='$facility_code' and kemsa_code=$drug_code")->andwhere("STATUS ='1'");	
+		$stocks= $query -> execute();
+		return $stocks;	
+	}
+	
+	public static function get_exp_count($facility){
 		$query=Doctrine_query::create()->select("batch_no")->from("Facility_Stock")
-		->where ("facility_code='$facility' and expiry_date<='$date'")
+		->where ("facility_code='$facility' and expiry_date<=NOW() and balance >0")
 		->andWhere("status='1'")->groupBy("batch_no");
-		$expire=$query->count();
-		return $expire;
+		$expire=$query->execute();
+		
+		return count($expire);
+	}
+	
+		public static function get_potential_count($facility){
+		$query=Doctrine_query::create()->select("batch_no")->from("Facility_Stock")
+		->where ("facility_code='$facility' and expiry_date BETWEEN CURDATE()AND DATE_ADD(CURDATE(), INTERVAL 6 MONTH) and balance >0")
+		->andWhere("status='1'")->groupBy("batch_no");
+		$expire=$query->execute();
+		
+		return count($expire);
 	}
 	public static function getAll1($facility)
 		  {
@@ -170,20 +201,20 @@ AND fs.STATUS ='1'
 GROUP BY fs.kemsa_code
 ORDER BY d.drug_name ASC  ");
 
-        return $inserttransaction ;}
-        
+        return $inserttransaction ;
+        }      
         ////////////// getting facility stock level
      public static function get_facility_stock_level($distict){
      
 $inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
-		->fetchAll("SELECT d.drug_name, ceil(SUM( fs.balance / d.total_units )) AS total
-FROM facility_stock fs, drug d, facilities f
-WHERE fs.facility_code = f.facility_code
-AND f.facility_code =  '$distict'
+		->fetchAll("SELECT d.drug_name, CEIL( SUM( fs.balance / d.total_units ) ) AS total, ifnull(temp.consumption_level,0) as consumption_level
+FROM  drug d, facility_stock fs
+left join historical_stock temp on temp.drug_id=fs.kemsa_code and temp.facility_code='$distict'
+WHERE fs.facility_code =  '$distict'
 AND d.id = fs.kemsa_code
-AND fs.STATUS ='1'
+AND fs.STATUS =  '1'
 GROUP BY fs.kemsa_code
-ORDER BY d.drug_name ASC  ");
+ORDER BY d.drug_name ASC");
 
         return $inserttransaction ;} 
       ////////////// getting district stock level
@@ -231,11 +262,30 @@ ORDER BY d.drug_name ASC  ");
 		
 	
 }
+ return $inserttransaction ;}  
+
+     public static function get_county_drug_consumption_level($county_id,$category_id=null){
+   
+  $and_data=isset($category_id) ?	"AND d.drug_category =  '$category_id'" : null;
+    	
+	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
+		->fetchAll("SELECT d.drug_name, CEIL( SUM( fs.qty_issued / d.total_units ) ) AS total
+FROM facility_issues fs, drug d, facilities f, districts di, counties c
+WHERE fs.facility_code = f.facility_code
+AND f.district = di.id
+AND fs.availability ='1'
+AND di.county = c.id
+AND year(fs.date_issued)=year(now())
+AND c.id =  '$county_id'
+AND d.id = fs.kemsa_code
+$and_data
+GROUP BY fs.kemsa_code having total >1
+ORDER BY d.drug_name ASC ");		
+   
      	
-     
 
-
-        return $inserttransaction ;}     
+ return $inserttransaction ;
+ }    
         
         /////getting cost of exipries 
             public static function get_district_cost_of_exipries($distict){
@@ -250,6 +300,15 @@ AND d.id = fs.kemsa_code
 GROUP BY month( expiry_date ) asc");
         return $inserttransaction ;
 			} 
+			
+			public static function get_county_stock_out_trend($county_id){
+     
+$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
+		->fetchAll("SELECT count(f_t.id) as total,date_format( `start_date`, '%b' ) as month, month(`start_date`) as checker from facility_stock_out_tracker f_t, facilities f, districts d
+where f.facility_code=f_t.`facility_id` and f.district=d.id and d.county=1
+ GROUP BY month( `start_date`) asc");
+        return $inserttransaction ;
+			}
       /////getting cost of exipries county
             public static function get_county_cost_of_exipries($county_id){
      
@@ -292,11 +351,12 @@ public static function get_decom_count($district)
 		////get maufacuture for a given batch no
 	
 	public static function get_facility_commodity_stock_balance($kemsa_code,$facility_code){
-		$query = Doctrine_Query::create() -> select("count(balance) as total") -> from("Facility_Stock") -> where("kemsa_code='$kemsa_code' and facility_code='$facility_code'")->andwhere("status='1'");
+		$query = Doctrine_Query::create() -> select("sum(balance) as total") -> from("Facility_Stock") -> where("kemsa_code='$kemsa_code' and facility_code='$facility_code'")->andwhere("status='1'");
 		
 		$stocks= $query -> execute();
-		$stocks=$stocks->toArray();
-		return $stocks[0];
+		
+		$stocks=$stocks[0]->toArray();
+		return $stocks;
 	}
 	
 	// get the stocks for a given facility 
@@ -306,7 +366,30 @@ public static function get_decom_count($district)
 		$stocktake = $query ->execute();
 		
 		return $stocktake;
+	}
+	
+	public static function get_county_max_date($county_id){
+$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
+		->fetchAll("SELECT MAX(stock_date) as date_ FROM `facility_stock` f_s, districts d, facilities f WHERE f.facility_code=f_s.`facility_code` and f.district=d.id and d.county=$county_id");
+        return  $inserttransaction ;
+	}
+	
+	public static function get_decommisioned_count($county_id=null,$district_id=null){
+				
+	$condition=isset($district_id)? "d.id" : "d.county";	
+	$id=	isset($district_id)?$district_id : $county_id;			
 		
+	$inserttransaction = Doctrine_Manager::getInstance()->getCurrentConnection()
+		->fetchAll("SELECT ifnull(COUNT(f_s.id),0) AS total
+FROM facilities f, facility_stock f_s, districts d
+WHERE f.facility_code = f_s.facility_code
+AND f.district = d.id
+AND $condition =$id
+AND f_s.`status` =2
+AND DATE_FORMAT( f_s.`expiry_date` ,  '%Y' ) = DATE_FORMAT( NOW( ) ,  '%Y' ) 
+GROUP BY $condition");
+
+        return  $inserttransaction ;	
 	}
 	
 }

@@ -186,6 +186,8 @@ code {
 
 </div>-->
 <div class="leftpanel">
+ 
+<br /><br />
 
 <div class="dash_menu">  
 <!-- <h3 class="accordion" class="ajax-call" id="facility_list">Facility List<span></span><h3>
@@ -194,20 +196,18 @@ code {
 <h3 class="accordion" id="section1" >Allocation Rate<span></span><h3>
 <div class="container">
 
-	<div class="multiple_chart_content" style="width:100%; height:15%" id="chart4"></div>
+<!--	<div class="multiple_chart_content" style="width:100%; height:15%" id="chart4"></div>-->
 	<table class="data-table" style="margin-left: 0px;">
 		<thead>
 		<tr>
-			<td width="50%">Counties</td><td><h6>No. Reporting Facilities | No. Allocated Facilities</h6></td>
+			<td width="50%">Counties</td><td><h6>(Reported/Total)  Facilities</h6></td>
 		</tr>
 		</thead>
 		<tbody>
-    <tr><td><a href="#"> Baringo</a> </td><td>23 | 1</td></tr><tr><td><a href="#"> Bomet</a> </td><td>56 | 0</td></tr><tr><td><a href="#"> Bungoma</a> </td><td>64 | 0</td></tr><tr><td><a href="#"> Busia</a> </td><td>28 | 0</td></tr><tr><td><a href="#"> Elgeyo Marakwet</a> </td><td>40 | 0</td></tr><tr><td><a href="#"> Embu</a> </td><td>0 | 0</td></tr><tr><td><a href="#"> Garissa</a> </td><td>8 | 0</td></tr><tr><td><a href="#"> Homa Bay</a> </td><td>80 | 0</td></tr><tr><td><a href="#"0> Isiolo</a> </td><td>2 | 0</td></tr><tr><td><a href="#"1> Kajiado</a> </td><td>24 | 0</td></tr><tr><td><a href="#"2> Kakamega</a> </td><td>47 | 0</td></tr><tr><td><a href="#"3> Kericho</a> </td><td>64 | 0</td></tr><tr><td><a href="#"4> Kiambu</a> </td><td>68 | 0</td></tr><tr><td><a href="#"5> Kilifi</a> </td><td>129 | 0</td></tr><tr><td><a href="#"6> Kirinyaga</a> </td><td>0 | 0</td></tr><tr><td><a href="#"7> Kisii</a> </td><td>37 | 0</td></tr><tr><td><a href="#"8> Kisumu</a> </td><td>103 | 0</td></tr><tr><td><a href="#"9> Kitui</a> </td><td>75 | 0</td></tr><tr><td><a href="#"0> Kwale</a> </td><td>47 | 0</td></tr><tr><td><a href="#"1> Laikipia</a> </td><td>0 | 0</td></tr><tr><td><a href="#"2> Lamu</a> </td><td>20 | 0</td></tr><tr><td><a href="#"3> Machakos</a> </td><td>40 | 0</td></tr><tr><td><a href="#"4> Makueni</a> </td><td>61 | 0</td></tr><tr><td><a href="#"5> Mandera</a> </td><td>4 | 0</td></tr><tr><td><a href="#"6> Marsabit</a> </td><td>20 | 0</td></tr><tr><td><a href="#"7> Meru</a> </td><td>42 | 0</td></tr><tr><td><a href="#"8> Migori</a> </td><td>119 | 0</td></tr><tr><td><a href="#"9> Mombasa</a> </td><td>25 | 0</td></tr><tr><td><a href="#"0> Muranga</a> </td><td>50 | 0</td></tr><tr><td><a href="#"> Nairobi</a> </td><td>1 | 0</td></tr><tr><td><a href="#"1> Nakuru</a> </td><td>76 | 0</td></tr><tr><td><a href="#"2> Nandi</a> </td><td>66 | 0</td></tr><tr><td><a href="#"3> Narok</a> </td><td>65 | 0</td></tr><tr><td><a href="#"4> Nyamira</a> </td><td>40 | 0</td></tr><tr><td><a href="#"5> Nyandarua</a> </td><td>52 | 0</td></tr><tr><td><a href="#"6> Nyeri</a> </td><td>113 | 0</td></tr><tr><td><a href="#"7> Samburu</a> </td><td>1 | 0</td></tr><tr><td><a href="#"8> Siaya</a> </td><td>112 | 0</td></tr><tr><td><a href="#"9> Taita Taveta</a> </td><td>45 | 0</td></tr><tr><td><a href="#"0> Tana River</a> <
-/td><td>10 | 0</td></tr><tr><td><a href="#"1> Tharaka Nithi</a> </td><td>18 | 0</td></tr><tr><td><a href="#"2> Trans Nzoia</a> </td><td>36 | 0</td></tr><tr><td><a href="#"3> Turkana</a> </td><td>12 | 0</td></tr><tr><td><a href="#"4> Uasin Gishu</a> </td><td>23 | 0</td></tr><tr><td><a href="#"5> Vihiga</a> </td><td>29 | 0</td></tr><tr><td><a href="#"6> Wajir</a> </td><td>6 | 0</td></tr><tr><td><a href="#"7> West Pokot</a> </td><td>26 | 0</td></tr><tr><td>TOTAL </td><td> 2007 | 1</td><tr>  
-		<?php 
+ 
 		
- //		echo $table_data;
-		?>
+<?php   echo $table_data; ?>
+	 
 			
 		 
 		</tbody>

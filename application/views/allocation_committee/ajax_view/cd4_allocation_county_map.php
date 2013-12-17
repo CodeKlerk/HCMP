@@ -58,7 +58,7 @@
 	<div class="multiple_chart_content" style="width:100%; height: 100%"  id="chart"></div>
 	
 	</div>
-	<div class="chart_content" style="width:100%;" id="chart2"></div>
+	 
 	
  
  

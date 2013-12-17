@@ -313,10 +313,7 @@ if ($quick_link == "new_order") {echo "active";
 <?php if($user_is_rtk_manager){
 	?>
 	<li class="active"><a data-clone="Home" href="<?php echo base_url(); ?>home_controller">Home </a></li>
-	<li><a data-clone="Facility Mapping" href="<?php echo site_url('rtk_management/rtk_mapping'); ?>"  class="<?php
-	if ($quick_link == "kemsa_order_v") {echo "active";
-	}
-?>">Facility Mapping</a></li>
+	
 	<?php } ?>
 <?php if($user_is_moh_user){
 	?>
@@ -373,9 +370,10 @@ if ($current == "home_controller") {echo "active";
 <?php if($user_is_allocation_committee){
 	?>
 	<li class="active"><a data-clone="RTK Home" href="<?php echo base_url();?>home_controller">RTK</a></li>
-<!--	<li><a  data-clone="RTK Allocation" href="<?php echo base_url();?>rtk_management/national_allocation">Allocation</a></li>
-	<li><a  data-clone="CD4 Home" href="<?php echo base_url();?>cd4_management/">CD4</a></li>-->
-	<li><a  data-clone="CD4 Allocation" href="<?php echo base_url();?>cd4_management">CD4</a></li>
+
+ <li><a  data-clone="RTK Allocation" href="<?php echo base_url();?>rtk_management/allocations">RTK Allocations</a></li>
+	<li><a  data-clone="CD4 Home" href="<?php echo base_url();?>cd4_management/">CD4</a></li> 
+	<li><a  data-clone="CD4 Allocation" href="<?php echo base_url();?>cd4_management/allocations">CD4 Allocations</a></li>
 	<?php } ?>
 <?php if($user_is_moh){
 	?>

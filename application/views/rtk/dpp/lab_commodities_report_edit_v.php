@@ -271,8 +271,8 @@ foreach ($all_details as $detail) {
 						<td colspan = "2"><input class='user2' id="moh_643" name="moh_643" size="10" type="text" value="<?php echo $moh_643?>"/></td>
 					</tr>
 <tr>					<td colspan = "4" style = "text-align:left">Compiled by: <?php echo $compiled_by?><input name="compiled_by" value ="<?php echo $compiled_by;?>" /></td>
-						<td colspan = "3" style = "text-align:left">Tel: <?php //echo $phone_no?><input name="compiled_by" value ="<?php // cho $phone_no;?>" /></td>
-						<td colspan = "3" style = "text-align:left">Designation: <?php //echo $full_name;?><input name="compiled_by" value ="<?php // echo $full_name;?>" /></td>
+						<td colspan = "3" style = "text-align:left">Tel: <?php //echo $phone_no?><input name="tel" value ="<?php // cho $phone_no;?>" /></td>
+						<td colspan = "3" style = "text-align:left">Designation: <?php //echo $full_name;?><input name="designation" value ="<?php // echo $full_name;?>" /></td>
 						<td colspan = "3" style = "text-align:left">Sign:</td>
 						<td colspan = "3" style = "text-align:left">Date: <?php echo $order_date?></td>
 					</tr>

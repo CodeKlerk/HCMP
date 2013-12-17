@@ -5,6 +5,7 @@ class Facility_Issues extends Doctrine_Record {
 	{
 		$this -> hasColumn('facility_code', 'int'); 
 		$this -> hasColumn('s11_No', 'int'); 
+		$this -> hasColumn('receipts', 'int'); 
 		$this -> hasColumn('kemsa_code', 'varchar',20); 
 	    $this -> hasColumn('batch_no', 'varchar',20); 
 		$this -> hasColumn('expiry_date', 'date'); 

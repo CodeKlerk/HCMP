@@ -52,15 +52,14 @@ $d_name = $district_name[0]['district'];
                 <tbody>
                     <?php
                     foreach ($lab_order_list as $order) {
-                        $d = new DateTime('');
-                        $d->modify($order['order_date']);
-                        $english_date = $d->format('D dS M Y');
+//                        echo "<pre>"; var_dump($order);echo "</pre>";
+  //                      die();
+                        $english_date = date('D dS M Y',strtotime($order['order_date']));
+                        $reportmonth = date('F',strtotime($order['order_date']));
                          
-
-
                         ?>
                         <tr>
-                            <td><?php echo 'july'; ?></td>		
+                            <td><?php echo $reportmonth; ?></td>		
                             <td><?php echo $order['facility_code']; ?></td>
                             <td><?php echo $order['facility_name']; ?></td>
                             <td><?php echo $order['compiled_by']; ?></td>

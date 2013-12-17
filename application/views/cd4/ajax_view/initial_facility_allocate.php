@@ -82,7 +82,7 @@ AND facility= '.$facility.'');
   
 				foreach ($equipments->result_array() as $equipmentsarr) {
 
-				$name = $equipmentsarr['name'];
+				$name = $equipmentsarr['reagentname'];
 				$reagentname = $equipmentsarr['reagentname'];
 				$equipmentname = $equipmentsarr['equipmentname'];
 				$unit = $equipmentsarr['unit'];

@@ -6,6 +6,8 @@ class Facilities extends Doctrine_Record {
 		$this -> hasColumn('district', 'varchar',30);
 		$this -> hasColumn('owner', 'varchar',30);
 		$this->hasColumn('drawing_rights','text');
+		$this->hasColumn('using_hcmp','int');
+		$this->hasColumn('date_of_activation','date');
 	}
 //////////////
 	public function setUp() {
@@ -27,11 +29,18 @@ class Facilities extends Doctrine_Record {
 		return $drugs;
 	}
 	public static function get_facility_name_($facility_code){
-			$query = Doctrine_Query::create() -> select("facility_name") -> from("facilities")->where("facility_code='$facility_code'");
+				
+	if($facility_code!=NULL){
+		$query = Doctrine_Query::create() -> select("*") -> from("facilities")->where("facility_code='$facility_code'");
 		$drugs = $query -> execute();
 		$drugs=$drugs->toArray();
 		
 		return $drugs[0];	
+	}	
+else{
+	return NULL;
+}	
+			
 	}
 	
 	public static function get_d_facility($district){
@@ -61,7 +70,7 @@ GROUP BY user.facility");
 	
 	/*************************getting the facility name *******************/
 	public static function get_facility_name($facility_code){
-	$query=Doctrine_Query::create()->select('facility_name')->from('facilities')->where("facility_code='$facility_code'");
+	$query=Doctrine_Query::create()->select('*')->from('facilities')->where("facility_code='$facility_code'");
 	$result=$query->execute();
 	return $result[0];
 	}
@@ -333,6 +342,43 @@ WHERE u.facility ="'.$facility_code.'"
 ');	
 
 return $q;
+}
+public static function get_dates_facility_went_online($county_id){
+$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("SELECT DISTINCT DATE_FORMAT(  `date_of_activation` ,  '%M %Y' ) AS date_when_facility_went_online
+FROM facilities f, districts d
+WHERE f.district = d.id
+AND d.county =$county_id
+AND UNIX_TIMESTAMP(  `date_of_activation` ) >0
+ORDER BY  `date_of_activation` ASC ");
+return $q;	
+}
+
+public static function get_facilities_which_went_online_($district_id,$date_of_activation){
+$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+SELECT count(facility_code) as total ,(select count(id) from facilities f where f.district='$district_id') as total_facilities
+ from facilities f, districts d where f.district=d.id and d.id=$district_id and DATE_FORMAT(  `date_of_activation` ,  '%M %Y' ) = '$date_of_activation'");
+return $q;		
+}
+public static function get_facilities_reg_on_($district_id,$date_of_activation){
+	
+		$query = Doctrine_Query::create() -> select("*") -> from("facilities f, districts d")->where("f.district=d.id and d.id ='$district_id'")
+		
+		->andwhere("date_format(`date_of_activation`, '%M %Y')='$date_of_activation' and unix_timestamp(`date_of_activation`) >0");
+		
+		$facilities = $query -> execute();
+		
+		return $facilities;
+	}
+public static function get_facilities_online_per_district($county_id){
+	$q = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+select d.id, d.district,f.facility_name,f.facility_code, DATE_FORMAT(`date_of_activation`,'%d %b %y') as date 
+from facilities f, districts d 
+where f.district=d.id and d.county='$county_id'
+and unix_timestamp(f.`date_of_activation`) >0 
+order by d.district asc,f.`date_of_activation` asc
+ ");
+return $q;	
+	
 }
 
 }

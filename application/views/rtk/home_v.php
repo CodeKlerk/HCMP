@@ -1,74 +1,46 @@
-<script src="<?php echo base_url().'Scripts/accordion.js'?>" type="text/javascript"></script> 
-<SCRIPT LANGUAGE="Javascript" SRC="<?php echo base_url();?>Scripts/FusionCharts/FusionCharts.js"></SCRIPT>
-<script type="text/javascript">
-$(document).ready(function(){
-
-  $.fn.slideFadeToggle = function(speed, easing, callback) {
-				return this.animate({
-					opacity : 'toggle',
-					height : 'toggle'
-				}, speed, easing, callback);
-			};
-
-			$('.accordion').accordion({
-				defaultOpen : 'section1',
-				cookieName : 'nav',
-				speed : 'medium',
-				animateOpen : function(elem, opts) {//replace the standard slideUp with custom function
-					elem.next().slideFadeToggle(opts.speed);
-				},
-				animateClose : function(elem, opts) {//replace the standard slideDown with custom function
-					elem.next().slideFadeToggle(opts.speed);
-				}
-			});
-    //default call
-    var url = "<?php echo base_url().'rtk_management/get_kenyan_county_map' ?>"
-    
-    ajax_request (url);
-
-$(".ajax-call").click(function(){
-var id  = $(this).attr("id"); 
-
-  if(id=='reporting_rate'){
-  	 var url = "<?php echo base_url().'rtk_management/get_reporting_rate' ?>";
-       	
- }
-  if(id=='county'){
-  	var url = "<?php echo base_url().'rtk_management/get_rtk_county_distribution_allocation_detail' ?>";
-       
-  }
-  
-  if(id=="fcdrr"){
-  	var url = "<?php echo base_url().'rtk_management/get_report/fcdrr' ?>";
-  }
-  if(id=="lab_commodities"){
-  	var url = "<?php echo base_url().'rtk_management/get_report/lab_commodities' ?>";
-  }
-
-  ajax_request (url);
-    
-});
-function ajax_request (url){
-	var url =url;
-	var loading_icon="<?php echo base_url().'Images/loader.gif' ?>";
-	 $.ajax({
-          type: "POST",
-          url: url,
-          beforeSend: function() {
-            $("#test_a").html("");
-            
-             $("#test_a").html("<img style='margin-left:20%;' src="+loading_icon+">");
-            
-          },
-          success: function(msg) {
-          $("#test_a").html("");
-           $("#test_a").html(msg);           
-          }
-        }); 
+<?php
+$month = $this->session->userdata('Month');
+if ($month==''){
+ $month = date('mY',time());
 }
 
+$year= substr($month, -4);
+$month= substr_replace($month,"", -4);
+//echo $year;
+//echo $month;
+//die();
+
+$monthyear = $year . '-' . $month . '-1';
+$englishdate = date('F, Y', strtotime($monthyear));
+?>
+<script type="text/javascript">
+  function loadcountysummary(county){
+//            $(".dash_main").load("<?php echo base_url(); ?>rtk_management/rtk_reporting_by_county/" + county);
+            $("#county_summary").load("<?php echo base_url(); ?>rtk_management/summary_tab_display/" + county + "/<?php echo $year.'/'.$month.'/'; ?>");
+            $("#county_graph").load("<?php echo base_url(); ?>rtk_management/fusion_test/" + county + "/<?php echo $month.'/'.$year.'/'; ?>");
+
+   }
+$(document).ready(function(){
+
+  $(".breadcrumb").load("<?php echo base_url(); ?>rtk_management/reporting_counties/<?php echo $month.'/'.$year.'/'; ?>");
+  $(".breadcrumb a").click( function(event)
+{
+   var clicked =  $(this).text();
+   $( "#selectedcounty" ).html(clicked);
+});
+ 
 
 });
+ 
+$(function(){
+
+            $('#switch_month').change(function(){
+                var value = $('#switch_month').val();
+              var path = "<?php echo base_url().'rtk_management/switch_district/0/rtk_manager/';?>"+value + "/";
+//              alert (path);
+                 window.location.href=path;
+            });
+               });
 </script>
 <style>
 .leftpanel{
@@ -190,12 +162,13 @@ code {
 
 <div class="leftpanel">
 
+<!--
 <div class="dash_menu">
     
    <!-- <h3 class="accordion" class="ajax-call" id="facility_list">Facility List<span></span><h3>
 <div class="container">
   
-</div>-->
+</div> 
 <a class="ajax-call" id="reporting_rate" ><h3 class="accordion" >Reporting Rate<span></span><h3></a>
 <div class="container">
 
@@ -217,9 +190,26 @@ code {
     </div>
 </div>
 
-</div>
+</div>-->
 <div class="sidebar">
-	
+<br />
+<div class="span2 bs-docs-sidebar">
+<select id="switch_month" style="width: 170px;background-color: #ffffff;border: 1px solid #cccccc;">
+<option>-- <?php echo $englishdate;?> --</option>
+<option value="092013">Sept 2013</option>
+<option value="102013">Oct 2013</option>
+<option value="112013">Nov 2013</option>
+<option value="122013">Dec 2013</option>
+
+</select>
+   <!-- <ul class="nav nav-tabs nav-stacked">
+        <li><a href="http://localhost/HCMP/">Counties</a></li>
+        <li class="active"><a href="#" onclick="loadDistrict()">Districts</a></li>
+        <li class="active"><a href="#" onclick="loadPendingFacilities()">Facilities</a></li>
+<!--        <li><a href="#" onclick="loadSummary()">Reports</a></li>-->
+  <!--  </ul>-->
+</div>
+	<!--
 		<h2>Quick Access</h2>
 <nav class="sidenav">
 	<ul>
@@ -227,14 +217,33 @@ code {
 
 	<ul>
 </nav>
-				
+-->				
 		</fieldset>
 	
 </div>
 </div>
 <div class="dash_main" id = "dash_main">
 <div id="test_a" style="overflow: scroll; height: 51em; min-height:100%; margin: 0; width: 100%">
+<ul class="breadcrumb" style="margin: 0 0 0px;">
+<?php
+$this->load->database();
+$q = 'SELECT id,county FROM  `counties` ORDER BY  `counties`.`county` ASC   ';
+$res_arr = $this->db->query($q);
+foreach ($res_arr->result_array() as $value) {
+  ?> 
+<li><a href="#" value ="<?php echo $value['county'] ; ?>" onclick="loadcountysummary(<?php echo $value['id'] ; ?>)"><?php echo $value['county'] ; ?></a> <span class="divider">/</span></li>
+<?php 
+} ?>
 
+   </ul>
+<div class="well">
+<div class="page-header">
+     <h1 style="font-size: 207%;">County summary <?php echo $englishdate;?><small> Kenya</small></h1>
+   </div>
+<!--     <h4>Leading County in reporting: Nakuru</h4>-->
+     <div id="county_graph"></div>
+     <div id="county_summary"></div>
+</div>
 		</div>
 </div>
 

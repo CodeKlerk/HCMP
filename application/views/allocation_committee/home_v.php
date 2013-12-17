@@ -201,19 +201,22 @@ code {
 </style>
 
 <div class="leftpanel">
-
+ 
+<br />
 <div class="dash_menu">  
 <!-- <h3 class="accordion" class="ajax-call" id="facility_list">Facility List<span></span><h3>
 <div class="container">
  </div>-->
+ 
+ 
 <h3 class="accordion" id="section1" >Allocation Rate<span></span><h3>
 <div class="container">
 
-	<div class="multiple_chart_content" style="width:100%; height:15%" id="chart4"></div>
+<!--	<div class="multiple_chart_content" style="width:100%; height:15%" id="chart4"></div>-->
 	<table class="data-table" style="margin-left: 0px;">
 		<thead>
 		<tr>
-			<td width="50%">Counties</td><td><h6>No. Reporting Facilities | No. Allocated Facilities</h6></td>
+			<td width="50%">Counties</td><td><h6>(Allocated/Total) Facilities</h6></td>
 		</tr>
 		</thead>
 		<tbody>

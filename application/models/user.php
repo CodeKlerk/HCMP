@@ -118,6 +118,14 @@ public static function activate_deactivate_user($id,$option){
 		$myobj->save();
 		return true;
 }
+public static function delete_user($id){
+	$q = Doctrine_Manager::getInstance()->getCurrentConnection()->execute("
+delete from user where id=$id
+");
+
+return true;
+}
+
 //////get the dpp details 
 public static function get_dpp_details($distirct){
 	$query = Doctrine_Query::create() -> select("*") -> from("user")->where("district=$distirct and usertype_id='3' ");
@@ -126,7 +134,7 @@ public static function get_dpp_details($distirct){
 }
 
 public static function check_user_exist($email){
-	$query = Doctrine_Query::create() -> select("*") -> from("user")->where("`email` like '%$email%'");
+	$query = Doctrine_Query::create() -> select("*") -> from("user")->where("`email` = '$email'");
 		$level = $query -> execute();
 		return count($level);
 }
@@ -218,5 +226,7 @@ AND u.county_id ='$county_id'
 
 return array('total_no_of_users'=>$q[0]['total_no_of_users'],'total_no_of_users_7_days'=>$q_1[0]['total_no_of_users'],"active_users"=>$q_2[0]['users_logged_in']);
 }
+
+
 
 }

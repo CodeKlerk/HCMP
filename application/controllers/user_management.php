@@ -19,7 +19,7 @@ public function change_password(){
 		$this -> load -> view("login_v", $data);
 	}
 
-	public function login() {
+	public function login() {   
 		$data = array();
 		$data['title'] = "Login";
 		$this -> load -> view("login_v", $data);
@@ -58,7 +58,7 @@ public function submit() {
 		$disto=$n['district'];
 		$faci=$n['facility'];
 		$phone=$n['telephone'];
-	    $user_id=$n['id'];
+                $user_id=$n['id'];
 		$user_email=$n['email'];
 		$county_id=$n['county_id'];
 
@@ -84,6 +84,7 @@ public function submit() {
 		$county= "County Facilitator";
 		$allocation="Allocation committee";
 		$dpp="District Lab Technologist";
+		$rca = "RTK County Admin";
 		
        if ($myvalue ==1) {
        		$session_data = array('county_id'=>$county_id,'phone_no'=>$phone,'user_email'=>$user_email,'full_name' =>$moh ,'user_id'=>$user_id,'user_indicator'=>"moh",'names'=>$namer,'inames'=>$inames,'identity'=>$id_d,'news'=>$faci,'district1'=>$disto,'county_name'=>$county_name);	
@@ -115,6 +116,10 @@ public function submit() {
 		}
 		else if($myvalue ==12)  {
 			$session_data = array('county_id'=>$county_id,'phone_no'=>$phone,'user_email'=>$user_email,'user_db_id'=>$user_id,'full_name' =>$dist,'user_id'=>$user_id,'user_indicator'=>"dpp",'names'=>$namer,'inames'=>$inames,'identity'=>$id_d,'news'=>$county,'district1'=>$disto,'drawing_rights'=>0, 'county_name'=>$county_name);			
+		
+		}
+		else if($myvalue ==13)  {
+			$session_data = array('county_id'=>$county_id,'phone_no'=>$phone,'user_email'=>$user_email,'user_db_id'=>$user_id,'full_name' =>$dist,'user_id'=>$user_id,'user_indicator'=>"rca",'names'=>$namer,'inames'=>$inames,'identity'=>$id_d,'news'=>$county,'district1'=>$disto,'drawing_rights'=>0, 'county_name'=>$county_name);			
 		
 		}				
 		$this -> session -> set_userdata($session_data);

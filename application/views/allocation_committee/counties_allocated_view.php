@@ -26,13 +26,45 @@
 			.button()
 			.click(function() {
 				  $('#myform').submit();
-				
+
+	
 });	
-								
+
+			$('#countiesselect').change(function(){
+				var value = $('#countiesselect').val();
+//				alert(value);
+				 window.location.href=value;
+
+			});
+									
 			} );
 			
 			</script>
-<div style="width:313px;">
+			<div id="inner_wrapper">
+			<div class="leftpanel">
+			<div style="width:20%;">
+	<nav class="sidenav">
+  <ul>
+    <li class="orders_minibar"><a href="../allocations" style="
+    margin: 0;  padding: 5%;  height: 15px;  border-top: #f0f0f0 1px solid;  background: #cccccc;  font: normal 1.3em 'Trebuchet MS',Arial,Sans-Serif;  text-decoration: none;  text-transform: uppercase;  background: #29527b;  border-radius: 0.5em;  color: #fff;
+"><< Back</a></li>
+        <!--<li class="orders_minibar"><a href="http://localhost/HCMP/rtk_management/rtk_orders">Pending
+    <span style="
+    font-weight: 400;
+    font-size: 1.5em;
+    color: #F3EA0B;
+    float: right;
+    background: rgb(216, 40, 40);
+    padding: 4px;
+    border-radius: 28px;
+    border: solid 1px rgb(150, 98, 98);
+">30</span>
+</a> </li>-->
+ 
+  </ul>
+</nav></div></div>
+ 
+<div class="dash_main" style="width: 80%;float: right;">
 <table id="allocated" class="data-table"> 
 <thead>
 	
@@ -51,3 +83,5 @@
 echo($tdata);
 ?>
 </table></div>
+
+</div>

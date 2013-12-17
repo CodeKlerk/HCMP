@@ -14,11 +14,14 @@
         }
 		</style>	 
 				<script type="text/javascript" charset="utf-8">
+				function downloadcounty(id){
+					alert(id);
+				}
 			
 			$(function() { 
 
 				/* Build the DataTable with third column using our custom sort functions */
-				$('#allocateds').dataTable( {
+				$('#allocated').dataTable( {
 					"bJQueryUI": true,
 					"aaSorting": [[ 10, "desc" ]],
 					"bPaginate": false} );				
@@ -32,14 +35,21 @@
 			} );
 			
 			</script>
-<div style="width:313px;">
+			<div id="inner_wrapper"> 
+			<div>
+				
+			</div>
+			<div class="dash_main" style="width: 80%;float: right;">
 <table id="allocated" class="data-table"> 
 <thead>
 	<th>
 	County 
 	</th>
 	<th>
-		Period 
+		Reporting Period 
+	</th>
+		<th>
+		Allocated Facilities/ total
 	</th>
 	<th>
 		Allocations
@@ -51,3 +61,4 @@
 echo($tdata);
 ?>
 </table></div>
+</div>

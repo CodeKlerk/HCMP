@@ -6,6 +6,7 @@ class Drug extends Doctrine_Record {
 		$this -> hasColumn('Unit_Size', 'varchar',100);
 		$this -> hasColumn('Unit_Cost', 'varchar',20);
 		$this -> hasColumn('Drug_Category', 'varchar',10); 
+		$this -> hasColumn('total_units', 'int',11);
 	}
 
 	public function setUp() {

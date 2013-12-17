@@ -86,4 +86,12 @@ public static function get_district_name_($district){
 			GROUP BY d.district");	
 		return $query;
 	}
+	
+	public static function get_district_coverage($district_id){
+	$query=Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAll("
+SELECT d.district, (select count(id) from facilities f where district=$district_id) as total, (select count(id) from 
+facilities f where district=$district_id and using_hcmp=1) as total_2 from districts d where d.id=$district_id");	
+		return $query;
+	}	
+	
 }
