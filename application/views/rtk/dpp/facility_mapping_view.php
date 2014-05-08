@@ -5,19 +5,6 @@
 <script type="text/javascript" language="javascript" src="<?php echo base_url(); ?>Scripts/jquery.dataTables.js"></script>
 
 
-<script src="http://localhost/moh_fortification/media/js/jquery.js" type="text/javascript"></script>
-<script src="http://localhost/moh_fortification/media/js/jquery.dataTables.js" type="text/javascript"></script>
-<script src="http://localhost/moh_fortification/media/js/complete.js" type="text/javascript"></script>
-<script src="http://localhost/moh_fortification/media/js/jquery.min.js" type="text/javascript"></script>
-<script src="http://localhost/moh_fortification/media/js/jquery.dataTables.min.js" type="text/javascript"></script>
-<script src="http://localhost/moh_fortification/media/js/jquery.dataTables.editable.js" type="text/javascript" ></script>
-<script src="http://localhost/moh_fortification/media/js/jquery.jeditable.js" type="text/javascript"></script>
-<script src="http://localhost/moh_fortification/media/js/jquery-ui.js" type="text/javascript"></script>
-<script src="http://localhost/moh_fortification/media/js/jquery.validate.js" type="text/javascript"></script>
-<script src="http://localhost/moh_fortification//media/js/jquery.jeditable.js" type="text/javascript"></script>
-
-
-
 <style type="text/css" title="currentStyle">
 
     @import "<?php echo base_url(); ?>DataTables-1.9.3 /media/css/jquery.dataTables.css";
@@ -33,36 +20,6 @@
             "bJQueryUI": true,
             "bPaginate": false,
             "aaSorting": [[3, "desc"]]
-        }).makeEditable({
-            aoColumns: [
-                {
-                },
-                null
-            ],
-            sUpdateURL: function(value, settings)
-            {
-                return value; //Simulation of server-side response using a callback function
-            }//Remove this line in your code
-            ,
-            aoTableActions: [
-                {
-                    sAction: "EditData",
-                    sServerActionURL: "",
-                    oFormOptions: {autoOpen: false, modal: true}
-                }
-            ],
-            sUpdateURL: "",
-                    oAddNewRowButtonOptions: {label: "Add...",
-                icons: {primary: 'ui-icon-plus'}
-            },
-            oDeleteRowButtonOptions: {label: "Delete",
-                icons: {primary: 'ui-icon-trash'}
-            },
-            sAddURL: "http://localhost/moh_fortification/addData",
-            sAddHttpMethod: "GET", //Used only on google.code live example because google.code server do not support POST request
-            // sDeleteURL: "#",
-            // sDeleteHttpMethod: "", //Used only on google.code live example because google.code server do not support POST request
-            sAddDeleteToolbarSelector: ".dataTables_length",
         });
         $.fn.slideFadeToggle = function(speed, easing, callback) {
             return this.animate({
@@ -275,32 +232,23 @@
                         </div>
                         <div class="modal-body">
                             <h4>Facility Name: </h4>
-                            <p> <input type="text" name="facilityname" /></p>
+                            <form id="add_facility" method="POST" action="<?php echo base_url().'rtk_management/create_facility';?>">
+                            <p> <input type="text" name="facilityname" id="facilityname" /></p>
                             <h4>Facility MFL Code: </h4>
-                            <p> <input type="text" name="facilitycode" /></p>
-                            <h4>Facility MFL Code: </h4>
-                            <p> <input type="text" name="facilitycode" /></p>
-                            <h4>Facility Type: </h4>
-                            <p> <input type="text" name="facilitytype" /></p>
+                            <p> <input type="text" name="facilitycode" id="facilitycode" /></p>
                             <h4>Facility Owner: </h4>
-                            <p> <input type="text" name="facilityowner" /></p>
-
-
-
-                            <h4>Popover in a modal</h4>
-                            <p>This <a href="#" role="button" class="btn popover-test" data-content="And here's some amazing content. It's very engaging. right?" data-original-title="A Title">button</a> should trigger a popover on click.</p>
-
-                            <h4>Tooltips in a modal</h4>
-                            <p><a href="#" class="tooltip-test" data-original-title="Tooltip">This link</a> and <a href="#" class="tooltip-test" data-original-title="Tooltip">that link</a> should have tooltips on hover.</p>
-
+                            <p> <input type="text" name="facilityowner" id="facilityowner" /></p>
+                            <h4>Facility type: </h4>
+                            <p> <input type="text" name="facilitytype" id="facilitytype" /></p>
+                            <input type="hidden" id="district" name="district" value="<?php echo $district; ?>">
                             <hr>
                         </div>
                         <div class="modal-footer">
                             <button class="btn" data-dismiss="modal">Close</button>
-                            <button class="btn btn-primary">Save changes</button>
+                            <button id="save_facility"class="btn btn-primary">Save changes</button>
+                            </form>
                         </div>
                     </div>
-
                     <table  style="margin-left: 0;" id="example_main" width="100%" >
                         <thead>
                             <tr>
@@ -317,11 +265,36 @@
 
                         </tbody>            
                     </table>
-
                 </div>
                 </div>
-
                 </div>
+<script type="text/javascript">
+/*
+   $(function(){
+    $('#add_facility').submit(function(){
+      var facilityname = $('#facilityname').val();
+      var facilitycode = $('#facilitycode').val();
+      var facilityowner = $('#facilityowner').val();
+      var facilitytype = $('#facilitytype').val();
+      var district = $('#district').val();
+
+      $.post( "<?php echo base_url().'rtk_management/create_facility';?>", { 
+        facilityname: facilityname,
+        facilitycode: facilitycode,
+        facilityowner: facilityowner,
+        facilitytype: facilitytype,
+        district: district
+      })
+  .done(function( data ) {
+    alert( "Success : " + data );
+  $('#Add_DMLT').modal('hide');
+window.location = "<?php echo base_url().'rtk_management/rtk_mapping/dpp';?>";
+  });
+      
 
 
+})
 
+   });
+      */
+</script>

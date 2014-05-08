@@ -1,4 +1,0 @@
-HCMP
-====
-
-HCMP System

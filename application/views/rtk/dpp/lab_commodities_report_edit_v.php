@@ -75,7 +75,7 @@ jQuery(document).ready(function() {
 		.button()
 			.click(function() {
 				
-			return $myDialog.dialog('open');
+//			return $myDialog.dialog('open');
 		});
 			$( "#dialog" ).dialog({
 			height: 140,
@@ -130,7 +130,7 @@ foreach ($all_details as $detail) {
 	echo form_open('rtk_management/update_lab_commodity_orders',$attributes); 
 		?>
 <div id="dialog-form" title="Lab Commodities Order Report">
-	<form>
+
 	<table id="user_order" width="90%" class="data-table">
 		<input type="hidden" name="facility_name" colspan = "3" style = "color:#000; border:none" value="<?php echo $facility_name?>"></td>
 		<input type="hidden" name="order_id" colspan = "3" style = "color:#000; border:none" value="<?php echo $order_id?>"></td>
@@ -285,8 +285,16 @@ foreach ($all_details as $detail) {
 					</tr>
 
 
-</table></form>
-</div>
-<input  class="btn btn-primary" id="save1" name="save1"  value="Update Order" >
-
+</table>
+<input  class="btn btn-primary" type="submit" id="" name="save1"  value="Update Order" >
+</form>
 <?php form_close();?>
+</div>
+<br />
+<br />
+<br />
+<br />
+<br />
+
+<br />
+<br />

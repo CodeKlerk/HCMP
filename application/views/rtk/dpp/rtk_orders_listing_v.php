@@ -52,10 +52,8 @@ $d_name = $district_name[0]['district'];
                 <tbody>
                     <?php
                     foreach ($lab_order_list as $order) {
-//                        echo "<pre>"; var_dump($order);echo "</pre>";
-  //                      die();
                         $english_date = date('D dS M Y',strtotime($order['order_date']));
-                        $reportmonth = date('F',strtotime($order['order_date']));
+                        $reportmonth = date('F',strtotime('-1 month',strtotime($order['order_date'])));
                          
                         ?>
                         <tr>
@@ -65,7 +63,7 @@ $d_name = $district_name[0]['district'];
                             <td><?php echo $order['compiled_by']; ?></td>
                             <td><?php echo "Lab Commodities"; ?></td>
                             <td><?php echo $english_date; ?></td>
-                            <td><a href="<?php echo site_url('rtk_management/lab_order_details/' . $order['id']); ?>"class="link">View</a>|<a href="<?php echo site_url('rtk_management/edit_lab_order_details/' . $order['id']); ?>"class="link">Edit</a></td>
+                            <td><a href="<?php echo site_url('rtk_management/lab_order_details/' . $order['id']); ?>"class="link">View</a><!--|<a href="<?php echo site_url('rtk_management/edit_lab_order_details/' . $order['id']); ?>"class="link">Edit</a>--></td>
                         </tr> 
                         <?php
                     }

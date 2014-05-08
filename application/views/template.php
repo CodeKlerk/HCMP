@@ -9,7 +9,7 @@ if (!isset($quick_link)) {
 	$quick_link = null;
 }
 $access_level = $this -> session -> userdata('user_indicator');
-$drawing_rights = $this -> session -> userdata('drawing_rights');
+$drawing_rights =0;
 
 $user_is_facility = false;
 $user_is_moh = false;
@@ -22,7 +22,9 @@ $user_is_rtk_manager = FALSE;
 $user_is_county_facilitator = FALSE;
 $user_is_allocation_committee = FALSE;
 $user_is_dpp = FALSE;
+$user_is_rca = FALSE;
 if ($access_level == "facility" || $access_level == "fac_user") {
+	$drawing_rights = $this -> session -> userdata('drawing_rights');
 	$user_is_facility = true;
 }
 if ($access_level == "moh") {
@@ -54,6 +56,9 @@ if ($access_level == "dpp") {
 	$user_is_dpp = true;
 
 }
+if ($access_level=="rca"){
+	$user_is_rca = true;
+}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -64,10 +69,12 @@ if ($access_level == "dpp") {
 <link rel="icon" href="<?php echo base_url().'Images/coat_of_arms.png'?>" type="image/x-icon" />
 <link href="<?php echo base_url().'CSS/style.css'?>" type="text/css" rel="stylesheet"/> 
 <link href="<?php echo base_url().'CSS/bootstrap.css'?>" type="text/css" rel="stylesheet"/>
-<link href="<?php echo base_url().'CSS/bootstrap-responsive.css'?>" type="text/css" rel="stylesheet"/>
-<link href="<?php echo base_url().'CSS/jquery-ui.css'?>" type="text/css" rel="stylesheet"/> 
+<link href="<?php echo base_url().'CSS/jquery-ui.css'?>" type="text/css" rel="stylesheet"/>
+ 
 <script src="<?php echo base_url().'Scripts/jquery.js'?>" type="text/javascript"></script> 
-<script src="<?php echo base_url().'Scripts/jquery.form.js'?>" type="text/javascript"></script> 
+<script src="<?php echo base_url();?>Scripts/HighCharts/highcharts.js"></script>
+<script src="<?php echo base_url();?>Scripts/HighCharts/modules/exporting.js"></script>
+<!--<script src="<?php echo base_url().'Scripts/jquery.form.js'?>" type="text/javascript"></script> -->
 <script src="<?php echo base_url().'Scripts/jquery-ui.js'?>" type="text/javascript"></script>
 <!--<script type="text/javascript" src="http://ajax.microsoft.com/ajax/jquery.validate/1.7/jquery.validate.min.js"></script>-->
 
@@ -77,77 +84,49 @@ if ($access_level == "dpp") {
 <script src="<?php echo base_url().'Scripts/waypoints-sticky.min.js'?>" type="text/javascript"></script>
 <script src="<?php echo base_url().'Scripts/bootstrap.js'?>" type="text/javascript"></script>
 
+<script src="<?php echo base_url();?>Scripts/FusionCharts/FusionCharts.js" type="text/javascript"></SCRIPT>
+	
+ 
 
-
-
-  <?php
-if (isset($script_urls)) {
-	foreach ($script_urls as $script_url) {
-		echo "<script src=\"" . $script_url . "\" type=\"text/javascript\"></script>";
-	}
-}
-?>
-<?php
-if (isset($scripts)) {
-	foreach ($scripts as $script) {
-		echo "<script src=\"" . base_url() . "Scripts/" . $script . "\" type=\"text/javascript\"></script>";
-	}
-}
-?>
-<?php
-if (isset($styles)) {
-	foreach ($styles as $style) {
-		echo "<link href=\"" . base_url() . "CSS/" . $style . "\" type=\"text/css\" rel=\"stylesheet\"/>";
-	}
-}
-?>  
-<style>
-	input.text {
-		margin-bottom: 12px;
-		width: 95%;
-		padding: .4em;
-	}
-	fieldset {
-		padding: 0;
-		border: 0;
-		
-	}
-	h1 {
-		font-size: 1.2em;
-		margin: .6em 0;
-	}
-	div#users-contain {
-		width: 350px;
-		margin: 20px 0;
-	}
-	div#users-contain table {
-		margin: 1em 0;
-		border-collapse: collapse;
-		width: 100%;
-	}
-	div#users-contain table td, div#users-contain table th {
-		border: 1px solid #eee;
-		padding: .6em 10px;
-		text-align: left;
-	}
-	.ui-dialog .ui-state-error {
-		padding: .3em;
-	}
-	.validateTips {
-		border: 1px solid transparent;
-		padding: 0.3em;
-	}
-
-	#top_menu a {
-		color: white;
-		text-decoration: none;
-	}
-	.successtext{
-		color:#003300;
-	}
-    </style>
 <script type="text/javascript">
 
+/*
+ * Auto logout
+ */
+var timer = 0;
+function set_interval() {
+	showTime()
+	// the interval 'timer' is set as soon as the page loads
+	timer = setInterval("auto_logout()", 3600000);
+	// the figure '1801000' above indicates how many milliseconds the timer be set to.
+	// Eg: to set it to 5 mins, calculate 3min = 3x60 = 180 sec = 180,000 millisec.
+	// So set it to 180000
+}
+
+function reset_interval() {
+	showTime()
+	//resets the timer. The timer is reset on each of the below events:
+	// 1. mousemove   2. mouseclick   3. key press 4. scroliing
+	//first step: clear the existing timer
+
+	if(timer != 0) {
+		clearInterval(timer);
+		timer = 0;
+		// second step: implement the timer again
+		timer = setInterval("auto_logout()", 3600000);
+		// completed the reset of the timer
+	}
+}
+
+function auto_logout() {
+
+	// this function will redirect the user to the logout script
+	window.location = "<?php echo base_url(); ?>user_management/logout";
+}
+
+/*
+* Auto logout end
+*/
 	function showTime()
 {
 var today=new Date();
@@ -160,6 +139,9 @@ m=checkTime(m);
 s=checkTime(s);
 $("#clock").text(h+":"+m);
 t=setTimeout('showTime()',1000);
+
+
+
 }
 function checkTime(i)
 {
@@ -170,23 +152,20 @@ if (i<10)
 return i;
 }
 
-		
+	
 </script>
 </head>
  
-<body onload="showTime()">
+<body onload="set_interval()" onmouseover="reset_interval()" onclick="reset_interval()">
+<div id="header_container" class="" id="top-panel" style="margin-bottom: 0px" >
 
-<div id="wrapper">
-	<div id="top-panel" style="margin:0px;">
+	<div class="banner_logo">
+			<a class="logo" href="<?php echo base_url();?>" ></a> 
+		</div>
 
-		<div class="logo_template">
-			<a class="logo_template" href="<?php echo base_url(); ?>" ></a> 
-</div>
-
-				<div id="system_title">
+				<div id="logo_text">
 					<span style="display: block; font-weight: bold; font-size: 14px; margin:2px;">Ministry of Health</span>
-					<span style="display: block; font-size: 12px;">Health Commodities Management Platform</span>
-					
+					<span style="display: block; font-size: 12px;">Health Commodities Management Platform(HCMP)</span>	
 				</div>
 			<?php if($banner_text=="New Order"):?>
 				<div id="notification" style="display: block; margin-left: 40%;">
@@ -201,15 +180,8 @@ return i;
 	
 	<?php endif; ?>
 	<?php $facility = $this -> session -> userdata('news'); ?>
- <div id="top_menu"> 
+ <div id="main_menu"> 
 
- 	<?php
-	//Code to loop through all the menus available to this user!
-	//Fet the current domain
-	$menus = $this -> session -> userdata('menu_items');
-	$current = $this -> router -> class;
-	$counter = 0;
-?>
 <nav id="navigate">
 <ul>
  	
@@ -217,7 +189,7 @@ return i;
 if($user_is_facility){
 ?>
 <li class="<?php
-if ($current == "home_controller") {echo "active";
+if (@@$current == "home_controller") {echo "active";
 }
 ?>"><a  href="<?php echo base_url(); ?>home_controller">Home </a></li>
  	<li><a  href="<?php echo base_url(); ?>order_management" class="<?php
@@ -226,7 +198,7 @@ if ($current == "home_controller") {echo "active";
 ?>"> Orders </a></li> 
 
 <li><a  href="<?php echo base_url(); ?>Issues_main" class="<?php
-if ($current == "Issues_main") {echo "active";
+if (@@$current == "Issues_main") {echo "active";
 }
 ?>">Issues </a></li>	
 <!--<a href="<?php echo base_url();?>order_management/all_deliveries/<?php echo $facility?>" class="top_menu_link<?php
@@ -234,7 +206,7 @@ if ($current == "Issues_main") {echo "active";
 	}
 	?>">Deliveries</a>-->
 <li><a  href="<?php echo base_url(); ?>report_management/reports_Home"  class="<?php
-if ($current == "report_management") {echo "active";
+if (@@$current == "report_management") {echo "active";
 }
 ?>">Reports </a></li>
 <li><a  href="<?php echo base_url(); ?>report_management/commodity_list" class="<?php
@@ -248,7 +220,9 @@ if ($quick_link == "user_facility_v") {echo "active";
 ?>">Users</a></li>
  <?php } ?>
 <li>
-	<i class=" icon-wrench icon-white" style="margin-right: 0.3em; margin-top: 0.1em;"></i><a  href="<?php echo base_url(); ?>report_management/facility_settings"  class="<?php
+	<i class="icon icon-wrench  icon-white" style="margin-right: 0.3em; margin-top: 0.1em;">
+		
+	</i><a  href="<?php echo base_url(); ?>report_management/facility_settings"  class="<?php
 	if ($quick_link == "user_facility_v") {echo "active";
 	}
 ?>">Settings</a></li>
@@ -257,7 +231,7 @@ if ($quick_link == "user_facility_v") {echo "active";
 	
 	
 		<li class="<?php
-		if ($current == "home_controller") {echo "active";
+		if (@@$current == "home_controller") {echo "active";
 		}
 	?>"><a data-clone="Home" href="<?php echo base_url(); ?>home_controller">Home </a></li>
 	<!--<li><a data-clone="Actions" href="<?php echo base_url();?>dp_facility_list/actions"  class="<?php
@@ -275,7 +249,7 @@ if ($quick_link == "new_order") {echo "active";
 ?>">District Facilities</a></li>
 
 	 	<li><a data-clone="Users" href="<?php echo base_url(); ?>user_management/dist_manage"  class="<?php
-		if ($current == "user_management") {echo "active";
+		if (@@$current == "user_management") {echo "active";
 		}
 	?>">Users</a></li>
 	
@@ -285,7 +259,12 @@ if ($quick_link == "new_order") {echo "active";
 ?>">Reports</a></li>
 
 
-	<li><a data-clone="Commodity List" href="<?php echo base_url(); ?>report_management/commodity_list" class="<?php
+	<li><a data-clone="Commodity List" href="<?php echo base_url(); ?>report_management/get_facility_evaluation_form_results" class="<?php
+	if ($quick_link == "commodity_list") {echo "active";
+	}
+?>">Evaluation Forms</a></li>
+
+<li><a data-clone="Commodity List" href="<?php echo base_url(); ?>report_management/commodity_list" class="<?php
 	if ($quick_link == "commodity_list") {echo "active";
 	}
 ?>">Commodity List</a></li>
@@ -313,13 +292,20 @@ if ($quick_link == "new_order") {echo "active";
 <?php if($user_is_rtk_manager){
 	?>
 	<li class="active"><a data-clone="Home" href="<?php echo base_url(); ?>home_controller">Home </a></li>
-	
+ <?php if (
+ 	$this -> session -> userdata('user_email')==('jbatuka@usaid.gov') ||
+ 	$this -> session -> userdata('user_email')!==('williamnguru@gmail.com')  	
+
+ ){?>
+ 	<li class="active"><a data-clone="Home" href="<?php echo base_url().'rtk_management/rtk_manager_admin';?>">Admin </a></li>
+ <?php }?>
+
 	<?php } ?>
 <?php if($user_is_moh_user){
 	?>
 
 <li class="<?php
-if ($current == "home_controller") {echo "active";
+if (@@$current == "home_controller") {echo "active";
 }
 ?>"><a data-clone="Home" href="<?php echo base_url(); ?>home_controller">Home </a></li>
 
@@ -350,6 +336,10 @@ if ($current == "home_controller") {echo "active";
 	<!--<li class="active"><a data-clone="Orders" href="<?php echo base_url();?>rtk_management/rtk_orders">Orders</a></li>-->
 	<li class="active"><a data-clone="Deliveries" href="<?php echo base_url(); ?>stock_expiry_management/county_deliveries">Deliveries</a></li>
 	<li class="active"><a data-clone="Expiries" href="<?php echo base_url(); ?>stock_expiry_management/county_expiries">Expiries</a></li>
+	<li><a data-clone="Commodity List" href="<?php echo base_url(); ?>report_management/get_county_evaluation_form_results" class="<?php
+	if ($quick_link == "commodity_list") {echo "active";
+	}
+?>">Evaluation Forms</a></li>
 	<li class="active"><a data-clone="Commodity List" href="<?php echo base_url(); ?>report_management/commodity_list">Commodity List</a></li>
 	<li><a data-clone="Facility Mapping" href="<?php echo site_url('report_management/get_county_facility_mapping'); ?>"  class="<?php
 	if ($quick_link == "kemsa_order_v") {echo "active";
@@ -365,7 +355,15 @@ if ($current == "home_controller") {echo "active";
 	}
 ?>">Facility Mapping</a></li>
 	<?php
+}?>
+
+<?php if($user_is_rca){
+	?>
+	<li class="active"><a data-clone="Home" href="<?php echo base_url();?>home_controller">Home </a></li>
+	<li class="active"><a data-clone="Admin" href="<?php echo base_url().'rtk_management/county_admin';?>">Admin</a></li>
+		<?php
 }
+
 ?>
 <?php if($user_is_allocation_committee){
 	?>
@@ -379,13 +377,13 @@ if ($current == "home_controller") {echo "active";
 	?>
 	
 <li class="<?php
-if ($current == "home_controller") {echo "active";
+if (@@$current == "home_controller") {echo "active";
 }
 ?>"><a data-clone="Home" href="<?php echo base_url(); ?>home_controller">Home </a></li>
 	
 		
 		<li><a data-clone="Users" href="<?php echo base_url(); ?>user_management/moh_manage" class="<?php
-		if ($current == "user_management") {echo "active";
+		if (@@$current == "user_management") {echo "active";
 		}
 	?>">Users</a></li>
 	
@@ -413,30 +411,11 @@ if ($current == "home_controller") {echo "active";
 </ul>
 </nav>
 </div>
-  	
-	<div style="font-size:15px; float:right; padding: 1em "><?php date_default_timezone_set('Europe/Moscow'); echo date('l, dS F Y'); ?>&nbsp;<div id="clock" style="font-size:15px; float:right; " ></div>
-	 </div><div style="width :53em;height: 4.2em; margin: auto; ;" ></div>
-	 <div >
-<?php $flash_success_data = NULL;
-	$flash_error_data = NULL;
-	$flash_success_data = $this -> session -> flashdata('system_success_message');
-	$flash_error_data = $this -> session -> flashdata('system_error_message');
-	if ($flash_success_data != NULL) {
-		echo '<p class="successreset" style="margin: auto;">' . $flash_success_data . '</p>';
-	} elseif ($flash_error_data != NULL) {
-		echo '<p class="errorlogin" style="margin: auto;">' . $flash_error_data . '</p>';
-	}
- ?>
-</div>
-<div class="banner_content" style="font-size:20px; float:right; margin-top: 0.3em;padding-bottom: 0.35em;"><div style="float: left;"><?php echo $this -> session -> userdata('full_name') . ": " . $banner_text; ?></div>
 
-		<div style="float:right">
-		
-		
-<div class="btn-group">
-  <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#"><i class="icon-user icon-white"></i> <?php echo $this -> session -> userdata('names'); ?> <?php echo $this -> session -> userdata('inames'); ?><span style="margin-left: 0.3em;" class="caret"></span></a>
+<div class="btn-group " id="btnlogout">
+  <a  class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#"><i class="icon-user icon-white"></i> <?php echo $this -> session -> userdata('names'); ?> <?php echo $this -> session -> userdata('inames'); ?><span style="margin-left: 0.3em;" class="caret"></span></a>
   
-  <ul class="dropdown-menu" style="font:#FFF">
+  <ul class="dropdown-menu" style="font:#FFF;">
     <li><a href="#"><i class="icon-pencil"></i> Edit Settings</a></li>
     <li><a href="#myModal" data-toggle="modal" data-target="#myModal" id="changepswd" ><i class="icon-edit"></i> Change password</a></li>
     
@@ -444,31 +423,53 @@ if ($current == "home_controller") {echo "active";
     <li class="divider"></li>
     <li><a href="<?php echo base_url(); ?>user_management/logout"><i class=" icon-off"></i> Log Out</a></li>
   </ul>
+  
 </div>
-		<a class="link" href="<?php echo base_url(); ?>user_management/logout"><i class="icon-off"></i> Log Out</a> 
-	
-		</div>
-	
-	</div>
-	
-	
+<div style="font-size:0.75em; float:right; padding: 0.5em "><?php  echo date('l, dS F Y'); ?>&nbsp;<div id="clock" style="font-size:0.75em; float:right; " ></div>
+	 </div>
+  	
 </div>
+	 <div>
+	<div class="divide" >
+	
+    			<div   id="banner_text">
+      				<?php echo $this -> session -> userdata('full_name') . ": " . $banner_text; ?>
+            			    				</div>
+    				
+    				<div  id="system_alerts">
+      				<?php $flash_success_data = NULL;
+					      $flash_error_data = NULL;
+	                      $flash_success_data = $this -> session -> flashdata('system_success_message');
+						  $flash_error_data = $this -> session -> flashdata('system_error_message');
+							if ($flash_success_data != NULL) {
+							echo '<div class="alert alert-success alert-dismissable" >
+							<button type="button" class=" close" data-dismiss="alert" aria-hidden="true">×</button>' . $flash_success_data . '</div>';
+						   } elseif ($flash_error_data != NULL) {
+							echo '<div class="alert alert-danger alert-dismissable" >
+							<button type="button" class=" close" data-dismiss="alert" aria-hidden="true">×</button>' . $flash_error_data . '</div>';
+							}
+ 						?>
+    				</div>
+    				
+  				
+  				</div>
 
-<!-- MOH USR-->
 
-<div id="inner_wrapper"> 
+
+
+ <div id="inner_wrapper"> 
  		
-<?php $this -> load -> view($content_view); ?>
+	<?php $this -> load -> view($content_view); ?>
 <!-- end inner wrapper -->
 
   <!--End Wrapper div-->
     
     
-    </div>
-    <div class="footer">
-	Government of Kenya &copy; <?php echo date('Y'); ?>. All Rights Reserved
-	
-	</div>
+ </div>
+ </div>
+
+ </div>
+    <div id="bottom_ribbon"><div id="footer"><?php $this -> load -> view("footer");?></div></div>
 
 	<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
 		
@@ -515,12 +516,12 @@ if ($current == "home_controller") {echo "active";
 <script>
 	$(document).ready(function() {
 		
-					$('.successreset').fadeOut(5000, function() {
+					$('.successreset').fadeOut(10000, function() {
     // Animation complete.
   });
-$('.errorlogin').fadeOut(5000, function() {
+//$('.errorlogin').fadeOut(10000, function() {
     // Animation complete.
-  });	
+ // });	
 			
 	
 		//$('#myModal').modal('hide')

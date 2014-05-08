@@ -3,15 +3,29 @@ $month = $this->session->userdata('Month');
 if ($month==''){
  $month = date('mY',time());
 }
-
 $year= substr($month, -4);
 $month= substr_replace($month,"", -4);
-//echo $year;
-//echo $month;
-//die();
-
 $monthyear = $year . '-' . $month . '-1';
 $englishdate = date('F, Y', strtotime($monthyear));
+$englishdate = date('F, Y', strtotime('previous month'));
+$this->load->database();
+$q = 'SELECT id,county FROM  `counties` ORDER BY  `counties`.`county` ASC ';
+$res_arr = $this->db->query($q);
+$counties_option_html="";
+foreach ($res_arr->result_array() as  $value) {
+  $counties_option_html .='<option value="'.$value['id'].'">'.$value['county'].'</option>';
+}
+$districts_option_html = "";
+$q1 = 'SELECT id,district,county FROM  `districts` ORDER BY  `districts`.`district` ASC ';
+$res_arr1 = $this->db->query($q1);
+foreach ($res_arr1->result_array() as  $value) {
+  $districts_option_html .='<option county="'.$value['county'].'" value="'.$value['id'].'">'.$value['district'].'</option>';
+}
+
+$thismonthname  = date('F',strtotime("-1 month", time()));
+$prev_prevmonthname = date('F',strtotime("-2 month", time()));
+$prevmonthname = date('F',strtotime("-3 month", time()));
+
 ?>
 <script type="text/javascript">
   function loadcountysummary(county){
@@ -22,17 +36,48 @@ $englishdate = date('F, Y', strtotime($monthyear));
    }
 $(document).ready(function(){
 
-  $(".breadcrumb").load("<?php echo base_url(); ?>rtk_management/reporting_counties/<?php echo $month.'/'.$year.'/'; ?>");
+//  $(".breadcrumb").load("<?php echo base_url(); ?>rtk_management/reporting_counties/<?php echo $month.'/'.$year.'/'; ?>");
   $(".breadcrumb a").click( function(event)
 {
    var clicked =  $(this).text();
    $( "#selectedcounty" ).html(clicked);
 });
  
+  $("#user_switch").change(function(){
+  var val = $('#user_switch').val();
+  if(val == 'dpp'){
+  $('#county_switch').attr('disabled','disabled');
+  $('#district_switch').removeAttr('disabled');
+  }
+  if(val == 'rca'){
+  $('#county_switch').removeAttr('disabled');
+  $('#district_switch').attr('disabled','disabled');
+  }
+  });
 
-});
- 
-$(function(){
+  $("#switch_idenity").click(function(event)
+  {
+  var switch_as = $('#user_switch').val();
+  var switch_county = $('#county_switch option:selected').val();
+  var switch_dist = $('#district_switch').val();
+
+if (switch_dist>0){
+  switch_county = $('#district_switch option:selected').attr('county');
+//  switch_county = $('#district_switch:selected').attr('county').val();
+//alert(switch_county);
+var path = "<?php echo base_url() . 'rtk_management/switch_district'; ?>/"+switch_dist+"/"+switch_as+"/0/0/"+switch_county+"/rtk_manager";
+  window.location.href=path;
+
+
+}
+
+  var path = "<?php echo base_url() . 'rtk_management/switch_district'; ?>/"+switch_dist+"/"+switch_as+"/0/0/"+switch_county+"/rtk_manager";
+
+//  rtk_management/switch_district/district/switched_as/month/redirect_url/county
+  window.location.href=path;
+
+  });
+
 
             $('#switch_month').change(function(){
                 var value = $('#switch_month').val();
@@ -40,26 +85,35 @@ $(function(){
 //              alert (path);
                  window.location.href=path;
             });
+
+   
                });
 </script>
 <style>
+#inner_wrapper
+{
+  margin-bottom: 100px;
+}
 .leftpanel{
-    	width: 17%;
-    	height:auto;
-    	float: left;
+      width: 17%;
+      height:auto;
+      float: left;
     }
 
 .alerts{
-	width:95%;
-	height:auto;
-	background: #E3E4FA;	
-	padding-bottom: 2px;
-	padding-left: 2px;
-	margin-left:0.5em;
-	-webkit-box-shadow: 0 8px 6px -6px black;
-	   -moz-box-shadow: 0 8px 6px -6px black;
-	        box-shadow: 0 8px 6px -6px black;
-	
+  width:95%;
+  height:auto;
+  background: #E3E4FA;  
+  padding-bottom: 2px;
+  padding-left: 2px;
+  margin-left:0.5em;
+  -webkit-box-shadow: 0 8px 6px -6px black;
+     -moz-box-shadow: 0 8px 6px -6px black;
+          box-shadow: 0 8px 6px -6px black;
+  
+}
+#1287{
+  color:#fff;
 }
     
     .dash_menu{
@@ -67,8 +121,8 @@ $(function(){
     float: left;
     height:auto; 
     -webkit-box-shadow: 2px 3px 5px#888;
-	box-shadow: 2px 3px 5px #888; 
-	margin-bottom:3.2em; 
+  box-shadow: 2px 3px 5px #888; 
+  margin-bottom:3.2em; 
     }
     
     .dash_main{
@@ -77,7 +131,7 @@ $(function(){
 height:600px;
     float: left;
     -webkit-box-shadow: 2px 2px 6px #888;
-	box-shadow: 2px 2px 6px #888; 
+  box-shadow: 2px 2px 6px #888; 
     margin-left:0.75em;
     margin-bottom:0em;
     
@@ -89,48 +143,10 @@ height:600px;
     height:450px;
     margin-left:8px;
     -webkit-box-shadow: 2px 2px 6px #888;
-	box-shadow: 2px 2px 6px #888;
+  box-shadow: 2px 2px 6px #888;
     
     }
     
-#accordion {
-    width: 300px;
-    margin: 50px auto;
-    float:left;
-    margin-left:0.45em;
-}
-.collapsible,
-.page_collapsible,
-.accordion {
-    margin: 0;
-    padding:5%;
-    height:15px;
-    border-top:#f0f0f0 1px solid;
-    background: #cccccc;
-    font:normal 1.3em 'Trebuchet MS',Arial,Sans-Serif;
-    text-decoration:none;
-    text-transform:uppercase;
-	background: #29527b; /* Old browsers */
-     border-radius: 0.5em;
-     color: #fff; }
-.accordion-open,
-.collapse-open {
-	background: #289909; /* Old browsers */    
-    color: #fff; }
-.accordion-open span,
-.collapse-open span {
-    display:block;
-    float:right;
-    padding:10px; }
-.accordion-open span,
-.collapse-open span {
-    background:url('<?php echo base_url()?>Images/minus.jpg') center center no-repeat; }
-.accordion-close span,
-.collapse-close span {
-    display:block;
-    float:right;
-    background:url('<?php echo base_url()?>Images/plus.jpg') center center no-repeat;
-    padding:10px; }
 div.container {
     width:auto;
     height:auto;
@@ -160,90 +176,115 @@ code {
 .accordion h3.collapse-close span {}   
 </style>
 
-<div class="leftpanel">
-
-<!--
-<div class="dash_menu">
-    
-   <!-- <h3 class="accordion" class="ajax-call" id="facility_list">Facility List<span></span><h3>
-<div class="container">
-  
-</div> 
-<a class="ajax-call" id="reporting_rate" ><h3 class="accordion" >Reporting Rate<span></span><h3></a>
-<div class="container">
-
+<div>
+<?php { ?>
+<div id="fixed-topbar" style="z-index:10;position: fixed; top: 104px;background: #708BA5; width: 100%;padding: 7px 1px 0px 13px;border-bottom: 1px solid #ccc;border-bottom: 1px solid #ccc;border-radius: 4px 0px 0px 4px;">
+<span class="lead" style="color: #ccc;">Switch Identities</span>
+&nbsp;
+<select id="user_switch"><option value="0"> -- Select UserType--</option><option value="dpp">DMLT</option><option value="rca">County Administrator</option>
+</select>
+&nbsp;
+<select id="county_switch"><option value="0"> -- Select Select County--</option><?php echo $counties_option_html;?></select>
+&nbsp;
+<select id="district_switch"><option value="0"> -- Select Select District--</option><?php echo $districts_option_html;?></select>
+&nbsp;
+<a href="#" class="btn btn-primary" id="switch_idenity" style="margin-top: -10px;">Go</a>
 </div>
-<a class="ajax-call" id="county" ><h3 class="accordion" >County<span></span><h3></a>
-<div class="container">
+<?php } ?>
 
-</div>
+ 
 
-   <h3 class="accordion" >Reports <span></span><h3>
-<div class="container">
-	
-   <div class="content">
-   	
-   	
-    	<button class="awesome blue" ><a class="ajax-call" id="fcdrr">FCDRR</a></button>
-      <button class="awesome blue" > <a class="ajax-call" id="lab_commodities">LAB COMMODITIES</a></button>
-  
-    </div>
-</div>
 
-</div>-->
-<div class="sidebar">
-<br />
-<div class="span2 bs-docs-sidebar">
+<div class="well" style="width:97%;"> 
+<div class="page-header">
 <select id="switch_month" style="width: 170px;background-color: #ffffff;border: 1px solid #cccccc;">
 <option>-- <?php echo $englishdate;?> --</option>
-<option value="092013">Sept 2013</option>
-<option value="102013">Oct 2013</option>
-<option value="112013">Nov 2013</option>
-<option value="122013">Dec 2013</option>
+<option value="092013">Aug 2013</option>
+<option value="102013">Sept 2013</option>
+<option value="112013">Oct 2013</option>
+<option value="122013">Nov 2013</option>
+<option value="012014">Dec 2013</option>
+<option>------ 2014 -----</option>
+<option value="022014">Jan 2014</option>
+
 
 </select>
-   <!-- <ul class="nav nav-tabs nav-stacked">
-        <li><a href="http://localhost/HCMP/">Counties</a></li>
-        <li class="active"><a href="#" onclick="loadDistrict()">Districts</a></li>
-        <li class="active"><a href="#" onclick="loadPendingFacilities()">Facilities</a></li>
-<!--        <li><a href="#" onclick="loadSummary()">Reports</a></li>-->
-  <!--  </ul>-->
-</div>
-	<!--
-		<h2>Quick Access</h2>
-<nav class="sidenav">
-	<ul>
-		<li class="orders_minibar"><a href="#">demo</a></li>
-
-	<ul>
-</nav>
--->				
-		</fieldset>
-	
-</div>
-</div>
-<div class="dash_main" id = "dash_main">
-<div id="test_a" style="overflow: scroll; height: 51em; min-height:100%; margin: 0; width: 100%">
-<ul class="breadcrumb" style="margin: 0 0 0px;">
-<?php
-$this->load->database();
-$q = 'SELECT id,county FROM  `counties` ORDER BY  `counties`.`county` ASC   ';
-$res_arr = $this->db->query($q);
-foreach ($res_arr->result_array() as $value) {
-  ?> 
-<li><a href="#" value ="<?php echo $value['county'] ; ?>" onclick="loadcountysummary(<?php echo $value['id'] ; ?>)"><?php echo $value['county'] ; ?></a> <span class="divider">/</span></li>
-<?php 
-} ?>
-
-   </ul>
-<div class="well">
-<div class="page-header">
      <h1 style="font-size: 207%;">County summary <?php echo $englishdate;?><small> Kenya</small></h1>
    </div>
 <!--     <h4>Leading County in reporting: Nakuru</h4>-->
      <div id="county_graph"></div>
-     <div id="county_summary"></div>
-</div>
-		</div>
-</div>
+     
+     <div id="container" style="min-width: 310px; width:97%; height: 1400px; margin: 0 auto"></div>
 
+  
+</div>
+    
+</div>
+<script src="http://code.highcharts.com/highcharts.js"></script>
+<script src="http://code.highcharts.com/modules/exporting.js"></script>
+<script type="text/javascript">$(function () {
+        $('#container').highcharts({
+
+            credits: {
+      enabled: false
+    },
+            chart: {
+                type: 'bar'
+            },
+            title: {
+                text: 'RTK Monthly reporting rates'
+            },
+            subtitle: {
+                text: 'RTK Data'
+            },
+            xAxis: {
+                categories: <?php echo $counties_json; ?>
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Percentage reporting'
+                }
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'top',
+                x: -40,
+                y: 100,
+                floating: true,
+                borderWidth: 1,
+                backgroundColor: '#FFFFFF',
+                shadow: true
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                    '<td style="padding:0"><b>{point.y:.1f} %</b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
+                }
+            },
+            series: [{
+                name: '<?php echo $prevmonthname; ?>',
+                data: <?php echo $previous_monthjson; ?>
+    
+            },{
+                name: '<?php echo $prev_prevmonthname; ?>',
+                data: <?php echo $prev_prev_monthjson; ?>
+    
+            },  {
+                name: '<?php echo $thismonthname; ?>',
+                data: <?php echo $thismonthjson; ?>
+    
+            }]
+        });
+    });
+    
+</script>

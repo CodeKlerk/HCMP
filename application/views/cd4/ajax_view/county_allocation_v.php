@@ -1,13 +1,16 @@
+<?php 
+$period = date('mY');
+$previous_month = date('mY', strtotime("last day of previous month"));
 
+?>
 <script type="text/javascript">
-	function showpreview(id)
+	function showpreview(id,period)
 {
 //	for (initial=0;initial<22;initial++){}
 //$("#view").click(function (){$("#overlay-preview").show(); });
 //alert("Welcome " + name + ", the ");
     $.ajax({
-//    url:'<?php echo base_url();?>cd4_management/facility_allocate/'+id,
-	 url:'<?php echo base_url();?>cd4_management/nascop_get/'+id,
+    	url:'<?php echo base_url();?>cd4_management/nascop_get/'+id+'/<?php echo $previous_month;?>',
     data:name,
 	success: function(result){
 		$(".cd4-allocate").html(result);

@@ -1,296 +1,130 @@
-<script src="<?php echo base_url().'Scripts/accordion.js'?>" type="text/javascript"></script> 
-<SCRIPT LANGUAGE="Javascript" SRC="<?php echo base_url();?>Scripts/FusionCharts/FusionCharts.js"></SCRIPT>
 <script type="text/javascript" language="javascript" src="<?php echo base_url(); ?>Scripts/jquery.dataTables.js"></script>
+<script src="http://tableclothjs.com/assets/js/jquery.tablecloth.js"></script>
+
 
 <script type="text/javascript">
 
-$(document).ready(function(){
+    $(document).ready(function() {
+        /* Build the DataTable with third column using our custom sort functions */
 
-		
-	 
+        $('#example').dataTable({
+            "bStateSave": true,
+            "iDisplayLength": 10,
+            "aaSorting": [[11, "desc"]],
+            "bPaginate": false,
+        });
 
-				/* Build the DataTable with third column using our custom sort functions */
-				$('#example').dataTable( {
-					"bJQueryUI": true,
-					"aaSorting": [[ 10, "desc" ]],
-					"bPaginate": false} );				
-					$( "#allocate" )
-			.button()
-			.click(function() {
-				  $('#myform').submit();
-				
-});	
-								
-		 
+        $("#allocate").button().click(function() {
+        	var loading = '<div id="loading"> &nbsp;&nbsp;<img src="<?php echo base_url(); ?>Images/ajax-loader.gif"><span style="font-size: 13px;color: #92CA8F;font-family: calibri;">Saving Allocations</span></div>';
+        	$('#system_alerts').html(loading);
+      	
 
-  $.fn.slideFadeToggle = function(speed, easing, callback) {
-				return this.animate({
-					opacity : 'toggle',
-					height : 'toggle'
-				}, speed, easing, callback);
-			};
+            var data = $('#myform').serialize();
+            $.post(
+                    '../rtk_allocation_data/',
+                    {data: data},
+            function(response) {
+                $('#system_alerts').html(response);
+                $('#system_alerts').addClass('alert alert-success');
+               location.reload(true);
+//                $( "#loading" ).hide();
+            }
+            );
 
-			$('.accordion').accordion({
-				defaultOpen : 'section1',
-				cookieName : 'nav',
-				speed : 'medium',
-				animateOpen : function(elem, opts) {//replace the standard slideUp with custom function
-					elem.next().slideFadeToggle(opts.speed);
-				},
-				animateClose : function(elem, opts) {//replace the standard slideDown with custom function
-					elem.next().slideFadeToggle(opts.speed);
-				}
-			});
- 
-			$('#countiesselect').change(function(){
-				var value = $('#countiesselect').val();
- 
-				 window.location.href=value;
 
-			});
-				
+        });
 
-});
+        $('.nav li a').click(function(e) {
+            var $this = $(this);
+            var thistext = $(this).text();
+            $('.nav li').removeClass('active');
+            $this.parent().addClass('active');
+            $(".dataTables_filter label input").focus();
+            $('.dataTables_filter label input').val(thistext).trigger($.Event("keyup", {keyCode: 13}));
+
+            e.preventDefault();
+        });
+        $("table").tablecloth({theme: "paper"});
+
+
+    });
 </script>
+
 <style>
-	@import "<?php echo base_url(); ?>DataTables-1.9.3 /media/css/jquery.dataTables.css";
-.leftpanel{
-    	width: 17%;
-    	height:auto;
-    	float: left;
-    }
+    @import "<?php echo base_url(); ?>DataTables-1.9.3 /media/css/jquery.dataTables.css";
+    @import "http://tableclothjs.com/assets/css/tablecloth.css";
 
-.alerts{
-	width:95%;
-	height:auto;
-	background: #E3E4FA;	
-	padding-bottom: 2px;
-	padding-left: 2px;
-	margin-left:0.5em;
-	-webkit-box-shadow: 0 8px 6px -6px black;
-	   -moz-box-shadow: 0 8px 6px -6px black;
-	        box-shadow: 0 8px 6px -6px black;
-	
-}
-    
-    .dash_menu{
-    width: 100%;
-    float: left;
-    height:auto; 
-    -webkit-box-shadow: 2px 3px 5px#888;
-	box-shadow: 2px 3px 5px #888; 
-	margin-bottom:3.2em; 
+    .alerts{
+        width:95%;
+        height:auto;
+        background: #E3E4FA;	
+        padding-bottom: 2px;
+        padding-left: 2px;
+        margin-left:0.5em;
+        -webkit-box-shadow: 0 8px 6px -6px black;
+        -moz-box-shadow: 0 8px 6px -6px black;
+        box-shadow: 0 8px 6px -6px black;
     }
-    
-    .dash_main{
-    width: 80%;
-   min-height:100%;
-height:1400px;
-    float: left;
-    -webkit-box-shadow: 2px 2px 6px #888;
-	box-shadow: 2px 2px 6px #888; 
-    margin-left:0.75em;
-    margin-bottom:0em;
-    
+    .user2{
+        width: 40px;
     }
-    .dash_notify{
-    width: 15.85%;
-    float: left;
-    padding-left: 2px;
-    height:450px;
-    margin-left:8px;
-    -webkit-box-shadow: 2px 2px 6px #888;
-	box-shadow: 2px 2px 6px #888;
-    
-    }
-    
-#accordion {
-    width: 300px;
-    margin: 50px auto;
-    float:left;
-    margin-left:0.45em;
-}
-.collapsible,
-.page_collapsible,
-.accordion {
-    margin: 0;
-    padding:5%;
-    height:15px;
-    border-top:#f0f0f0 1px solid;
-    background: #cccccc;
-    font:normal 1.3em 'Trebuchet MS',Arial,Sans-Serif;
-    text-decoration:none;
-    text-transform:uppercase;
-	background: #29527b; /* Old browsers */
-     border-radius: 0.5em;
-     color: #fff; }
-.accordion-open,
-.collapse-open {
-	background: #289909; /* Old browsers */    
-    color: #fff; }
-.accordion-open span,
-.collapse-open span {
-    display:block;
-    float:right;
-    padding:10px; }
-.accordion-open span,
-.collapse-open span {
-    background:url('<?php echo base_url()?>Images/minus.jpg') center center no-repeat; }
-.accordion-close span,
-.collapse-close span {
-    display:block;
-    float:right;
-    background:url('<?php echo base_url()?>Images/plus.jpg') center center no-repeat;
-    padding:10px; }
-div.container {
-    width:auto;
-    height:auto;
-    padding:0;
-    margin:0; }
-div.content {
-    background:#f0f0f0;
-    margin: 0;
-    padding:10px;
-    font-size:.9em;
-    line-height:1.5em;
-    font-family:"Helvetica Neue", Arial, Helvetica, Geneva, sans-serif; }
-div.content ul, div.content p {
-    padding:0;
-    margin:0;
-    padding:3px; }
-div.content ul li {
-    list-style-position:inside;
-    line-height:25px; }
-div.content ul li a {
-    color:#555555; }
-code {
-    overflow:auto; }
-.accordion h3.collapse-open {}
-.accordion h3.collapse-close {}
-.accordion h3.collapse-open span {}
-.accordion h3.collapse-close span {}   
-</style>
+    #example{
+        width: 100% !important;
+    }    
+    .nav{
+        margin-bottom: 0px;
+    } 
+</style> 
+<div style="width:100%;font-size: 15px;background: #F8F8F8;padding: 10px 10px 10px 10px;border-bottom: solid 1px #ccc;">
+    <ul class="nav nav-pills">
 
-<div class="leftpanel">
- 
-<br />
-<div class="dash_menu">  
-<!-- <h3 class="accordion" class="ajax-call" id="facility_list">Facility List<span></span><h3>
-<div class="container">
- </div>-->
- <br />
- <select id="countiesselect">
-			<option> -- Select county -- </option>
-							<option value="1">Nairobi </option>
-								<option value="2">Baringo </option>
-								<option value="3">Bomet </option>
-								<option value="4">Bungoma </option>
-								<option value="5">Busia </option>
-								<option value="6">Elgeyo Marakwet </option>
-								<option value="7">Embu </option>
-								<option value="8">Garissa </option>
-								<option value="9">Homa Bay </option>
-								<option value="10">Isiolo </option>
-								<option value="11">Kajiado </option>
-								<option value="12">Kakamega </option>
-								<option value="13">Kericho </option>
-								<option value="14">Kiambu </option>
-								<option value="15">Kilifi </option>
-								<option value="16">Kirinyaga </option>
-								<option value="17">Kisii </option>
-								<option value="18">Kisumu </option>
-								<option value="19">Kitui </option>
-								<option value="20">Kwale </option>
-								<option value="21">Laikipia </option>
-								<option value="22">Lamu </option>
-								<option value="23">Machakos </option>
-								<option value="24">Makueni </option>
-								<option value="25">Mandera </option>
-								<option value="26">Marsabit </option>
-								<option value="27">Meru </option>
-								<option value="28">Migori </option>
-								<option value="29">Mombasa </option>
-								<option value="30">Muranga </option>
-								<option value="31">Nakuru </option>
-								<option value="32">Nandi </option>
-								<option value="33">Narok </option>
-								<option value="34">Nyamira </option>
-								<option value="35">Nyandarua </option>
-								<option value="36">Nyeri </option>
-								<option value="37">Samburu </option>
-								<option value="38">Siaya </option>
-								<option value="39">Taita Taveta </option>
-								<option value="40">Tana River </option>
-								<option value="41">Tharaka Nithi </option>
-								<option value="42">Trans Nzoia </option>
-								<option value="43">Turkana </option>
-								<option value="44">Uasin Gishu </option>
-								<option value="45">Vihiga </option>
-								<option value="46">Wajir </option>
-								<option value="47">West Pokot </option>
-							</select>
- 
-<h3 class="accordion" id="section1" >Allocation Rate<span></span><h3>
-<div class="container">
+        <?php foreach ($districts_in_county as $value) { ?>
+            <li class=""><a href="#"><?php echo $value['district']; ?></a></li>
+        <?php } ?>
+            <li class="disabled" style=""><a href="#">&nbsp;</a></li>     
+            <li class="disabled" style="border-left: solid 0.1em #ccc;"><a href="#">&nbsp;</a></li>
 
-<!--	<div class="multiple_chart_content" style="width:100%; height:15%" id="chart4"></div>-->
-	<table class="data-table" style="margin-left: 0px;">
-		<thead>
-		<tr>
-			<td width="50%">Counties</td><td><h6>(Allocated/Total) Facilities</h6></td>
-		</tr>
-		</thead>
-		<tbody>
-		<?php 
-		
-		echo $table_data;
-		
-		
-		?>
-			
-		 
-		</tbody>
-	</table>
-	
+            <li class=""><a href="#">Tie Breaker</a></li>
+            <li class=""><a href="#">Confirmatory</a></li>
+            <li class=""><a href="#">Screening</a></li>
+<!--            <li class="pull-right"><a href="#">View last Allocation</a></li>-->
+
+    </ul>
 </div>
-
+<div style="height:411px;overflow:scroll;">
+    <?php
+    $attributes = array('name' => 'myform', 'id' => 'myform');
+    echo form_open('rtk_management/rtk_allocation_data/' . $county_id, $attributes);
+    ?>
+    <table id="example">
+        <thead>
+            <tr>
+                <th colspan="3">Facility Details</th>
+                <th rowspan="2"><b>Commodity</b></th>
+                <th colspan="2">Quantity</th>
+                <th colspan="2">Quantity</th>
+                <th rowspan="2"><b>AMC</b></th>
+                <th rowspan="2"><b>Qty to allocate</b></th>
+                <th rowspan="2"><b>Qty Issued<br />(From KEMSA)</b></th>
+                <th rowspan="2"><b>Status</b></th>
+            </tr>
+            <tr>
+                <th><b>MFL</b></th>
+                <th><b>Facility Name</b></th>
+                <th><b>District</b></th>
+                <th><b>Received</b></th>
+                <th><b> Consumed</b></th>
+                <th><b>End balance<br />Physical Count</b></th>
+                <th><b>Qty Requested <br />for Re-Supply</b></th>
+            </tr>
+        </thead>
+        <tbody><?php echo $table_body; ?></tbody>
+    </table>
+    <br />
+<div id="clear">&nbsp;</div>
+    <div>
+<input type="button" id="allocate" value="Allocate" style="background: #F8F7F7; padding: 7px;margin: 8px 0px 5px 19px;color: #0088cc;font-family: calibri;font-size: 18px;border: 1px solid #ccc;">
 
 </div>
-
+<?php echo form_close(); ?>	
 </div>
-<div class="dash_main" id = "dash_main">
-
-<?php $attributes = array( 'name' => 'myform', 'id'=>'myform');
-	 echo form_open('rtk_management/rtk_allocation_data/'.$county_id,$attributes); ?>
-		<table id="example">
-					<thead>
-					<tr>
-						<th><b>MFL</b></th>
-						<th><b>Facility Name</b></th>
-                                                <th><b>District</b></th>
-				 
-						<th><b>Commodity</b></th>
-						<th><b>Quantity Received</b></th>
-						<th><b>Quantity Consumed</b></th>
-						<th><b>End of Month Physical Count</b></th>
-
-						<th><b>Quantity Requested for Re-Supply</b></th>
-						<th><b>Quantity Allocated</b></th>
-						<th><b>Quantity Issued(From KEMSA)</b></th>
-						<th><b>Status</b></th>
-											    
-					</tr>
-					</thead>
-					<tbody>
-		<?php 
-			echo $table_body;
-			
-		 ?>
-							
-				</tbody>
-				</table>
-				<input  class="button" id="allocate"  value="Allocate" >
-		<?php  echo form_close();
-		?>	
-</div>
- 

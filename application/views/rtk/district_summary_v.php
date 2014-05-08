@@ -34,7 +34,7 @@ $(function(){
 
             $('#switch_month').change(function(){
                 var value = $('#switch_month').val();
-              var path = "<?php echo base_url().'rtk_management/switch_district/0/rtk_manager/';?>"+value + "/";
+              var path = "<?php echo base_url().'rtk_management/switch_district/0/rtk_manager/';?>"+value + "/rtk_management_district_statistics";
 //              alert (path);
                  window.location.href=path;
             });
@@ -73,7 +73,8 @@ height:600px;
 <div class="sidebar">
 <br />
 <div class="span2 bs-docs-sidebar">
-<select id="switch_month" style="width: 170px;background-color: #ffffff;border: 1px solid #cccccc;">
+
+<select id="switch_months" style="width: 170px;background-color: #ffffff;border: 1px solid #cccccc;">
 <option>-- <?php echo $englishdate;?> --</option>
 <option value="092013">Sept 2013</option>
 <option value="102013">Oct 2013</option>
@@ -85,26 +86,48 @@ height:600px;
 </div>
 <div class="dash_main" id = "dash_main">
 <div id="test_a" style="overflow: scroll; height: 51em; min-height:100%; margin: 0; width: 100%">
-<ul class="breadcrumb" style="margin: 0 0 0px;">
-<?php
-$this->load->database();
-$q = 'SELECT id,county FROM  `counties` ORDER BY  `counties`.`county` ASC   ';
-$res_arr = $this->db->query($q);
-foreach ($res_arr->result_array() as $value) {
-  ?> 
-<li><a href="#" value ="<?php echo $value['county'] ; ?>" onclick="loadcountysummary(<?php echo $value['id'] ; ?>)"><?php echo $value['county'] ; ?></a> <span class="divider">/</span></li>
-<?php 
-} ?>
 
-   </ul>
-<div class="well">
+
 <div class="page-header">
-     <h1 style="font-size: 207%;">County summary <?php echo $englishdate;?><small> Kenya</small></h1>
+     <h1 style="font-size: 207%;"><?php echo $title;?></h1>
    </div>
-<!--     <h4>Leading County in reporting: Nakuru</h4>-->
-     <div id="county_graph"></div>
-     <div id="county_summary"></div>
-</div>
+<div class="row-fluid">
+               <ul class="thumbnails">
+                 <li class="span4">
+                   <div class="thumbnail">
+                     <img src="http://placehold.it/300x200" alt="">
+                     <div class="caption">
+                       <h3>Thumbnail label</h3>
+                       <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+                       <p><a href="#" class="btn btn-primary">Action</a> <a href="#" class="btn">Action</a></p>
+                     </div>
+                   </div>
+                 </li>
+                 <li class="span4">
+                   <div class="thumbnail">
+                     <img src="http://placehold.it/300x200" alt="">
+                     <div class="caption">
+                       <h3>Thumbnail label</h3>
+                       <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+                       <p><a href="#" class="btn btn-primary">Action</a> <a href="#" class="btn">Action</a></p>
+                     </div>
+                   </div>
+                 </li>
+                 <li class="span4">
+                   <div class="thumbnail">
+                     <img src="http://placehold.it/300x200" alt="">
+                     <div class="caption">
+                       <h3>Thumbnail label</h3>
+                       <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+                       <p><a href="#" class="btn btn-primary">Action</a> <a href="#" class="btn">Action</a></p>
+                     </div>
+                   </div>
+                 </li>
+               </ul>
+             </div>
+
+
+ 
 		</div>
 </div>
 

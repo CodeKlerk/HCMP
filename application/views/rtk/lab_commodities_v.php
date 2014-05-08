@@ -20,6 +20,177 @@
 </style>
 <script type="text/javascript">
     $(function() {
+         
+
+        var begining_bal = <?php echo json_encode($beginning_bal);?>;
+        
+        for (var a = 0; a < begining_bal.length; a++) {            
+            var current_bal = begining_bal[a];
+            $('#b_balance_'+a).attr("value",current_bal); 
+        };             
+        
+
+        $('#tests_done_0').attr("readonly",'true');
+
+        /*Calculating the Value of the Number of tests done for Colloidal*/
+       $('#vct').keyup(function(){   
+            validate_vct();
+            compute_tests_done();           
+       })
+       $('#pitc').keyup(function(){
+            validate_pitc();
+            compute_tests_done();
+       })
+       $('#pmtct').keyup(function(){
+            validate_pmtct();
+            compute_tests_done();
+       })
+       $('#blood_screening').keyup(function(){
+            validate_blood();
+            compute_tests_done();           
+       })
+       $('#other2').keyup(function(){
+            validate_other();
+             compute_tests_done();           
+       })    
+
+       function validate_vct(){            
+            var input_value  = $('#vct').val();            
+            if(isNaN(input_value)){
+                 $('#vct').attr("value",0);
+            }else if(input_value<0){
+                $('#vct').attr("value",0);
+            }
+            
+       }
+       function validate_pitc(){            
+            var input_value  = $('#pitc').val();            
+            if(isNaN(input_value)){
+                 $('#pitc').attr("value",0);
+            }else if(input_value<0){
+                $('#pitc').attr("value",0);
+            }
+            
+       }
+       function validate_pmtct(){            
+            var input_value  = $('#pmtct').val();            
+            if(isNaN(input_value)){
+                 $('#pmtct').attr("value",0);
+            }else if(input_value<0){
+                $('#pmtct').attr("value",0);
+            }
+            
+       }
+       function validate_blood(){            
+            var input_value  = $('#blood_screening').val();            
+            if(isNaN(input_value)){
+                 $('#blood_screening').attr("value",0);
+            }else if(input_value<0){
+                $('#blood_screening').attr("value",0);
+            }
+            
+       }
+       function validate_other(){            
+            var input_value  = $('#other2').val();            
+            if(isNaN(input_value)){
+                 $('#other2').attr("value",0);
+            }else if(input_value<0){
+                $('#other2').attr("value",0);
+            }
+            
+       }
+
+       function validateEnd(row){
+            var end_val = $('#physical_count_' + row).val();
+            if(end_val<0){
+                $('#q_received_' + row).attr("value",0);
+                $('#q_used_' + row).attr("value",0);
+               // $('#tests_done_' + row).attr("value",0);
+                $('#losses_' + row).attr("value",0);
+                $('#pos_adj_' + row).attr("value",0);
+                $('#neg_adj_' + row).attr("value",0);
+                $('#physical_count_' + row).attr("value",0);
+            }
+       }
+
+       /*$('#q_used_0').keyup(function(){            
+            setTimeout(function(){
+                validate_quantity_used()},2000);            
+       })
+
+       function validate_quantity_used(){
+
+            if($('#q_used_0').val()<$('#tests_done_0').val()){
+                    var t0 = $('#tests_done_0').val();
+                    $('#q_used_0').attr("value",t0);
+            }
+            var q0 = $('#q_used_0').val();
+            if(isNaN(q0)){
+                $('#q_used_0').attr("value",0);
+            }
+       }*/
+       /*
+
+       $('#compiled_by').keyup(function(){
+        activate_save1_button();
+       })
+       $('#approved_by').keyup(function(){
+        activate_save1_button();
+       })
+*/
+
+       /* --- deactivate the save button until all the fields are filled -- */       
+  /*
+       $('#save1').attr("disabled",true);
+       $('#save1').attr("title","Fill in all Data to Save");
+       function activate_save1_button(){
+            var compile = $('#compiled_by').val();
+            var approve = $('#approved_by').val();
+            if((compile!='')&&(approve!='')){
+                $('#save1').attr("disabled",false);
+                $('#save1').attr("title","Click to Save");
+            }else{
+                $('#save1').attr("disabled",true);
+            }
+       }
+
+
+
+       */
+
+       /* -- ------- end of save button ---------*/
+       
+       var tests_done_q = 0;
+       var tests_done_no = parseInt(tests_done_q);
+       function compute_tests_done(){  
+            var vct_no = parseInt($('#vct').val());
+            var pitc_no = parseInt($('#pitc').val());
+            var pmtct_no = parseInt($('#pmtct').val());
+            var blood_screening_no = parseInt($('#blood_screening').val());
+            var other = parseInt($('#other2').val());
+            tests_done_no = vct_no + pitc_no + pmtct_no + blood_screening_no + other;
+
+            $('#tests_done_0').attr("value",tests_done_no);
+
+            
+            if($('#q_used_0').val()<$('#tests_done_0').val()){
+                var t0 = $('#tests_done_0').val();
+                $('#q_used_0').attr("value",0);
+            }
+            if(isNaN($('#tests_done_0').val())){
+                $('#tests_done_0').attr("value",0);
+            }
+            var q0 = $('#q_used_0').val();
+            if(isNaN(q0)){
+                $('#q_used_0').attr("value",0);
+            }
+
+
+        }       
+
+        /* --- end of calculation for the no of tests done for Colloidal -- */
+       
+       
         jQuery(document).ready(function() {
 
             $("#begin_date").datepicker({
@@ -28,7 +199,7 @@
                 changeYear: true,
                 numberOfMontds: 1,
                 // onClose : function(selectedDate) {
-                // 	$("#end_date").datepicker("option", "minDate", selectedDate);
+                //  $("#end_date").datepicker("option", "minDate", selectedDate);
                 // }
             });
             $("#end_date").datepicker({
@@ -37,15 +208,15 @@
                 changeYear: true,
                 numberOfMonths: 1,
                 // onClose : function(selectedDate) {
-                // 	$("#begin_date").datepicker("option", "minDate", selectedDate);
+                //  $("#begin_date").datepicker("option", "minDate", selectedDate);
                 // }
             });
 
 
 
-//		 var inbal = 0;
-//		 var endbal = parseInt(inbal);
-//		 var val = 0;
+//       var inbal = 0;
+//       var endbal = parseInt(inbal);
+//       var val = 0;
             var final = 0;
             var num_final = parseInt(final);
 
@@ -54,31 +225,31 @@
             function compute_end(row) {
                 var bal = $('#b_balance_' + row).val();
                 var num_bal = parseInt(bal);
-//	alert(num_bal);
+//  alert(num_bal);
 
                 var qty_rcvd = $('#q_received_' + row).val();
                 var num_qty_rcvd = parseInt(qty_rcvd);
-//	alert(num_qty_rcvd);
+//  alert(num_qty_rcvd);
 
                 var q_used = $('#q_used_' + row).val();
                 var num_q_used = parseInt(q_used);
-//	alert(num_q_used);
+//  alert(num_q_used);
 
                 var tests_done = $('#tests_done_' + row).val();
                 var num_tests_done = parseInt(tests_done);
-                //	alert(num_tests_done);
+                //  alert(num_tests_done);
 
                 var loses = $('#losses_' + row).val();
                 var num_loses = parseInt(loses);
-//	alert(num_loses);
+//  alert(num_loses);
 
                 var pos_adj = $('#pos_adj_' + row).val();
                 var num_pos_adj = parseInt(pos_adj);
-//	alert(num_pos_adj);
+//  alert(num_pos_adj);
 
                 var neg_adj = $('#neg_adj_' + row).val();
                 var num_neg_adj = parseInt(neg_adj);
-//	alert(num_neg_adj);
+//  alert(num_neg_adj);
 
                 /*
                  num_final+=num_bal;
@@ -95,7 +266,7 @@
 
 //alert(num_final);
 
-//	final = final+bal+qty_rcvd+q_used-tests_done-loses+pos_adj-neg_adj;
+//  final = final+bal+qty_rcvd+q_used-tests_done-loses+pos_adj-neg_adj;
 
                 $('#physical_count_' + row).attr("value", num_final);
             }
@@ -104,42 +275,49 @@
                 number = row_id.attr("commodity_id");
                 num = parseInt(number);
                 compute_end(num);
+                validateEnd(num);
             })
             $('.qty_rcvd').keyup(function() {
                 row_id = $(this).closest("tr");
                 number = row_id.attr("commodity_id");
                 num = parseInt(number);
                 compute_end(num);
+                validateEnd(num);
             })
             $('.qty_used').keyup(function() {
                 row_id = $(this).closest("tr");
                 number = row_id.attr("commodity_id");
                 num = parseInt(number);
                 compute_end(num);
+               validateEnd(num);
             })
             $('.tests_done').keyup(function() {
                 row_id = $(this).closest("tr");
                 number = row_id.attr("commodity_id");
                 num = parseInt(number);
                 compute_end(num);
+                validateEnd(num);
             })
             $('.loses').keyup(function() {
                 row_id = $(this).closest("tr");
                 number = row_id.attr("commodity_id");
                 num = parseInt(number);
                 compute_end(num);
+                validateEnd(num);
             })
             $('.pos_adj').keyup(function() {
                 row_id = $(this).closest("tr");
                 number = row_id.attr("commodity_id");
                 num = parseInt(number);
                 compute_end(num);
+                validateEnd(num);
             })
             $('.neg_adj').keyup(function() {
                 row_id = $(this).closest("tr");
                 number = row_id.attr("commodity_id");
                 num = parseInt(number);
                 compute_end(num);
+                validateEnd(num);
             })
 
             /*
@@ -198,8 +376,7 @@
             function add(prev, value, row_id) {
                 val = $('#physical_count_' + row_id).val();
                 endbal = parseInt(val);
-//        	alert(endbal);
-
+ 
                 val = parseInt(value);
                 endbal += val;
                 $('#physical_count_' + row_id).attr("value", endbal);
@@ -226,13 +403,13 @@
                 "OK": function() {
                     // var checker=0;
                     // $("input[name^=expiry_date]").each(function() {
-                    // 	checker=checker+1;
+                    //  checker=checker+1;
 
                     // });
                     // //alert(checker);
                     // if(checker<2){
-                    // 	alert("Cannot submit an empty form");
-                    // 	$(this).dialog("close"); 
+                    //  alert("Cannot submit an empty form");
+                    //  $(this).dialog("close"); 
                     // }
                     // else{
                     $(this).dialog("close");
@@ -247,7 +424,7 @@
                 .button()
                 .click(function() {
 
-            return $myDialog.dialog('open');
+//            return $myDialog.dialog('open');
         });
         $("#dialog").dialog({
             height: 140,
@@ -262,8 +439,30 @@
     input{
         width: 70px;
     }
+    #fixed-alert{
+        height: 24px;
+        background-color: #ccc;
+        color: rgb(255,0,0);
+        margin-bottom: 10px;
+        position: fixed;
+        top: 104px;
+        width: 100%;
+        padding: px 1px 0px 13px;
+        border-bottom: 1px solid #ccc;        
+        border-radius: 4px 0px 0px 4px;
+        font-size: 18px;
+        text-align: center;
+    }
+    #banner_text{
+        margin-top: 30px;
+    }
+    #dialog-form{
+        margin-top: 30px;
+    }
 </style>
+<!--<div id="fixed-alert"  >NOTICE: YOU WILL NOT BE ABLE TO EDIT THE DATA ONCE SAVED !&nbsp;</div>-->
 <?php
+
 $attributes = array('name' => 'myform', 'id' => 'myform');
 echo form_open('rtk_management/save_lab_report_data', $attributes);
 
@@ -302,31 +501,31 @@ foreach ($facilities as $facility) {
                 <td colspan = "1"><b>Test</b></td>
                 <td colspan = "1"><b>Category</b></td>
                 <td colspan = "1"><b>No. of Tests Performed</b></td>
-                <td colspan = "1"><b>No. Positive</b></td>							
+                <td colspan = "1"><b>No. Positive</b></td>                          
             </tr>
             <tr><td colspan = "2" style = "text-align:left"><b>District:</b></td>
                 <td><?php echo $district ?></td>
                 <td colspan = "2"><b>VCT</b></td>
-                <td><input class='user2'class='user2' id="vct" name="vct" colspan = "2" style = "color:#000"></td>
+                <td><input class='user2'class='user2' id="vct" name="vct" colspan = "2" style = "color:#000" value=0></td>
                 <td colspan = "2"></td>
                 <td rowspan = "3">RDT</td>
                 <td style = "text-align:left">Patients&nbsp;<u>under</u> 5&nbsp;years</td>
             <td><input class='user2'id="rdt_under_tests" name="rdt_under_tests" size="10" type="text"/></td>
-            <td><input class='user2'id="rdt_under_positive" name="rdt_under_positive" size="10" type="text"/></td>							
+            <td><input class='user2'id="rdt_under_positive" name="rdt_under_positive" size="10" type="text"/></td>                          
 
             </tr>
-            <tr><td colspan = "2" style = "text-align:left"><b>County:</b></td>						
+            <tr><td colspan = "2" style = "text-align:left"><b>County:</b></td>                     
                 <td><?php echo $county ?></td>
                 <td colspan = "2"><b>PITC</b></td>
-                <td><input class='user2'class='user2' id="pitc" name="pitc" colspan = "2" style = "color:#000"></td>
+                <td><input class='user2'class='user2' id="pitc" name="pitc" colspan = "2" style = "color:#000" value=0></td>
                 <td colspan = "2"></td>
                 <td style = "text-align:left">Patients&nbsp;aged 5-14&nbsp;yrs</td>
                 <td><input class='user2'id="rdt_to_tests" name="rdt_to_tests" size="10" type="text"/></td>
-                <td><input class='user2'id="rdt_to_positive" name="rdt_to_positive" size="10" type="text"/></td>						</tr>
-            <tr><td colspan = "2" style = "text-align:right"><b>Beginning:</b></td>	
+                <td><input class='user2'id="rdt_to_positive" name="rdt_to_positive" size="10" type="text"/></td>                        </tr>
+            <tr><td colspan = "2" style = "text-align:right"><b>Beginning:</b></td> 
                 <td><input class='my_date'id="begin_date" name="begin_date" colspan = "2" size="10" type="text"/></td>
                 <td colspan = "2"><b>PMTCT</b></td>
-                <td><input class='user2'class='user2' id="pmtct" name="pmtct" colspan = "2" style = "color:#000"></td>
+                <td><input class='user2'class='user2' id="pmtct" name="pmtct" colspan = "2" style = "color:#000" value=0></td>
                 <td colspan = "2"></td>
                 <td style = "text-align:left">Patients&nbsp;<u>over</u> 14&nbsp;years</td>
             <td><input class='user2'id="rdt_over_tests" name="rdt_over_tests" size="10" type="text"/></td>
@@ -336,16 +535,16 @@ foreach ($facilities as $facility) {
             <tr><td colspan = "2" style = "text-align:right"><b>Ending:</b></td>
                 <td><input class='my_date'id="end_date" name="end_date" colspan = "2" size="10" type="text"/></td>
                 <td colspan = "2"><b>Blood&nbsp;Screening</b></td>
-                <td><input class='user2'class='user2' id="blood_screening" name="blood_screening" colspan = "2" style = "color:#000"></td>
+                <td><input class='user2'class='user2' id="blood_screening" name="blood_screening" colspan = "2" style = "color:#000" value=0></td>
                 <td colspan = "2"></td>
                 <td rowspan = "3">Microscopy</td>
                 <td style = "text-align:left">Patients&nbsp;<u>under</u> 5&nbsp;years</td>
             <td><input class='user2'id="micro_under_tests" name="micro_under_tests" size="10" type="text"/></td>
-            <td><input class='user2'id="micro_under_positive" name="micro_under_positive" size="10" type="text"/></td>							
+            <td><input class='user2'id="micro_under_positive" name="micro_under_positive" size="10" type="text"/></td>                          
             </tr>
             <tr ><td colspan = "3"></td>
                 <td colspan = "2"><b>Other&nbsp;(Please&nbsp;Specify)</b></td>
-                <td><input class='user2'class='user2' id="other2" name="other2" colspan = "2" style = "color:#000"></td>	
+                <td><input class='user2'class='user2' id="other2" name="other2" colspan = "2" style = "color:#000" value=0></td>    
                 <td colspan = "2"></td>
                 <td style = "text-align:left">Patients&nbsp;aged 5-14&nbsp;yrs</td>
                 <td><input class='user2'id="micro_to_tests" name="micro_to_tests" size="10" type="text"/></td>
@@ -353,7 +552,7 @@ foreach ($facilities as $facility) {
             </tr>
             <tr><td colspan = "3"></td>
                 <td colspan = "2"><b>Specify&nbsp;Here:</b></td>
-                <td><input class='user2'class='user2' id="specification" name="specification" colspan = "2" style = "color:#000"></td>	
+                <td><input class='user2'class='user2' id="specification" name="specification" colspan = "2" style = "color:#000"></td>  
                 <td colspan = "2"></td>
                 <td style = "text-align:left">Patients&nbsp;<u>over</u> 14&nbsp;years</td>
             <td><input class='user2'id="micro_over_tests" name="micro_over_tests" size="10" type="text"/></td>
@@ -361,7 +560,7 @@ foreach ($facilities as $facility) {
             </tr>
 
             <tr><td colspan = "14"></td></tr>
-            <tr > 		
+            <tr >       
                 <td rowspan = "2" colspan = "2"><b>Commodity Name</b></td>
                 <td rowspan = "2"><b>Unit of Issue (e.g. Test)</b></td>
                 <td rowspan = "2"><b>Beginning Balance</b></td>
@@ -369,10 +568,10 @@ foreach ($facilities as $facility) {
                 <td rowspan = "2"><b>Quantity Used</b></td>
                 <td rowspan = "2"><b>Number of Tests Done</b></td>
                 <td rowspan = "2"><b>Losses</b></td>
-                <td colspan = "2"><b>Adjustments [indicate if (+) or (-)]</b></td>	
+                <td colspan = "2"><b>Adjustments [indicate if (+) or (-)]</b></td>  
                 <td rowspan = "2"><b>End of Month Physical Count</b></td>
                 <td rowspan = "2"><b>Quantity Expriing in <u>less than</u> 6 Months</b></td>
-                <td rowspan = "2"><b>Days out of Stock</b></td>	
+                <td rowspan = "2"><b>Days out of Stock</b></td> 
                 <td rowspan = "2"><b>Quantity Requested for&nbsp;Re-Supply</b></td>
             </tr>
             <tr>
@@ -384,7 +583,7 @@ foreach ($facilities as $facility) {
             foreach ($lab_categories as $lab_category) {
                 ?>
                 <tr>
-                    <td colspan = "14" style = "text-align:left"><b><?php echo $lab_category->category_name; ?></b></td>		    
+                    <td colspan = "14" style = "text-align:left"><b><?php echo $lab_category->category_name; ?></b></td>            
                 </tr>
 
                 <?php foreach ($lab_category->category_lab_commodities as $lab_commodities) { ?>
@@ -399,12 +598,12 @@ foreach ($facilities as $facility) {
                     <td><input id="q_used_<?php echo $checker ?>" name = "q_used[<?php echo $checker ?>]" class='qty_used' size="10" type="text" value="0" style = "text-align:center"/></td>
                     <td><input id="tests_done_<?php echo $checker ?>" name = "tests_done[<?php echo $checker ?>]" class='tests_done' size="10" value="0" type="text" style = "text-align:center"/></td>
                     <td><input id="losses_<?php echo $checker ?>" name = "losses[<?php echo $checker ?>]" class='loses' size="10" type="text" value="0" style = "text-align:center"/></td>
-                    <td><input id="pos_adj_<?php echo $checker ?>" name = "pos_adj[<?php echo $checker ?>]" class='pos_adj' size="10" type="text" value="0" style = "text-align:center"/></td>	
+                    <td><input id="pos_adj_<?php echo $checker ?>" name = "pos_adj[<?php echo $checker ?>]" class='pos_adj' size="10" type="text" value="0" style = "text-align:center"/></td>  
                     <td><input id="neg_adj_<?php echo $checker ?>" name = "neg_adj[<?php echo $checker ?>]" class='neg_adj' size="10" type="text" value="0" style = "text-align:center"/></td>
                     <td><input id="physical_count_<?php echo $checker ?>"  name = "physical_count[<?php echo $checker ?>]" class='phys_count' value="0" size="10" type="text" style = "text-align:center"/></td>
                     <td><input id="q_expiring_<?php echo $checker ?>" name = "q_expiring[<?php echo $checker ?>]" class='user2' size="10" type="text" style = "text-align:center"/></td>
-                    <td><input id="days_out_of_stock_<?php echo $checker ?>" name = "days_out_of_stock[<?php echo $checker ?>]" class='user2' size="10" type="text" style = "text-align:center"/></td>	
-                    <td><input id="q_requested_<?php echo $checker ?>" name = "q_requested[<?php echo $checker ?>]" class='user2' size="10" type="text" style = "text-align:center"/></td>				    
+                    <td><input id="days_out_of_stock_<?php echo $checker ?>" name = "days_out_of_stock[<?php echo $checker ?>]" class='user2' size="10" type="text" style = "text-align:center"/></td>  
+                    <td><input id="q_requested_<?php echo $checker ?>" name = "q_requested[<?php echo $checker ?>]" class='user2' size="10" type="text" style = "text-align:center"/></td>                  
                     </tr>
                     <?php $checker++;
                 }
@@ -413,10 +612,10 @@ foreach ($facilities as $facility) {
             <tr>
                 <td colspan = "14"><br/></td>
             </tr>
-            <tr>					
+            <tr>                    
                 <td colspan = "14" style = "text-align:left;background: #EEE;">Explain Losses and Adjustments</td>
             </tr>
-            <tr>					
+            <tr>                    
                 <td colspan ="14"><input class='user2'id="explanation" name="explanation" size="10" type="text" style="width: 90%"/></td>
 
             </tr>
@@ -431,10 +630,10 @@ foreach ($facilities as $facility) {
                 <td><input class='user2'id="moh_642" name="moh_642" size="10" type="text"/></td>
                 <td colspan = "3"><b>(2) F-CDRR for Laboratory Commodities (MOH 643):</b></td>
                 <td><input class='user2'id="moh_643" name="moh_643" size="10" type="text"/></td>
-            </tr>	
+            </tr>   
 
 
-            <tr>					<td colspan = "3" style = "text-align:left">Compiled by:</td>
+            <tr>                    <td colspan = "3" style = "text-align:left">Compiled by:</td>
                 <td colspan = "2" style = "text-align:left">Tel:</td>
                 <td colspan = "1"></td>
                 <td colspan = "2" style = "text-align:left">Designation:</td>
@@ -443,7 +642,8 @@ foreach ($facilities as $facility) {
                 <td colspan = "1"></td>
                 <td colspan = "2" style = "text-align:left">Date:</td>
             </tr>
-            <tr>					<td><input class='user2'id="compiled_by" name="compiled_by" size="10" type="text" colspan = "2"/></td>
+            <tr><td><input class='user2'id="compiled_by" name="compiled_by" size="10" type="text" colspan = "2"/>
+                <br/><span style="color: #f33;font-size: 10px;">* required field</span></td>
                 <td colspan = "2"><br/></td>
                 <td><input class='user2'id="compiled_tel" name="compiled_tel" size="10" type="text" colspan = "2"/></td>
                 <td colspan = "1"><br/></td>
@@ -459,7 +659,7 @@ foreach ($facilities as $facility) {
 
             <tr></tr>
 
-            <tr>					<td colspan = "3" style = "text-align:left">Approved by:</td>
+            <tr>                    <td colspan = "3" style = "text-align:left">Approved by:</td>
                 <td colspan = "2" style = "text-align:left">Tel:</td>
                 <td colspan = "1"><br/></td>
                 <td colspan = "2" style = "text-align:left">Designation:</td>
@@ -468,7 +668,8 @@ foreach ($facilities as $facility) {
                 <td colspan = "1"></td>
                 <td colspan = "2" style = "text-align:left">Date:</td>
             </tr>
-            <tr>					<td><input class='user2'id="approved_by" name="approved_by" size="10" type="text" colspan = "2"/></td>
+            <tr>                    <td><input class='user2'id="approved_by" name="approved_by" size="10" type="text" colspan = "2"/>
+                <br/><span style="color: #f33;font-size: 10px;">* required field</span></td>            
                 <td colspan = "2"><br/></td>
                 <td><input class='user2'id="approved_tel" name="approved_tel" size="10" type="text" colspan = "2"/></td>
                 <td colspan = "1"><br/></td>
@@ -482,8 +683,16 @@ foreach ($facilities as $facility) {
                 <td><input class='user2'id="approved_date" name="approved_date" size="10" type="text" colspan = "2"/></td>
             </tr>
 
-        </table></form>
-</div>
+        </table>
 <input class="btn btn-primary" type="submit"   id="save1"  value="Save" style="margin-left: 0%; width:100px" >
+        </form>
+</div>
+<br />
+<br />
+<br />
+<br />
+<br />
+
 
 <?php form_close(); ?>
+

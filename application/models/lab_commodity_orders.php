@@ -77,10 +77,10 @@ class Lab_Commodity_Orders extends Doctrine_Record {
 //	$last_month=date('m')-1;
 //	$last_month=date('m');
 
-	$lastday = date('Y-m-d', strtotime("last day of previous month"));
-//	$month_ago=date('Y-'.$last_month.'-d');
-	// $facility_code=12889;
-	
+	$lastday = date('Y-m', time());
+	$lastday = $lastday.'-1';
+
+
 	$query = Doctrine_Query::create() -> select("facility_code, order_date") 
 	-> from("Lab_Commodity_Orders")-> where(" order_date between '$lastday' AND NOW()")->andWhere("facility_code='$facility_code'");
 	$stocktake = $query ->execute()->toArray();

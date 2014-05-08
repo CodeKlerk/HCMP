@@ -5,8 +5,18 @@ if (!defined('BASEPATH'))
 
 class cd4_Management extends MY_Controller {
 
+
     function __construct() {
         parent::__construct();
+          $this->load->database();
+    }
+
+    function _near_period_finder(){
+        $this->load->database();
+        $sql = 'SELECT DISTINCT YEAR, MONTH FROM  `api_gen` ORDER BY  `api_gen`.`year` DESC ';
+        $res = $this->db->query($sql);
+        $returnable = $res->result_array();
+        return $returnable;
     }
 
     public function index() {
@@ -35,10 +45,6 @@ class cd4_Management extends MY_Controller {
     }
 
     public function api_get_facilities($month,$year) {
-
-
-
-
         function objectToArray($object) {
             if (!is_object($object) && !is_array($object)) {
                 return $object;
@@ -48,27 +54,21 @@ class cd4_Management extends MY_Controller {
             }
             return array_map('objectToArray', $object);
         }
-
         date_default_timezone_set('EUROPE/Moscow');
-  //      $month = date('m');
-//        $year = date('o');
         $url = 'http://nascop.org/cd4/reportingfacsummary.php?yr='.$year.'&month='.$month;
-    //    echo($url);
-//	$url = 'http://localhost/api/counties.php';
         $string_manual = file_get_contents($url);
-
-
-
         $string = json_decode($string_manual);
         $string = objectToArray($string);
-// 	$string = $this->objectToArray($string);
         return $string;
-        //	echo"<pre>";
-        //	var_dump($string);
-        //	echo"</pre>";
     }
 
-    public function get_facilities_local() {
+    public function get_facilities_local($period=null) {
+        if ($period==null){
+    $periods_available = $this->_near_period_finder();
+    $period = $periods_available[0]['MONTH'].$periods_available[0]['YEAR'];
+}
+
+
 
         function objectToArray($object) {
             if (!is_object($object) && !is_array($object)) {
@@ -80,20 +80,30 @@ class cd4_Management extends MY_Controller {
             return array_map('objectToArray', $object);
         }
 
+        $year = substr($period, -4);
+        $month = substr_replace($period, "", -4);
+        $monthyear = $year . '-' . $month . '-1';
+
         $this->load->database();
-        $q = $this->db->query('SELECT * FROM  `api_gen` ORDER BY  `api_gen`.`id` ASC LIMIT 0 , 1');
+        $sql = 'SELECT * FROM  `api_gen` 
+        WHERE month = '.$month.'
+        AND year = '.$year.'
+        ORDER BY  `api_gen`.`id` ASC LIMIT 0 , 1';
+        $q = $this->db->query($sql);
         $local_json = $q->result_array();
 
         $res_arr = json_decode($local_json[0]['json']);
         $res_arr = objectToArray($res_arr);
-        //$res_arr = objectToArray($local_json[0]['json']);
         return $res_arr;
-//	echo "<pre>";var_dump($res_arr); echo "</pre>";
     }
 
     public function cd4_sidebar() {
-        $tdata = ' ';
-        $all_data = $this->get_facilities_local();
+        $previous_month = date('mY', strtotime("last day of previous month"));
+        $year= substr($previous_month, -4);
+        $month= substr_replace($previous_month,"", -4);
+        $tdata = ' ';      
+
+        $all_data = $this->get_facilities_local($previous_month);
         foreach ($all_data as $key => $county) {
 //   echo "<pre>"; var_dump($all_data); echo "</pre>";
 //   echo key($all_data);
@@ -108,7 +118,7 @@ class cd4_Management extends MY_Controller {
             } else {
                 $reporting_rate = 0;
             }
-// 	county_allocation_details
+
             $key +=1;
             $tdata .='<tr><td><a href="' . base_url() . 'cd4_management/county_allocation_details/' . $key . '">' . $countyname . '</a></td><td>' . $reporting_facilities . '/' . $total_facilities . '</td></tr>';
         }
@@ -138,7 +148,7 @@ class cd4_Management extends MY_Controller {
           $reporting_rate=round((($reporting_facilities/$total_facilities)*100),1);
           $map .="<entity  link='".base_url()."cd4_management/county_allocation_details/$county_map_id' id='$county_map_id' displayValue ='$countyname' color='".array_rand($colors,1)."'  toolText='County :$countyname&lt;BR&gt; Total Facilities :".$total_facilities."&lt;BR&gt; Facilities Reporting  :".$reporting_facilities."&lt;BR&gt; Facility Reporting Rate :".$reporting_rate." %'/>";
           } */
-        $all_data = $this->get_facilities_local();
+        $all_data = $this->get_facilities_local('092013');
         foreach ($all_data as $county) {
             $county_map_id = $county['county'];
             $countyname = $county['name'];
@@ -266,86 +276,32 @@ class cd4_Management extends MY_Controller {
         echo $this->kenyan_map($map, "CD4 County allocation: Click to view facilities in county");
     }
 
-    public function county_allocation_details_old($county_id) {
+    public function county_allocation_details($county_id,$period=null) {
 
-
-        $data['content_view'] = 'cd4/ajax_view/county_allocation_v';
-
-
-
-
-        $htm = '';
-
-
-        $facilities = $this->db->query('SELECT DISTINCT AutoID,fname,MFLCode,countyname
-			FROM cd4_facility, cd4_facilityequipments, cd4_districts
-			WHERE cd4_facility.AutoID = cd4_facilityequipments.facility
-			AND cd4_facility.district = cd4_districts.ID
-			AND equipment  <=3
-			AND county = "' . $county_id . '"');
-
-
-
-
-        if ($facilities->num_rows() > 0) {
-
-            // checks whether any equipments 
-//			$htm.='<table class=" "  style="position:fixed; width:300px">';
-//			$htm.='<tr><thead><th>Facility</th><!--<th>Device</th>--><th></th></thead></tr>';
-            $htm.='<ul class="facility-list">';
-            foreach ($facilities->result_array() as $facilitiessarr) {
-                $countyname = $facilitiessarr['countyname'];
-
-
-
-                $facility = $facilitiessarr['AutoID'];
-                $facility_name = $facilitiessarr['fname'];
-                $facility_mfl = $facilitiessarr['MFLCode'];
-                $facilitiessarr['equipmentname'] = '';
-//			echo $facility_name .' - '.$facility;
-//			echo"<pre>";
-// 			var_dump($facilitiessarr);
-//			echo"</pre>";	
-//	 		
-                //	$htm.='<tr><!--Facility --><td>'.$facilitiessarr['fname'].'</td><!-- MFLCode '.$facilitiessarr['MFLCode'].' equipment <td>'.$facilitiessarr['equipmentname'].'</td>--><td><a href="#'.$facility.'" class="allocate" onClick="showpreview('.$facility.')" >Allocate</a></td></tr>';
-                $htm .='<li><a href="#' . $facility_mfl . '" class="allocate" onClick="showpreview(' . $facility_mfl . ')" >' . $facilitiessarr['fname'] . '</a></li>';
-
-//			echo 'Facility '.$facilitiessarr['fname'].' MFLCode '.$facilitiessarr['MFLCode']
-//			.' equipment '.$facilitiessarr['equipment']		;
-            }$htm.='</ul>';
-            //$htm.='</table>';
+        if ($period!==null) {
+            # code...
+            echo 'sema yeh';
+            die();
         }
-        $data['htm'] = $htm;
-        $data['banner_text'] = 'Allocate ' . $countyname;
-        $data['title'] = 'CD4 Allocation ' . $countyname;
-        $data['countyname'] = $countyname;
+        $previous_month = date('mY', strtotime("last day of previous month"));
+        $year= substr($previous_month, -4);
+        $month= substr_replace($previous_month,"", -4);
 
-        $this->load->view('template', $data);
-    }
 
-    public function county_allocation_details($county_id,$month='') {
-    	if ($month!=='') {
-    		# code...
-    		echo 'sema yeh';
-    		die();
-    	}
         $county_id = $county_id - 1;
-
         $data['content_view'] = 'cd4/ajax_view/county_allocation_v';
         $htm = '';
         $htm.='<ul class="facility-list">';
 
-        $all_counties = $this->get_facilities_local();
+        $all_counties = $this->get_facilities_local($previous_month);
         $countyname = $all_counties[$county_id]['name'];
-        //var_dump($all_counties[$county_id]);
         if ($all_counties[$county_id]['particulars'] > 0) {
-
             foreach ($all_counties[$county_id]['particulars']['particular']as $key => $facilities) {
                 $facility_mfl = $facilities['mfl'];
                 $facilityname = $facilities['name'];
                 $status = $facilities['status'];
                 if ($status !== "Not Reported") {
-                    $htm .='<li><a href="#' . $facility_mfl . '" class="allocate" onClick="showpreview(' . $facility_mfl . ')" >' . $facilityname . '</a></li>';
+                    $htm .='<li><a href="#' . $facility_mfl . '" class="allocate" onClick="showpreview('.$facility_mfl.','.$previous_month.')" >' . $facilityname . '</a></li>';
                 } else {
                     $htm .='<li style="background: #FF0000;"><a href="#" title="' . $facilityname . ' has not reported yet" class="allocate" onClick="alertnonreported()"  >' . $facilityname . '</a></li>';
                 }
@@ -375,7 +331,7 @@ class cd4_Management extends MY_Controller {
         $htm = '';
         $htm.='<ul class="facility-list">';
 
-        $all_counties = $this->get_facilities_local();
+        $all_counties = $this->get_facilities_local('092013');
         $countyname = $all_counties[$county_id]['name'];
         //var_dump($all_counties[$county_id]);
         if ($all_counties[$county_id]['particulars'] > 0) {
@@ -404,7 +360,11 @@ class cd4_Management extends MY_Controller {
  
     }
 
-    function nascop_get($facil_mfl) {
+    function nascop_get($facil_mfl,$period=null) {
+if ($period==null){
+    $periods_available = $this->_near_period_finder();
+    $period = $periods_available[0]['month'].$periods_available[0]['year'];
+} 
         /*
           //$facil_mfl = 11555;
           function objectToArray( $object ) {
@@ -437,9 +397,7 @@ class cd4_Management extends MY_Controller {
 
           //var_dump($string_manual);
          */
-        $string_manual = $this->get_reported_local($facil_mfl);
-
-//echo'<br /><br />';
+        $string_manual = $this->get_reported_local($facil_mfl,$period);
         if ($string_manual == null) {
             echo '<fieldset style="
 		    position: absolute;
@@ -454,19 +412,15 @@ class cd4_Management extends MY_Controller {
 		"> <h1>No data has been submitted yet</h1></fieldset>';
         } else {
 
-
             echo '<fieldset style="font-size: 14px;background: #FCF8F8;padding: 10px;">
 				<span><b>FACILITY :</b>' . $string_manual['facility'] . ' (' . $string_manual['mfl'] . ')</span><br>
 				<span><b>DEVICE :</b>' . $string_manual['device'][0] . '</span><br>
 				</fieldset>';
             echo"<form action='../allocate_cd4' method='post' name='cd4_allocation' id='cd4_allocation'>";
 
-            echo "<table border='0' class='data-table' style='font-size: 0.9em;'>"; // Table begins
-            echo "<thead><th>Name(Unit)</th><th>received </th><th>used</th><th>requested</th><th>Allocated</th></thead>";
+            echo "<table border='0' class='data-table' style='font-size: 0.9em;'>";
+            echo "<thead><th>Name(Unit)</th><th>received </th><th>used</th><th>requested</th><th>Allocation</th></thead>";
             foreach ($string_manual['device']['devices'] as $reagents_arr) {
-//		echo "<pre>";var_dump($reagents_arr);echo "</pre>";
-//		$used =  $reagents_arr['report']['used'];
-//		echo "<pre>";var_dump($reagents_arr);echo "</pre>";
                 $used = $reagents_arr['report']['used'];
                 $alloc_formula = 1.14 * $used * 4;
                 $alloc_formula = round($alloc_formula);
@@ -523,20 +477,26 @@ class cd4_Management extends MY_Controller {
 //		echo "</pre>";
     }
 
-    function allocation_per_facility($mfl) {
+    function allocation_per_facility($mfl,$allocation_period) {
         $this->load->database();
 
-        $sel = $this->db->query('SELECT cd4_facility.facilityname, cd4_facility.MFLCode, cd4_facility.districtname, cd4_allocation.id, cd4_allocation.facility_code, cd4_allocation.reagentID, cd4_allocation.allocation_for, cd4_allocation.qty, cd4_allocation.date_allocated, cd4_allocation.allocated_by, cd4_reagents.reagentname, cd4_reagents.reagentID, cd4_countys.ID, cd4_countys.name, cd4_districts.name, cd4_districts.county, cd4_districts.ID
+        $sql = 'SELECT cd4_facility.facilityname, cd4_facility.MFLCode, cd4_facility.districtname, cd4_allocation.id, cd4_allocation.facility_code, cd4_allocation.reagentID, cd4_allocation.allocation_for, cd4_allocation.qty, cd4_allocation.date_allocated, cd4_allocation.allocated_by, cd4_reagents.reagentname, cd4_reagents.reagentID, cd4_countys.ID, cd4_countys.name, cd4_districts.name, cd4_districts.county, cd4_districts.ID
 FROM cd4_facility, cd4_allocation, cd4_reagents, cd4_districts, cd4_countys
 WHERE  `cd4_facility`.`MFLCode` =  `cd4_allocation`.`facility_code` 
 AND cd4_reagents.reagentID = cd4_allocation.reagentID
 AND cd4_countys.ID = cd4_districts.county
 AND cd4_facility.district = cd4_districts.ID
 AND cd4_allocation.qty>0
-AND cd4_facility.MFLCode=' . $mfl . '');
+AND cd4_facility.MFLCode='.$mfl.'
+AND cd4_allocation.allocation_for ='. $allocation_period ;
+
+        $sel = $this->db->query($sql);
+    
         $resarr = $sel->result_array();
-//for($i = 0; $i < count($resarr); $i++){if($i % 2) // OR if(!($i % 2)){unset($resarr[$i]);}}
-//echo "<pre>";print_r($resarr);echo "</pre>";
+/*        echo "<pre>";
+        print_r($resarr);
+        echo "</pre>";
+*/
         return $resarr;
     }
 
@@ -741,7 +701,6 @@ AND facility= ' . $facility . '');
         $date = date('F, Y', strtotime($newdate));
 //  $pdf_html .= ($date).'<br />';
         $pdf_html .="<div ALIGN=CENTER><img src='" . base_url() . "Images/coat_of_arms.png' height='70' width='70'style='vertical-align: top;' > </img></div>
-
        <div style='text-align:center; font-family: arial,helvetica,clean,sans-serif;display: block; font-weight: bold; font-size: 14px;'>
        Ministry of Health<br />
        CD4 Allocations for $date</div>
@@ -755,7 +714,7 @@ AND  cd4_allocation.allocation_for = ' . $alloc_period . '');
         foreach ($q->result_array() as $key => $value) {
 //	var_dump($value);
             $mfl = $value['facility_code'];
-            $facil = $this->allocation_per_facility($mfl);
+            $facil = $this->allocation_per_facility($mfl,$alloc_period);
             $pdf_html .= $value['facilityname'] . ' (' . $mfl . ')<br />';
             $pdf_html .= "<table>
 		<tr>
@@ -847,8 +806,6 @@ AND cd4_allocation.qty>0');
 // echo "<pre>";print_r($resarr); echo "</pre>";
 
         $data['allocations'] = $resarr;
-
-
         $this->load->view('template', $data);
     }
 
@@ -882,8 +839,6 @@ AND cd4_countys.ID = ' . $County . ' ');
 
         $data['allocations'] = $resarr;
         return $resarr;
-
-//$this->load->view('template',$data);
     }
 
     public function loadmonth_alloc($alloc_period) {
@@ -891,36 +846,33 @@ AND cd4_countys.ID = ' . $County . ' ');
         date_default_timezone_set('EUROPE/Moscow');
         $today = date('dS F Y');
         $pdf_html = ' ';
-
-        $allocation_for = str_split($alloc_period);
-        $newdate = $allocation_for[0] . ':' . $allocation_for[1];
-        $date = date('F, Y', strtotime($newdate));
-//  $pdf_html .= ($date).'<br />';
-
-
+        
+        $year = substr($alloc_period, -4);
+        $month = substr_replace($alloc_period, "", -4);
+        $monthyear = $year . '-' . $month . '-1';
+        
+        $date = date('F, Y', strtotime($monthyear));
         $this->load->database();
         $q = $this->db->query('SELECT DISTINCT cd4_allocation.facility_code, cd4_facility.facilityname,cd4_allocation.allocation_for
 FROM cd4_allocation, cd4_facility
 WHERE cd4_allocation.facility_code = cd4_facility.MFLCode
 AND  cd4_allocation.allocation_for = ' . $alloc_period . '');
+           $pdf_html .=  '<button onclick="send_mail(' . $alloc_period . ')" style="background: #E8E9E6;border: solid 1px #ECECEC;padding: 7px;text-decoration: blink;text-transform: capitalize;">Send Allocation Memo</button><button onclick="download()">Download</button><br />';
+            $pdf_html .="<div id='table-area'>";
+           
         foreach ($q->result_array() as $key => $value) {
-//	var_dump($value);
             $mfl = $value['facility_code'];
-            $facil = $this->allocation_per_facility($mfl);
-            $pdf_html .= $value['facilityname'] . ' (' . $mfl . ')';
-            $pdf_html .= "<table class='data-table'>
-		<thead>
- 
-<th>Reagent</th>
-<th>Quantity</th>
- 
- 
-</tr></thead>
-		<tbody>";
+            $facil = $this->allocation_per_facility($mfl,$alloc_period);
+            $pdf_html .= '<h3>'.$value['facilityname'] . ' (' . $mfl . ') Allocation for '.$date.'</h3>';
+            $pdf_html .= "
+            <table class='data-table'>
+            <thead>
+            <th>Reagent</th>
+            <th>Quantity</th>
+            </tr></thead>
+            <tbody>";
 
             foreach ($facil as $key => $val) {
-//		var_dump($val);
-                # code...
                 $pdf_html .='<tr>
  
 		<td>' . $val['reagentname'] . '</td>
@@ -928,9 +880,31 @@ AND  cd4_allocation.allocation_for = ' . $alloc_period . '');
 		</tr>';
             }
             $pdf_html .= "</tbody></table><br />";
-            echo '<button onclick="send_mail(' . $alloc_period . ')" style="background: #CAEE59;border: solid 1px #ECECEC;">Send mail</button><br />';
-            echo $pdf_html;
         }
+           $pdf_html .= "</div>";
+        
+             echo $pdf_html;
+    }
+
+    function print_pdf($period){
+
+        $html_title = "<div ALIGN=CENTER><img src='" . base_url() . "Images/coat_of_arms.png' height='70' width='70'style='vertical-align: top;' > </img></div>
+      <div style='text-align:center; font-size: 14px;display: block;font-weight: bold;'>$title</div>
+       <div style='text-align:center; font-family: arial,helvetica,clean,sans-serif;display: block; font-weight: bold; font-size: 14px;'>
+       Ministry of Health</div>
+        <div style='text-align:center; font-family: arial,helvetica,clean,sans-serif;display: block; font-weight: bold;display: block; font-size: 13px;'>Health Commodities Management Platform</div><hr />";
+
+        /*         * ********************************initializing the report ********************* */
+        $this->load->library('mpdf');
+        $this->mpdf = new mPDF('', 'A4-L', 0, '', 15, 15, 16, 16, 9, 9, '');
+        $this->mpdf->SetTitle($title);
+        $this->mpdf->WriteHTML($html_title);
+        $this->mpdf->simpleTables = true;
+        $this->mpdf->WriteHTML('<br/>');
+        $this->mpdf->WriteHTML($html_data);
+        $report_name = $report_name . ".pdf";
+        $this->mpdf->Output($report_name, 'D');
+   
     }
 
     public function allocated() {
@@ -1047,7 +1021,12 @@ AND district =' . $district . '');
         }
     }
 
-    public function get_reported_local($mfl) {
+    public function get_reported_local($mfl,$period) {
+
+        $year = substr($period, -4);
+        $month = substr_replace($period, "", -4);
+        $monthyear = $year . '-' . $month . '-1';
+
 
         function objectToArray($object) {
             if (!is_object($object) && !is_array($object)) {
@@ -1060,7 +1039,12 @@ AND district =' . $district . '');
         }
 
         $this->load->database();
-        $q = $this->db->query('SELECT * FROM  `api_facilities` WHERE  `mfl` =' . $mfl . ' ORDER BY  `api_facilities`.`id` ASC LIMIT 0 , 1');
+        $sql = 'SELECT * FROM  `api_facilities` 
+        WHERE  `mfl` =' . $mfl . ' 
+        AND month = '.$month.'
+        AND year = '.$year.'
+        ORDER BY  `api_facilities`.`id` ASC LIMIT 0 , 1';
+        $q = $this->db->query($sql);
         $res = $q->result_array();
         $fac_arr = $res[0]['json'];
 
@@ -1071,20 +1055,10 @@ AND district =' . $district . '');
     }
 
     public function facility_api_data($facil_mfl,$month,$year) {
-
-
-//        $url = 'http://nascop.org/cd4/arraytest.php?mfl=' . $facil_mfl . ''; // url for the aPI
         $url = 'http://nascop.org/cd4/arraytest.php?mfl='.$facil_mfl.'&month='.$month.'&year='.$year;
-//        $url ='http://nascop.org/cd4/arraytest.php?mfl=16464&month=10&year=2013';
-
-//$url = 'http://localhost/api/arraytest.php';
         $string_manual = file_get_contents($url); // Fetchin the API json
-//echo $string_manual;
         $string_manual = substr($string_manual, 0, -1); // Removes the last string character ']' from the json
-//echo $string_manual;
         $string_manual = substr($string_manual, 12); // removes the first 12 string characters which includes a '<pre>' tag up to the '['
-// echo $string_manual;
-
         $now = time();
         $this->load->database();
         $data = array(
@@ -1097,53 +1071,40 @@ AND district =' . $district . '');
 
         );
         $this->db->insert('api_facilities', $data);
-        /*
-          $string_manual = json_decode($string_manual); // decoding the json
-          $string_manual = objectToArray($string_manual); // This is where I convert String Manual to array
-         */
     }
 
     public function sync_nascop($month,$year) {
-    	$month;
-    	$year;
-
-
         $allfacilities = $this->api_get_facilities($month,$year);
-//	
         $reported_facilities_to_sync = array();
 
+        $jsonfacilities = json_encode($allfacilities);
+        $now = time();
+        $data = array(
+            'id' => 'NULL',
+            'json' => $jsonfacilities,
+            'date_sync' => $now,
+            'month'=>$month,
+            'year'=>$year
+        );
+        $this->db->insert('api_gen', $data);
+        echo "Counties Done synchronizing. Now synchronizing Facilities...<br />";
 
         foreach ($allfacilities as $key => $value) {
             if ($value['particulars']['reported'] > 0) {
                 foreach ($value['particulars']['particular'] as $reportedfacilities) {
 
                     if ($reportedfacilities['status'] == "Reported") {
-//				echo "<pre>";var_dump($reportedfacilities);echo "</pre>";
                         array_push($reported_facilities_to_sync, $reportedfacilities['mfl']);
                     }
                 }
             }
         }
+
         foreach ($reported_facilities_to_sync as $sync_mfl_code) {
-// 	echo($sync_mfl_code.'<br />');
             $this->facility_api_data($sync_mfl_code,$month,$year);
         }
-        echo "Success: Facilities Sync Complete, Please wait shortly to sync Counties<br />";
-//	echo($allfacilities);
-        $allfacilities = json_encode($allfacilities);
-        $now = time();
-        $this->load->database();
-        $data = array(
-            'id' => 'NULL',
-            'json' => $allfacilities,
-            'date_sync' => $now,
-            'month'=>$month,
-            'year'=>$year
-        );
-        $this->db->insert('api_gen', $data);
-        echo "Counties Done synchronizing. You are now being redirected to another planet....";
-//	echo "Counties Sync Complete. Please wait for Reported facilities sync";
-//$allfacilities = $this->api_get_facilities();
+        echo "Success: Facilities Sync Complete,  You are now being redirected to another planet....";
+
     }
 
     public function allocated_cd4($MFLCode, $year, $month) {
