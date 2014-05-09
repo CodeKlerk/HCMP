@@ -22,7 +22,7 @@ class Rtk_Management extends Home_controller {
 
         $month = $this->session->userdata('Month');
         if ($month == '') {
-            $month = date('mY', time());
+            $month = date('mY', strtotime('-1 month'));
         }
 
         $year = substr($month, -4);
@@ -177,7 +177,7 @@ AND user.usertype_id =12';
         }
         $month = $this->session->userdata('Month');
         if ($month == '') {
-            $month = date('mY', time());
+            $month = date('mY', strtotime('-1 month'));
         }
 
         $year = substr($month, -4);
@@ -368,7 +368,7 @@ AND user.usertype_id =12';
         $data = array();
         $month = $this->session->userdata('Month');
         if ($month == '') {
-            $month = date('mY', time());
+            $month = date('mY', strtotime('-1 month'));
         }
         $year = substr($month, -4);
         $month = substr_replace($month, "", -4);
