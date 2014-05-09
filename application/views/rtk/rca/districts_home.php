@@ -2,7 +2,7 @@
 <?php
 $month = $this->session->userdata('Month');
 if ($month == '') {
-    $month = date('mY', strtotime('-1 month'));
+    $month = date('mY', time());
 }
 
 $year = substr($month, -4);
@@ -41,33 +41,7 @@ foreach ($res->result_array() as $key => $value) {
     var county = <?php echo $this->session->userdata('county_id'); ?>;
 
 
-    $(function() {
-        $("#grapharea").load("./rtk_management/county_reporting_percentages/" + county / +<?php echo $year . '/' . $month; ?>);
-
-        $('#switch_month').change(function() {
-            var value = $('#switch_month').val();
-            var path = "<?php echo base_url() . 'rtk_management/switch_district/0/rca/'; ?>" + value + "/";
-//              alert (path);
-            window.location.href = path;
-        });
-
-        $('#switch_county').change(function() {
-            var value = $('#switch_county').val();
-            var path = "<?php echo base_url() . 'rtk_management/switch_district/0/rca/0/home_controller/'; ?>" + value + "";
-//              alert (path);
-            window.location.href = path;
-        });
-    });
-
-    function loadPendingFacilities() {
-        $(".dash_main").load("<?php echo base_url(); ?>rtk_management/rtk_reporting_by_county/<?php echo $this->session->userdata('county_id') . '/' . $year . '/' . $month; ?>");
-            }
-            function loadDistrict() {
-                $(".dash_main").load("<?php echo base_url(); ?>rtk_management/reports_in_county/<?php echo $this->session->userdata('county_id') . '/' . $year . '/' . $month; ?>");
-                    }
-                    function loadSummary() {
-                        $(".dash_main").load("<?php echo base_url(); ?>rtk_management/reports_in_county/<?php echo $this->session->userdata('county_id') . '/' . $year . '/' . $month; ?>");
-                            }
+    
 
 </script>
 <br />
@@ -89,12 +63,10 @@ foreach ($res->result_array() as $key => $value) {
 
     </select>
     <ul class="nav nav-tabs nav-stacked">
-
-
-        <li><a href="<?php echo base_url(); ?>">Summary</a></li>
-        <li><a href="<?php echo base_url().'rtk_management/rca_districts_home';?>">Districts</a></li>
-        <li><a href="<?php echo base_url().'rtk_management/rca_pending_facilities'; ?>">Pending Facilities</a></li>
-        <li><a href="<?php echo base_url('./rtk_management/rca_facilities_reports'); ?>">Reports</a></li>
+        <li><a href="<?php echo base_url().'rtk_management/county_home'?>">Summary</a></li>        
+        <li><a href="<?php echo base_url().'rtk_management/rca_districts'?>">Districts</a></li>
+        <li><a href="<?php echo base_url().'rtk_management/rca_pending_facilities'?>">Pending Facilities</a></li>
+        <li><a href="<?php echo base_url().'rtk_management/rca_facilities_reports' ?>">Reports</a></li>
     </ul>
 </div>
 <div class="dash_main" style="width: 80%;float: right; overflow: scroll; height: 500px">

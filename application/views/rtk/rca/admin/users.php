@@ -36,7 +36,7 @@
                         <select id="district">
                             <option> -- Select Sub County --</option>
                             <?php foreach ($districts as $dists) { ?>
-                                <option value="<?php echo$dists['id']; ?>"><?php echo$dists['district']; ?></option>
+                                <option value="<?php echo $dists['id']; ?>"><?php echo$dists['district']; ?></option>
                             <?php } ?>
                         </select>
                     </td>

@@ -2,7 +2,7 @@
 <?php
 $month = $this->session->userdata('Month');
 if ($month == '') {
-    $month = date('mY', strtotime('-1 month'));
+    $month = date('mY', time());
 }
 
 $year = substr($month, -4);
@@ -92,9 +92,9 @@ foreach ($res->result_array() as $key => $value) {
 
 
         <li><a href="<?php echo base_url(); ?>">Summary</a></li>
-        <li><a href="<?php echo base_url().'rtk_management/rca_districts_home';?>">Districts</a></li>
-        <li><a href="<?php echo base_url().'rtk_management/rca_pending_facilities'; ?>">Pending Facilities</a></li>
-        <li><a href="<?php echo base_url('./rtk_management/rca_facilities_reports'); ?>">Reports</a></li>
+        <li><a href="#" onclick="loadDistrict()">Districts</a></li>
+        <li><a href="#" onclick="loadPendingFacilities()">Pending Facilities</a></li>
+        <li><a href="#" onclick="loadSummary()">Reports</a></li>
     </ul>
 </div>
 <div class="dash_main" style="width: 80%;float: right; overflow: scroll; height: 500px">

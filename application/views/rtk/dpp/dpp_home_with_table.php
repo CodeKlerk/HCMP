@@ -15,7 +15,7 @@ $englishdate = date('F, Y', strtotime($monthyear));
 
     @import "<?php echo base_url(); ?>DataTables-1.9.3 /media/css/jquery.dataTables.css";
 
-   
+
 </style>
 <script type="text/javascript">
 
@@ -35,8 +35,8 @@ $englishdate = date('F, Y', strtotime($monthyear));
 
         //       $(".alert").fadeIn(400);
         $(".alert").delay(20000).slideUp(1000);
-        $("#tablediv").delay(15000).css( "height", '450px');
-        $(".dataTables_filter").delay(15000).css( "color", '#ccc');
+        $("#tablediv").delay(15000).css("height", '450px');
+        $(".dataTables_filter").delay(15000).css("color", '#ccc');
 
 
 
@@ -170,7 +170,7 @@ if ($this->session->userdata('switched_as') == 'dpp') {
         $facility_code = $counties['facility_code'];
         $facility_name = $counties['facility_name'];
         ?>
-                                                          <option value="<?php echo $facility_code . '|' . $facility_name ?>"><?php echo $facility_name; ?></option>
+                                                                  <option value="<?php echo $facility_code . '|' . $facility_name ?>"><?php echo $facility_name; ?></option>
     <?php }
     ?>
                           </select>   
@@ -207,7 +207,7 @@ if ($this->session->userdata('switched_as') == 'dpp') {
 
     for ($i = 0; $i < 5; $i++) {
         ?>
-                                                          <option value="<?php echo $this_year - $i; ?>"><?php echo $this_year - $i; ?></option>
+                                                                  <option value="<?php echo $this_year - $i; ?>"><?php echo $this_year - $i; ?></option>
     <?php } ?>
                           </select>
                           <a href="<?php echo base_url() . 'rtk_management/view_report' ?>"><button class="awesome blue" id="generate" style="margin-left:30%" align="left">Generate Report</button></a>
@@ -341,7 +341,7 @@ and dmlt_districts.dmlt=' . $id;
             ?>
             <script type="text/javascript">
                 $(document).ready(function() {
-    //                    $(".dataTables_wrapper").load("<?php echo base_url(); ?>rtk_management/summary_tab_display/" + <?php echo $countyid; ?> + "/<?php echo $year; ?>/<?php echo $month; ?>/");
+                    //                    $(".dataTables_wrapper").load("<?php echo base_url(); ?>rtk_management/summary_tab_display/" + <?php echo $countyid; ?> + "/<?php echo $year; ?>/<?php echo $month; ?>/");
                 });
             </script>
             <?php
@@ -386,9 +386,9 @@ and dmlt_districts.dmlt=' . $id;
 <script src="http://tableclothjs.com/assets/js/jquery.metadata.js"></script>
 <script src="http://tableclothjs.com/assets/js/jquery.tablecloth.js"></script>
 <script type="text/javascript">
-            $(document).ready(function() {
-                $("table").tablecloth({theme: "paper"});
-            });
+                $(document).ready(function() {
+                    $("table").tablecloth({theme: "paper"});
+                });
 
 
 </script>

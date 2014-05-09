@@ -113,7 +113,7 @@
             }
        }
 
-       /*$('#q_used_0').keyup(function(){            
+       $('#q_used_0').keyup(function(){            
             setTimeout(function(){
                 validate_quantity_used()},2000);            
        })
@@ -128,7 +128,7 @@
             if(isNaN(q0)){
                 $('#q_used_0').attr("value",0);
             }
-       }*/
+       }
        /*
 
        $('#compiled_by').keyup(function(){
@@ -171,7 +171,8 @@
             tests_done_no = vct_no + pitc_no + pmtct_no + blood_screening_no + other;
 
             $('#tests_done_0').attr("value",tests_done_no);
-
+            $('#q_used_0').attr("value",tests_done_no);
+/*
             
             if($('#q_used_0').val()<$('#tests_done_0').val()){
                 var t0 = $('#tests_done_0').val();
@@ -184,6 +185,7 @@
             if(isNaN(q0)){
                 $('#q_used_0').attr("value",0);
             }
+            */
 
 
         }       
@@ -441,16 +443,16 @@
     }
     #fixed-alert{
         height: 24px;
-        background-color: #ccc;
-        color: rgb(255,0,0);
+        background-color: #EEE;
+        color: rgb(255, 166, 166);
+        text-shadow: 0.5px 0.51px #949292;
         margin-bottom: 10px;
         position: fixed;
         top: 104px;
         width: 100%;
-        padding: px 1px 0px 13px;
-        border-bottom: 1px solid #ccc;        
-        border-radius: 4px 0px 0px 4px;
-        font-size: 18px;
+        padding: 10px 0px 0px 13px;
+        border-bottom: 1px solid #ccc;
+        font-size: 15px;
         text-align: center;
     }
     #banner_text{
@@ -460,7 +462,7 @@
         margin-top: 30px;
     }
 </style>
-<!--<div id="fixed-alert"  >NOTICE: YOU WILL NOT BE ABLE TO EDIT THE DATA ONCE SAVED !&nbsp;</div>-->
+<div id="fixed-alert"  >NOTICE: YOU WILL NOT BE ABLE TO EDIT THE DATA ONCE SAVED !&nbsp;</div>
 <?php
 
 $attributes = array('name' => 'myform', 'id' => 'myform');
