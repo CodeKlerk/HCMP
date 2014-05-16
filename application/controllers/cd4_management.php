@@ -853,11 +853,13 @@ AND cd4_countys.ID = ' . $County . ' ');
         
         $date = date('F, Y', strtotime($monthyear));
         $this->load->database();
-        $q = $this->db->query('SELECT DISTINCT cd4_allocation.facility_code, cd4_facility.facilityname,cd4_allocation.allocation_for
+        $sql = 'SELECT DISTINCT cd4_allocation.facility_code, cd4_facility.facilityname,cd4_allocation.allocation_for
 FROM cd4_allocation, cd4_facility
 WHERE cd4_allocation.facility_code = cd4_facility.MFLCode
-AND  cd4_allocation.allocation_for = ' . $alloc_period . '');
-           $pdf_html .=  '<button onclick="send_mail(' . $alloc_period . ')" style="background: #E8E9E6;border: solid 1px #ECECEC;padding: 7px;text-decoration: blink;text-transform: capitalize;">Send Allocation Memo</button><button onclick="download()">Download</button><br />';
+AND  cd4_allocation.allocation_for = ' . $alloc_period . '';
+        $q = $this->db->query($sql);
+         echo($sql);die;
+           $pdf_html .=  '<button onclick="send_mail(' . $alloc_period . ')" style="background: #E8E9E6;border: solid 1px #ECECEC;padding: 7px;text-decoration: blink;text-transform: capitalize;">Send Allocation Memo</button><!--<button onclick="download()">Download</button>--><br />';
             $pdf_html .="<div id='table-area'>";
            
         foreach ($q->result_array() as $key => $value) {

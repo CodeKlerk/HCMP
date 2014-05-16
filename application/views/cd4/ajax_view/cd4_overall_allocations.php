@@ -133,11 +133,12 @@
     <h2>2014</h2>	
     <ul class="allocation-months-list">
 
-        <li><a href="#Aug" class="allocate" onclick="loadmonth(012014)">Jan</a></li>
-        <li><a href="#Sept" class="allocate" onclick="loadmonth(022014)">Feb</a></li>
-        <li><a href="#Oct" class="allocate" onclick="loadmonth(032014)">March</a></li>
-        <!--        <li><a href="#Nov" class="allocate" onclick="loadmonth(042014)">April</a></li>
-                <li><a href="#Dec" class="allocate" onclick="loadmonth(052014)">May</a></li>-->
+        <li><a href="#Jan" class="allocate" onclick="loadmonth(12014)">Jan</a></li>
+        <li><a href="#Feb" class="allocate" onclick="loadmonth(22014)">Feb</a></li>
+        <li><a href="#Mar" class="allocate" onclick="loadmonth(32014)">March</a></li>
+        <li><a href="#Apr" class="allocate" onclick="loadmonth(42014)">April</a></li>
+        <li><a href="#May" class="allocate" onclick="loadmonth(52014)">May</a></li>
+        
     </ul>
 
 </div><span id="notif" style=""> </span>

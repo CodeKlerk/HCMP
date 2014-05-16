@@ -471,32 +471,32 @@ AND user.usertype_id =12';
         $data = array();
         $lastday = date('Y-m-d', strtotime("last day of previous month"));
 
-        $current_month = $this->session->userdata('Month');
+        $current_month =  $this->session->userdata('Month');
         if ($current_month == '') {
             $current_month = date('mY', time());
         }
 
         $previous_month = date('m', strtotime("last day of previous month"));
 
-        $previous_month_1 = date('mY', strtotime('-2 month'));
+        $previous_month_1 = date('mY', strtotime('-2 month')); 
 
-        $previous_month_2 = date('mY', strtotime('-3 month'));
+        $previous_month_2 = date('mY', strtotime('-3 month')); 
 
 
         $year_current = substr($current_month, -4);
 
         $year_previous = date('Y', strtotime("last day of previous month"));
 
-        $year_previous_1 = substr($previous_month_1, -4);
+        $year_previous_1 = substr($previous_month_1,-4);
 
-        $year_previous_2 = substr($previous_month_2, -4);
+        $year_previous_2 = substr($previous_month_2,-4);
+     
+       
 
-
-
-        $current_month = substr_replace($current_month, "", -4);
-        $previous_month_1 = substr_replace($previous_month_1, "", -4);
-        $previous_month_2 = substr_replace($previous_month_2, "", -4);
-
+        $current_month = substr_replace($current_month, "", -4); 
+        $previous_month_1 = substr_replace($previous_month_1, "", -4);   
+        $previous_month_2 = substr_replace($previous_month_2, "", -4);  
+        
 
         $monthyear_current = $year_current . '-' . $current_month . '-1';
         $monthyear_previous = $year_previous . '-' . $previous_month . '-1';
@@ -505,15 +505,15 @@ AND user.usertype_id =12';
 
         $englishdate = date('F, Y', strtotime($monthyear_current));
 
-        $m_c = date("F", strtotime($monthyear_current));
+        $m_c = date("F",strtotime($monthyear_current));        
         //first month               
-        $m0 = date("F", strtotime($monthyear_previous));
-        $m1 = date("F", strtotime($monthyear_previous_1));
-        $m2 = date("F", strtotime($monthyear_previous_2));
+        $m0 = date("F",strtotime($monthyear_previous));
+        $m1 = date("F",strtotime($monthyear_previous_1));
+        $m2 = date("F",strtotime($monthyear_previous_2));
 
-        $month_text = array($m2, $m1, $m0);
+        $month_text = array($m2,$m1,$m0);   
 
-
+       
 
         $district_summary = $this->rtk_summary_district($district, $year_current, $current_month);
 
@@ -531,6 +531,9 @@ AND user.usertype_id =12';
         $data['district_balances_previous'] = $this->district_totals($year_previous, $previous_month, $district);
 
         $data['district_balances_previous_1'] = $this->district_totals($year_previous_1, $previous_month_1, $district);
+
+        $data['district_balances_previous_2'] = $this->district_totals($year_previous_2, $previous_month_2, $district);
+        
 
         $data['district_summary'] = $district_summary;
         $county_id = districts::get_county_id($district_summary['district_id']);
@@ -1087,9 +1090,19 @@ AND rca_county.rca =' . $rca;
             $q .=' AND lab_commodity_details.closing_stock>' . $value;
         }
         $res = $this->db->query($q);
+        echo "<table>
+        <th>Facility Code</th>
+        <th>Facility Name</th>
+        <th>Commodity Name</th>
+        <th>Facility Closing stock</th>";
         foreach ($res->result_array() as $arr) {
-            echo '' . $arr['facility_name'] . ' - ' . $arr['closing_stock'] . ' test kits <br />';
+            echo '<tr>';
+            echo '<td>'. $arr['facility_code'].' </td><td> ' . $arr['facility_name'] . ' </td><td> ' . $arr['closing_stock'] . ' test kits <br />';
+//            echo '<pre>';print_r($arr);die;
+            echo '</tr>';
         }
+        echo "</table>";
+        die;
     }
 
     public function district_fcdrr($district, $year, $month, $commodity_id = null) {
